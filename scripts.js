@@ -8,7 +8,7 @@ var Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot
 
 var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/";
 
-var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json"];
+var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json","awarddat.json"];
 
 function include() {
     var files = sys.filesForDirectory(".");
