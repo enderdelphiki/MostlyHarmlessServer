@@ -885,12 +885,12 @@ init : function (){
                 
                     //  Luca gets a special ball
                     if (name == "[HH]Luca") {
-                        banner += pictures.get("gsaway");
+                        banner += Pictures["gsaway"];
                     }
                     
                     //  Rain also gets a special ball
                     else if (name == "[HH]SilverRain") {
-                        banner += pictures.get("gbaway");
+                        banner += Pictures["gbaway"];
                     }
                     
                     //  The default ball
@@ -901,12 +901,12 @@ init : function (){
                 
                 //  Luca has a special ball
                 else if (name == "[HH]Luca") {
-                    banner += pictures.get("gsonline");
+                    banner += Pictures["gsonline"];
                 }
                 
                 //  Rain also gets a special ball
                 else if (name == "[HH]SilverRain") {
-                    banner += pictures.get("gbonline");
+                    banner += Pictures["gbonline"];
                 }
                 
                 //  The defeault ball
@@ -937,16 +937,16 @@ init : function (){
                 }
                 if (sys.id(name) == undefined) {
                     if (name == "[HH]Luca") {
-                        banner += pictures.get("gsaway");
+                        banner += pictures["gsaway"];
                     } else if (name == "[HH]SilverRain") {
-                        banner += pictures.get("gbaway");
+                        banner += Pictures["gbaway"];
                     } else {
                         banner += "<img src='Themes/Classic/client/" + letter + "Away.png'/>"; 
                     }
                 } else if (name == "[HH]Luca") {
-                    banner += pictures.get("gsonline");
+                    banner += Pictures["gsonline"];
                 } else if (name == "[HH]SilverRain") {
-                    banner += pictures.get("gbonline");
+                    banner += Pictures["gbonline"];
                 } else {
                     banner += "<img src='Themes/Classic/client/" + letter + "Available.png'/>";
                 }
@@ -962,7 +962,7 @@ init : function (){
             
             //  Add the juggernaut info
             var score = juggernaut.getScore();
-            banner += "<tr><td></td><td></td><td></td></tr><tr><td></td><td>Juggernaut:</td><td>Score:</td></tr><tr style='text-align:center'><td>" + pictures.get("juggernaut") + "</td><td>" + juggernaut.getName() + "</td><td>" + score + "</td></tr>";
+            banner += "<tr><td></td><td></td><td></td></tr><tr><td></td><td>Juggernaut:</td><td>Score:</td></tr><tr style='text-align:center'><td>" + Pictures["juggernaut"] + "</td><td>" + juggernaut.getName() + "</td><td>" + score + "</td></tr>";
             
             //  Add the server clock
             //  set up the vars
@@ -1012,11 +1012,13 @@ init : function (){
 
         //  This list of messages will be displayed privately to the user on login
         WelcomeMessage : [
+            
+            [Config.Welcome, "The Forum can be found here: <a href=\"http://w11.zetaboards.com/The_Valley/index/\">http://w11.zetaboards.com/The_Valley/index/</a>"],
+            
+            [Config.Guard, "If you choose not to read the !rules, I may choose not to warn before acting"],
+            
+            [Config.ChatBot, "HH Members please check !allmembers and get an auth to remove alts you don't use."]
         
-            // [Bot, "Message"]. Bot must be a tuple as seen in Config
-            [Config.Welcome, "The Forum can be found here: <a href=\"http://w11.zetaboards.com/The_Valley/index/\">http://w11.zetaboards.com/The_Valley/index/</a>"]
-            ,
-            [Config.Guard, "If you choose not to read the !rules, I may choose not to warn before acting"]
         ],
         
         //  If you don't like the HallOfFame as autoshiny, you can set your own list of autoshiny
@@ -2175,12 +2177,60 @@ init : function (){
                 };
                 
                 //  Warn everyone about the coming lag
-    //            sys.sendAll("~~Server~~: Script update in progress. We apologise for any lag.", main);
+                //  sys.sendAll("~~Server~~: Script update in progress. We apologise for any lag.", main);
                 
                 //  grab the script
                 sys.webCall(updateURL, changeScript);
                 return true;
             }
+        },
+        
+        "update" : {
+            run : function (source, chan) {
+
+                //  If you aren't owner, gtfo
+                if (db.auth(source) < 3) {
+                    return false;
+                }
+                
+                //  Data must exist
+                if (commandData == undefined || commandData.length < 3) {
+                    return false;
+                }
+                
+                
+                //  grab the file
+                sys.webCall(root + commandData, function (resp) {
+                
+                    //  If nothing was received, do nothing.
+                    if (resp == "") {
+                        return false;
+                    }
+                    
+                    //  Attempt to update.
+                    try {
+                    
+                        //  Write the file
+                        sys.writeToFile(commandData, resp);
+                        
+                        sys.sendMessage(source, "Successed!", chan);
+                        
+                    }
+                    
+                    //  Failed!
+                    catch (err) {
+                                                
+                        //  Tell updater and auth what went wrong
+                        sys.sendMessage(source, err, chan);
+                        sys.sendAll(err, watch);
+                        
+                        //  Tell the server what went wrong.
+                        print(err);
+                    }
+                });
+                return true;
+            }
+            
         },
 
         //  Updates the tiers. Runs in much the same way as updatescript.
@@ -2238,16 +2288,6 @@ init : function (){
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 sys.sendMessage(source, Object.keys(sys), chan);
                 sys.sendHtmlMessage(source, "<hr>", chan);
-                return true;
-            }
-        },
-
-        //  Displays all of the pictures the server currently uses.
-        "showpics" : {
-            run : function (source, chan) {
-            
-                //  Just call the function that does this. There is a display bug that repeats pictures but not worth handling.
-                sys.sendHtmlMessage(source, pictures.showAll(), chan);
                 return true;
             }
         },
@@ -2390,12 +2430,12 @@ init : function (){
         run : function (source, chan, isshiny, isback) {
         
             //  The picture for the command
-            var i = pictures.indexOf(command);
+            var i = Pictures[command];
             
             var pic;
             
             //  If there is no picture of that name...
-            if (-1 == i) {
+            if (i == undefined) {
                 //  effective name to be using
                 var name = command;
                 
@@ -2445,10 +2485,10 @@ init : function (){
             
             //  There is a picture so use that
             else {
-                pic = pictures.pics[i][1];
+                pic = i;
             }
             
-            if (! hash.get("cmd_meme")) {
+            if (!hash.get("cmd_meme")) {
                 CommandBot.sendMessage(source, "Posting pictures to chat is currently disabled.", chan);
                 return true;
             }
@@ -3333,6 +3373,7 @@ init : function (){
             cost : 0,
             help : "Allow players to challenge you",
             run : function (source, chan) {
+            
                 //  An alternate (VP) way to unidle
                 sys.changeAway(source, false);
                 CommandBot.sendMessage(source, "You are no longer idling.", chan);
@@ -3389,107 +3430,134 @@ init : function (){
                         sys.sendMessage(source, "", chan);
                     }
                     
-                    //  
-                    if (battlesStarted.indexOf(false) != -1)
-                    {
+                    //  Battles that haven't started
+                    if (battlesStarted.indexOf(false) != -1) {
+                        
+                        //  Header
                         sys.sendMessage(source, "", chan);
                         sys.sendMessage(source, "*** Yet to start battles ***", chan);
-                        for (var i = 0; i < tourbattlers.length; i+=2)
-                        {
-                            if (battlesStarted [i/2] == false)
-                            {
+                        
+                        //  Show the pairings
+                        for (var i = 0; i < tourbattlers.length; i+=2) {
+                            if (battlesStarted [i/2] == false) {
                                 sys.sendMessage(source, tourplayers[tourbattlers[i]] + " VS " + tourplayers[tourbattlers[i+1]], chan);
                             }
                         }
                     }
                 }
-                if (tourmembers.length > 0)
-                {
+                
+                //  Battles that have finished
+                if (tourmembers.length > 0) {
+                
+                    //  Header
                     sys.sendMessage(source, "", chan);
                     sys.sendMessage(source, "*** Members to the next round ***", chan);
-                    sys.sendMessage(source, "", chan);
+                    
+                    //  Show who won already
                     var str = "";
-                    for (x in tourmembers)
-                    {
+                    for (x in tourmembers) {
                         str += (str.length == 0 ? "" : ", ") + tourplayers[tourmembers[x]];
                     }
                     sys.sendMessage(source, str, chan);
                     sys.sendMessage(source, "", chan);
                 }
+                
+                //  Close the message
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 sys.sendMessage(source, "", chan);
                 return true;
             }
         },
-
+    
+        //  Run code
         "eval" : {
             cost : 0,
             help : "Run code",
             run : function (source, chan) {
-
-                if (db.auth(source) == 4)
-                {
-                    try
-                    {
+                
+                //  Only superusers can !eval
+                if (db.auth(source) == 4) {
+                    
+                    //  Try to run it
+                    try {
                         sys.eval(commandData);
+                        
+                        //  Don't kick yourself with eval please
                         sys.sendMessage(source, "Success!", chan);
                     }
-                    catch (e)
-                    {
+                    
+                    //  Say what went wrong if it broke
+                    catch (e) {
                         sys.sendMessage(source, "Failed!", chan);
                         sys.sendMessage(source, e, chan);
                     }
                 }
-                else
-                {
+                
+                //  Kick anyone else who tries
+                else {
                     CommandBot.sendMessage(source, "You gotta do better than that.", chan);
                     sys.kick(source);
                 }
                 return true;
             }
         },
-
+        
+        //  Join a tournament
         "join" : {
             cost : 0,
             help : "Join a tournament",
             run : function (source, chan) {
-
-                if (tourmode != 1)
-                {
+                
+                //  There isn't a tournment to join
+                if (tourmode != 1) {
                     TourBot.sendMessage(source, "There is no tournament running in the signups phase.", chan);
                     return false;
                 }
+                
+                //  Enforce they have a team in the right tier
                 var canjoin = false;
-                for (var i = 0; i < sys.teamCount(source); i++)
-                {
-                    if (sys.tier(source, i) == tourtier)
-                    {
+                for (var i = 0; i < sys.teamCount(source); i++) {
+                    if (sys.tier(source, i) == tourtier) {
                         canjoin = true;
+                        break;
                     }
                 }
-                if (!canjoin)
-                {
+                
+                //  Stop them from joining if no team is in the right tier
+                if (!canjoin) {
                     TourBot.sendMessage(source, "You need to have a team in the " + tourtier + " tier in order to join the tournament.", chan);
                     return false;
                 }
+                
+                //  Check for duplicate registration
                 var name = sys.name(source).toLowerCase();
-                if (tourmembers.indexOf(name.toLowerCase()) != -1)
-                {
+                if (tourmembers.indexOf(name.toLowerCase()) != -1) {
                     TourBot.sendMessage(source, "You are already in the tournament.", chan);
                     return false;
                 }
-                if (tourSpots() > 0)
-                {
+                
+                //  Make sure there is an opening
+                if (tourSpots() > 0) {
+                    
+                    //  Force unidle
                     sys.changeAway(source,false);
+                    
+                    //  Add the player
                     tourmembers.push(name);
                     tourplayers[name] = sys.name(source);
+                    
                     var spotsleft = tourSpots();
-                    TourBot.sendAll(sys.name(source) + " joined the tournament! " + spotsleft + " more " + ((spotsleft == 1) ? "spot" : "spots") + " left!", -1);
-                    if (tourSpots() == 0)
-                    {
+                    
+                    //  If no more open spots, start tournament!
+                    if (spotsleft == 0) {
                         tourmode = 2;
                         roundnumber = 0;
                         roundPairing();
+                    }
+                    
+                    //  Otherwise show this person has joined
+                    else {
+                        TourBot.sendAll(sys.name(source) + " joined the tournament! " + spotsleft + " more " + ((spotsleft == 1) ? "spot" : "spots") + " left!", -1);
                     }
                 }
                 return true;
@@ -3500,59 +3568,75 @@ init : function (){
             cost : 0,
             help : "Leave a tournament",
             run : function (source, chan) {
-
-                if (tourmode == 0)
-                {
+                
+                //  Only leave a tournament that is running.
+                if (tourmode == 0) {
                     TourBot.sendMessage(source, "You aren't in a tournament.", chan);
                     return false;
                 }
-                var name2 = sys.name(source).toLowerCase();
-                if (tourmembers.indexOf(name2) != -1)
-                {
-                    tourmembers.splice(tourmembers.indexOf(name2),1);
-                    delete tourplayers[name2];
+                
+                //  Unjoin
+                var name = sys.name(source).toLowerCase();
+                if (tourmembers.indexOf(name) != -1) {
+                    
+                    //  Remove player from the game
+                    tourmembers.splice(tourmembers.indexOf(name),1);
+                    delete tourplayers[name];
+                    
+                    //  Announce leave
                     TourBot.sendAll(sys.name(source) + " left the tournament!", -1);
                     return true;
                 }
-                if (tourbattlers.indexOf(name2) != -1)
-                {
-                    battlesStarted[Math.floor(tourbattlers.indexOf(name2)/2)] = true;
+            
+                //  DQ from battles this round
+                if (tourbattlers.indexOf(name) != -1) {
+                    
+                    //  Start the battle
+                    battlesStarted[Math.floor(tourbattlers.indexOf(name) / 2)] = true;
                     TourBot.sendAll(sys.name(source) + " left the tournament!", -1);
-                    tourBattleEnd(tourOpponent(name2), name2);
+                    
+                    //  End the battle
+                    tourBattleEnd(tourOpponent(name), name);
+                    return true;
                 }
-                return false;
+                return false
             }
         },
-
+        
+        
+        //  Notify someone
         "ping" : {
-            cost : 90
-            ,
-            help : "Catch someone's attention."
-            ,
+            cost : 90,
+            help : "Catch someone's attention.",
             param : ["name"],
             run : function (source, chan) {
-
-                if (!hash.get("cmd_ping"))
-                {
+                
+                //  Only ping if allowed
+                if (!hash.get("cmd_ping")) {
                     CommandBot.sendMessage(source,"!ping is disabled right now.", chan);
                     return false;
                 }
-                if (target == undefined)
-                {
+                
+                //  Only ping people who exist
+                if (target == undefined) {
                     CommandBot.sendMessage(source, commandData + " isn't logged in.", chan);
                     return false;
                 }
-                CommandBot.sendMessage(source, db.playerToString(target) + " was pinged.", chan);
+                
+                //  Ping the person
                 sys.sendHtmlMessage(target, "<timestamp/> <font size=+2>You got pinged by " + db.playerToString(source) + "!<ping/></font>");
+                CommandBot.sendMessage(source, db.playerToString(target) + " was pinged.", chan);
                 return true;
             }
         },
-
+        
+        //  View Tournament rules
         "tourrules" : {
             cost : 0,
             help : "View Tournament rules",
             run : function (source, chan) {
-
+                
+                //  Just display everything
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 TourBot.sendMessage(source, "Tournament Rules:", chan);
                 sys.sendMessage(source, "1: You may only use the tournament's tier in your battles. This is enforced.", chan);
@@ -3565,20 +3649,29 @@ init : function (){
             }
         },
         
+        //  Look at the status of the assassin game.
         "assassin" : {
             cost : 0,
             help : "!assassin join to join a game. !assassin leave to leave the game. !assassin rules to view the rules. !assassin to view progress and your target.",
             run : function (source, chan) {
+                
+                //  Undefined breaks the switch statement
                 if (commandData == undefined) {
                     commandData = "nothing";
                 }
+                
+                //  Decide what to do
                 switch (commandData.toLowerCase()) {
+                    
+                    //  Join the game
                     case "join" :
                         return assassin.register(sys.name(source));
                     
+                    //  Leave the game
                     case "leave" :
                         return assassin.leave(sys.name(source));
                     
+                    //  View the rules
                     case "rules" :
                         sys.sendHtmlMessage(source, "<hr>", chan);
                         assassin.sendMessage(source, "The rules to this game are:", chan);
@@ -3591,18 +3684,25 @@ init : function (){
                         sys.sendMessage(source, "7: Don't be cocky.", chan);
                         sys.sendHtmlMessage(source, "<hr>", chan);
                         return true;
-                        
+                    
+                    //  Just display depending on the mode
                     default:
                         switch (assassin.data.mode) {
+                        
+                            //  Show game stats as they are
                             case 2:
                                 assassin.showAll(source, chan);
                                 break;
+                            
+                            //  Show who has joined
                             case 1:
                                 
                                 sys.sendHtmlMessage(source, "<hr>", chan);
                                 assassin.sendMessage(source, assassin.data.allplayers.length  + " are playing Assassin. " + (assassin.data.numplayers - assassin.data.allplayers.length) + " spots remaining." + (-1 == assassin.data.allplayers.indexOf(sys.name(source))?" Type !assassin join to join.":""), chan);
                                 sys.sendHtmlMessage(source, "<hr>", chan);
                                 break;
+                            
+                            //  Show end results of last game
                             case 0:
                                 assassin.getResults(source, chan);
                                 break;
@@ -3611,15 +3711,16 @@ init : function (){
                 }
             }
         },
-
+        
+        //  Role playing commands cost PP
         "rpcommands" : {
             cost : 0,
             help : "View all Role Playing commands. All of these are free in the Role Playing channel.",
             run : function (source, chan) {
-
+                
+                //  Simply display everything
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><td width=15%></td><td></td></tr><tr><td><td></td><td></td><td></td></tr>";
-                for (var c in RPCommands)
-                {
+                for (var c in RPCommands) {
                     showMessage+="<tr><td><center>" + RPCommands[c].cost + "pp</center></td><td><b>!" + c + "</b></td><td>" + RPCommands[c].help + "</td></tr>";
                 }
                 showMessage+="<tr><td></td><td></td></tr></table><br>";
@@ -3633,13 +3734,10 @@ init : function (){
     RPCommands = {
         "rphelp" : {
             cost : 0,
-            
             param : ["command"],
-            
             help : "A detailed explanation of any Role Playing command.",
-            
             run : function (source, chan) {
-
+                //  Display everything
                 if (commandData == undefined) {
                     commandData = "rphelp";
                 }
@@ -3662,66 +3760,75 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  Change your name in the role playing channel only
         "nick" : {
             cost : 10,
-            
             help : "Change your name in the Role Playing channel. This doesn't affect your real name on the server.",
-            
             param : ["new name (max length 20 characters)"],
-            
             run : function (source, chan) {
-
+                
+                //  Make sure it's enabled
                 if (!hash.get("cmd_nick")) {
                     CommandBot.sendMessage(source, "!nick is disabled right now.", chan);
                     return false;
                 }
+                
+                //  It only works in one channel
                 if (chan != rpchan) {
                     CommandBot.sendMessage(source, "You need to be in the Role Playing channel to use this command.", chan);
                     return false
                 }
+                
+                //  Don't go into a bad name
                 if (db.nameIsInappropriate(commandData)) {
                     return false;
                 }
+                
+                //  Don't join the clan
                 if (-1 < commandData.indexOf(clan.tagToString())) {
                     CommandBot.sendMessage(source, "Don't change into the clan!", chan);
                     return false;
                 }
+                
+                //  Don't make a long name
                 if (commandData.length > 20) {
                     CommandBot.sendMessage(source, "That name is too long.", chan);
                     return false;
                 }
+                
+                //  Don't make a short name
                 if (db.isEmptyString(commandData)) {
                     sys.sendMessage(source, "You have to be named something...", chan);
                     return false;
                 }
+                
+                //  Finally do it
                 NickBot.sendAll(sys.name(source) + " is now using the nickname " + db.htmlEscape(commandData) + " in the Role Playing channel!", chan);
                 players[source].rpname = db.htmlEscape(commandData);
                 return true;
             }
         },
-
+        
+        //  Revert nickname
         "nonick" : {
             cost : 0,
-            
             help : "Revert to your old name.",
-            
             run : function(source, chan) {
                 NickBot.sendAll(sys.name(source) + " is no longer using the nickname " + players[source].rpname, rpchan);
                 players[source].rpname = false;
                 return true;
             }
         },
-
+        
+        //  Attack someone
         "attack" : {
             cost : 100,
-            
             param : ["name"],
-            
             help : "Use a random attack on someone. Effects of certain moves may also apply. PP may be earned back if a critical hit lands. Your odds of a critical hit increase if you have the Shiny award.",
-            
             run : function (source, chan) {
                 
+                //  Target must exist
                 if (commandData == undefined) {
                     CommandBot.sendMessage(source, "You must target someone with the attack.", chan);
                     return false;
@@ -3731,6 +3838,8 @@ init : function (){
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
                 }
+                
+                //  Command must be enabled
                 if (!hash.get("cmd_attack")) {
                     CommandBot.sendMessage(source, "Attack is disabled right now.", chan);
                     return false;
@@ -3739,8 +3848,10 @@ init : function (){
                 var typecolors = ["#a8a878", "#c03028", "#a890f0", "#a040a0", "#e0c068", "#b8a038", "#a8b820", "#705898", "#b8b8d0", "#f08030", "#6890f0", "#78c850", "#f8d030", "#f85888", "#98d8d8", "#7038f8", "#705848", "#FF88BB"],                    
                 var move, type, repeat;
                 
+                //  Do everything in a loop! (some moves may cause repeats)
                 do {
                     
+                    //  pick a move
                     move = sys.rand(1, 607);
                     type = sys.moveType(move);                
                     
@@ -3760,131 +3871,133 @@ init : function (){
                         CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " used <b><font color=" + typecolors[type] + ">" + sys.move(move) + "</font></b> on " + db.playerToString(target, false, (chan==rpchan)) + "</font>", chan);
                         repeat = true;
                     } else {
+                    
+                        //  Give certain players Protean
                         if (players[source].seed != 0 && players[source].seed % 8 == 0) {
                             CommandBot.sendAll(source, db.playerToString(source, false, (chan==rpchan)) + " acquired <b><font color=" + typecolors[type] + ">" + sys.type(type) + "</font></b>-type!", chan);
                             players[source].type = type;
                         }
+                        
+                        //  Show the attack
                         CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " used <b><font color=" + typecolors[type] + ">" + sys.move(move) + "</font></b> on " + db.playerToString(target, false, (chan==rpchan)) + "</font>", chan);
                         repeat = false;
                         
                         //  Soak
-                        if (move == 487)
-                        {
+                        if (move == 487) {
                             CommandBot.sendAll(source, "<font color=black>" + db.playerToString(target, false, (chan==rpchan)) + " acquired Water-type!</font>", chan);
                             players[target].type = 0;
                         }
                         
                         //  Forest's Curse
-                        else if (move == 567)
-                        {
+                        else if (move == 567) {
                             CommandBot.sendAll(source, "<font color=black>" + db.playerToString(target, false, (chan==rpchan)) + " acquired Grass-type!</font>", chan);
                             players[target].type = 11;
                         }
                         
                         //  Trick-or-Treat
-                        else if (move == 581)
-                        {
+                        else if (move == 581) {
                             CommandBot.sendAll(source, "<font color=black>" + db.playerToString(target, false, (chan==rpchan)) + " acquired Ghost-type!</font>", chan);
                             players[target].type = 7;
                         }
                         
                         //  Entrainment
-                        else if (move == 494)
-                        {
+                        else if (move == 494) {
                             CommandBot.sendAll(source, "<font color=black>" + db.playerToString(target, false, (chan==rpchan)) + " acquired " + db.playerToString(source, false, (chan==rpchan)) + "'s " + sys.type(players[source].type) + "-type!", chan);
                             players[target].type = players[source].type;                
                         }
                         
                         //  Copy type
-                        else if (-1 < [144, 160, 166, 244, 293, 513].indexOf(move))
-                        {
+                        else if (-1 < [144, 160, 166, 244, 293, 513].indexOf(move)) {
                             CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " acquired " + db.playerToString(target, false, (chan==rpchan)) + "'s " + sys.type(players[target].type) + "-type!", chan);
                             players[source].type = players[target].type;
                         }
                         
                         //  Conversion 2
-                        else if (move == 176)
-                        {
+                        else if (move == 176) {
                             players[source].type = sys.rand(0, 18);
                             CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " acquired " + sys.type(players[source].type) + "-type!", chan);
                         }
                         
                         //  Swap types
-                        else if (-1 < [271, 272, 415, 433, 606, 609].indexOf(move))
-                        {
+                        else if (-1 < [271, 272, 415, 433, 606, 609].indexOf(move)) {
                             CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " and " + db.playerToString(target, false, (chan==rpchan)) + " swapped types!", chan);
                             var temp = players[source].type;
                             players[source].type = players[target].type;
                             players[target].type = temp;
                         }
                         
-                        var eff = db.typeeff[type][players[target].type];
-                        
-                        if (move == 150) {
+                        //  Splash
+                        else if (move == 150) {
                             var odds = 0;
                             CommandBot.sendAll(source, "<font color=black><b>But nothing happened!</b></font>", chan);
                         }
                         
-                        
-                        //  Struggle is never critical
+                        //  Struggle is never critical; neither are status moves
                         else if (move == 0 || db.getMoveCategory(move) == "Other") {
                             var odds = 0;
                         }
                         
+                        //  Get the effectiveness
+                        var eff = db.typeeff[type][players[target].type];
+                        
+                        
+                        var supereff = false;
+                        if (players[source].seed == 0 || players[target].seed == 0) {
+                            switch (eff) {
+                            case 0: case 1:
+                                CommandBot.sendAll(source, "<font color=black><b>It's super effective!</b></font>", chan);
+                                supereff = true;
+                                break;
+                            case 4:
+                                CommandBot.sendAll(source, "<font color=black><b>It's not very effective!</b></font>", chan);
+                                break;
+                            }
+                        }
                         else {
-                            var supereff = false;
-                            if (players[source].seed == 0 || players[target].seed == 0) {
-                                switch (eff) {
-                                case 0: case 1:
-                                    CommandBot.sendAll(source, "<font color=black><b>It's super effective!</b></font>", chan);
-                                    supereff = true;
-                                    break;
-                                case 4:
-                                    CommandBot.sendAll(source, "<font color=black><b>It's not very effective!</b></font>", chan);
-                                    break;
-                                }
+                            switch (eff) {
+                            case 0:
+                                CommandBot.sendAll(source, "<font color=black><b>It doesn't affect!</b></font>", chan);
+                                break;
+                            case 1:
+                                CommandBot.sendAll(source, "<font color=black><b>It's not very effective!</b></font>", chan);
+                                break;
+                            case 4:
+                                CommandBot.sendAll(source, "<font color=black><b>It's super effective!</b></font>", chan);
+                                supereff = true;
+                                break;   
                             }
-                            else {
-                                switch (eff) {
-                                case 0:
-                                    CommandBot.sendAll(source, "<font color=black><b>It doesn't affect!</b></font>", chan);
-                                    break;
-                                case 1:
-                                    CommandBot.sendAll(source, "<font color=black><b>It's not very effective!</b></font>", chan);
-                                    break;
-                                case 4:
-                                    CommandBot.sendAll(source, "<font color=black><b>It's super effective!</b></font>", chan);
-                                    supereff = true;
-                                    break;   
-                                }
-                            }
-                            
-                            //  max % chance without boosts
-                            var odds = 5;
-                            
-                            //  increaes shiny's odds
-                            if (13 == players[source].seed) {
-                                odds *= 4;
-                            }
-                            
-                            //  Double award's odds
-                            if (-1 < award.hash["Who's Your Daddy"].value.indexOf(sys.name(source))) {
-                                odds *= 2;
-                            }
-                            
-                            //  high crit ratio
-                            if (0 < [2, 13, 75, 143, 152, 163, 177, 238, 299, 314, 342, 348, 400, 421, 427, 440, 444, 454, 460, 529].indexOf(move)) {
-                                odds *= 2;
-                            }
-                            //  always crit
-                            else if (move == 480 || move == 524) {
-                                odds = 101;
-                            }
+                        }
+                        
+                        //  max % chance without boosts
+                        var odds = 5;
+                        
+                        //  increase shiny's odds
+                        if (13 == players[source].seed) {
+                            odds *= 4;
+                        }
+                        
+                        //  Double award's odds
+                        if (-1 < award.hash["Who's Your Daddy"].value.indexOf(sys.name(source))) {
+                            odds *= 2;
+                        }
+                        
+                        //  high crit ratio
+                        if (0 < [2, 13, 75, 143, 152, 163, 177, 238, 299, 314, 342, 348, 400, 421, 427, 440, 444, 454, 460, 529].indexOf(move)) {
+                            odds *= 2;
+                        }
+                        
+                        //  always crit
+                        else if (move == 480 || move == 524) {
+                            odds = 101;
                         }
                         
                         //  A crit landed!
                         if (0 < eff && sys.rand(0, 100) < odds) {
+                            
+                            //  Display
                             CommandBot.sendAll(source, "<font color=black><b>A critical hit!</b></font>", chan);
+                            
+                            //  Preserve PP
                             if (chan != rpchan) {
                                 players[source].ppleft += 50;
                                 CommandBot.sendMessage(source, "<font color=black>PP was preserved!</font>", chan);
@@ -3921,44 +4034,43 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  Burn target player
         "burn" :
         {
             cost : 30,
-            
             param : ["name"],
-            
             help : "Burn someone.",
-            
             run : function (source, chan) {
-
+                
+                //  Target player must exist
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
                 }
+                
+                //  Don't do it if we can't do it
                 if (!hash.get("cmd_status")) {
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
                 }
+                
+                //  Display
                 db.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status4.png><b><font color=red size=3>" + db.playerToString(target)+ " was burned by " + db.playerToString(source) + " <img src=Themes/Classic/status/battle_status4.png></font>", chan);
                 return true;
             }
         },
-
+        
+        //  Works just like Burn
         "cure" : {
             cost : 30,
-            
             param : ["name"],
-            
             help : "Cure someone.",
-            
             run : function (source, chan) {
-
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
                 }
-
                 if (!hash.get("cmd_status")) {
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
@@ -3967,21 +4079,17 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  Works just like burn
         "freeze" : {
             cost : 30,
-            
             param : ["name"],
-            
             help : "Freeze someone.",
-            
             run : function (source, chan) {
-
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
                 }
-
                 if (!hash.get("cmd_status")) {
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
@@ -3990,20 +4098,17 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  Works just like burn
         "paralyze" : {
             cost : 30,
-            
             help : "Paralyze someone" ,
-            
             param : ["name"],
-            
             run : function(source, chan) {
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
                 }
-
                 if (!hash.get("cmd_status")) {
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
@@ -4012,20 +4117,17 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  Works just like burn
         "poison" : {
             cost : 30,
-            
             help : "Poison someone",
-            
             param : ["name"],
-            
             run : function(source, chan) {
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
                 }
-
                 if (!hash.get("cmd_status")) {
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
@@ -4034,54 +4136,30 @@ init : function (){
                 return true;
             }
         },
-
-        "facepalm" : {
-            cost : 25,
-            
-            help : "Facepalm",
-            
-            run : function (source, chan) {
-
-                if (!hash.get("cmd_facepalm")) {
-                    CommandBot.sendMessage(source, "!facepalm is disabled right now.", chan);
-                    return false;
-                }
-                var name = db.playerToString(source, true, chan==rpchan, true)
-                db.sendHtmlAll(source, name + " " + pictures.get("facepalm"), chan);
-                return true;
-            }
-        },
-
+                
+        //  Flip a table
         "flip" : {
             cost : 15,
-            
             help : "Flip a table",
-            
             run : function (source, chan) {
-     
                 db.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + " (╯°□°）╯︵ ┻━┻", chan);
                 return true;
             }
         },
-
+        
+        //  One of the most important commands in chatrooms
         "me" : {
             cost : 5 ,
-            
             help : "Talk in the third person",
-            
             param : ["message"],
-            
             run : function (source, chan) {
+            
+                //  Don't do it if we're not allowed
                 if (!hash.get("cmd_me")) {
                     CommandBot.sendMessage(source, "!me is disabled right now.", chan);
                     return false;
                 }
-                
-                if (Config.debug) {
-                    var loggedPlayers = sys.playerIds();
-                    source = loggedPlayers[sys.rand(0, loggedPlayers.length - 1)];
-                }
-                
+                                
                 //  Define the name for this context
                 var sourcename;
                 
@@ -4098,16 +4176,16 @@ init : function (){
                     sourcename = sys.name(source)
                 }
                 
+                //  Display
                 db.sendHtmlAll(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + " " + db.htmlEscape(commandData) + "</font></i></font>", chan);
                 return true;
             }
         },
-
+        
+        //  Works the same as !me
         "my" : {
-            cost : 5
-            ,
-            help : "Talk in the third person."
-            ,
+            cost : 5,
+            help : "Talk in the third person.",
             param : ["message"],
             run : function (source, chan) {
                 if (!hash.get("cmd_my")) {
@@ -4115,12 +4193,6 @@ init : function (){
                     return false;
                 }
                 
-                if (Config.debug) {
-                    var loggedPlayers = sys.playerIds();
-                    source = loggedPlayers[sys.rand(0, loggedPlayers.length - 1)];
-                }
-                
-                
                 //  Define the name for this context
                 var sourcename;
                 
@@ -4137,12 +4209,11 @@ init : function (){
                     sourcename = sys.name(source)
                 }
                 
+                //  Keep our pig latin code; it won't run but the code is nice
                 if (false && Config.debug) {
                     var sgmay = commandData.toLowerCase().split(/\W|_ /);
                     for (var i = 0; i < sgmay.length; i++) {
-                        var word = sgmay[i], cons = "";
-                        
-                        var repeat = true;
+                        var word = sgmay[i], cons = "", repeat = true;
                         while (repeat) {
                             if (word.length == 0) break;
                             var c = word.charAt(0);
@@ -4156,7 +4227,6 @@ init : function (){
                                     break;
                             }
                         }
-                        
                         sgmay[i] = word + cons + "ay";
                     }
                     commandData = sgmay.join(" ");
@@ -4165,20 +4235,26 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  For those moments win
         "slap" : {
-            cost : 20
-            ,
+            cost : 20,
             help : "Slap someone",
             run : function (source, chan) {
+                
+                //  Target player must exist
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
                 }
+                
+                //  Don't if we can't
                 if (hash.get["cmd_slap"]) {
                     CommandBot.sendMessage(source, "That command is disabled.", chan);
                     return false;
                 }
+                
+                //  Display
                 CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan == rpchan)) + " slaps " + db.playerToString(target, false, (chan == rpchan)) + " around a bit with a large trout.</font>", chan);
                 return true;
             }
@@ -4187,12 +4263,14 @@ init : function (){
     
     //  These are commands used to manage tournaments and assassin
     TourCommands = {
+        
+        //  View the commands
         "tourcommands" : {
             cost : 0,
-            
             help : "View all Tournament commands.",
-            
             run : function (source, chan) {
+                
+                //  Display everything
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><th width=15%>Command</th><th>Usage</th></tr><tr><td><td></td><td></td></tr>";
                 for (var c in TourCommands) {
                     showMessage+="<tr><td></td><td><b>!" + c + "</b></td>";
@@ -4207,24 +4285,35 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  Start a tournament
         "tour" : {
             param : ["tier", "number of players", "prize"],
             run : function (source, chan) {
+                
+                //  A tournament is already running
                 if (typeof(tourmode) != "undefined" && tourmode > 0) {
                     TourBot.sendMessage(source, "Sorry, you are unable to start a tournament because one is still currently running.", chan);
                     return false;
                 }
+                
+                //  Incorrect format
                 if (mcmd.length < 3) {
                     TourBot.sendMessage(source, "Try '!tour TIER:PLAYERS:PRIZE'", main);
                     return false;
                 }
+                
+                //  Parse the data
                 prize = mcmd[2].toLowerCase();
                 tournumber = parseInt(mcmd[1]);
+                
+                //  Enforce tournament length
                 if (isNaN(tournumber) || tournumber <= 2) { 
                     TourBot.sendMessage(source, "You must specify a tournament size of 3 or more.", chan);
                     return false;
                 }
+                
+                //  Make sure the tier exists
                 var tier = sys.getTierList();
                 var found = false;
                 for (var x in tier) {
@@ -4234,10 +4323,14 @@ init : function (){
                         break;
                     }
                 }
+                
+                //  Tier doesn't exist
                 if (!found) {
                     TourBot.sendMessage(source, "The server does not recognize the tier " + mcmd[0], chan);
                     return false;
                 }
+                
+                //  Prepare a tournament
                 tourmode = 1;
                 tourmembers = [];
                 tourbattlers = [];
@@ -4245,16 +4338,13 @@ init : function (){
                 battlesStarted = [];
                 battlesLost = [];
                 var chans = [0];
+                
+                //  No prize is fine
                 if (typeof(prize) == "undefined"){
                     prize = "No prize";
                 }
                 
-                
-                if (Config.debug) {
-                    var loggedPlayers = sys.playerIds();
-                    source = loggedPlayers[sys.rand(0, loggedPlayers.length - 1)];
-                }
-                
+                //  Display for everyone
                 sys.sendHtmlAll("<hr>", main);
                 sys.sendHtmlAll("<center><b><font color='#FF00CC' style='font-size: 14pt; font-family:calibri'>A "+tourtier+" Tournament has been started by <font color=" + db.getColor(source) + ">"+sys.name(source)+"!</font></font></b></center>", main);
                 sys.sendAll("~~Server~~: " +tournumber+" people can join this tournament", main);
@@ -4264,29 +4354,44 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  Change the number of participants
         "changecount" : {
             param : ["num"],
             run : function (source, chan) {
+                
+                //  Can't change in-progress tour size
                 if (tourmode != 1) {
-                    TourBot.sendMessage(source, "Unable to edit a tournament's size after it started.", chan);
+                    TourBot.sendMessage(source, "Unable to edit a tournament's size if not in sign-up phase.", chan);
                     return false;
                 }
+                
+                //  Get the new count
                 var count = parseInt(commandData);
+                
+                //  Enforce tour size on this count
                 if (isNaN(count) || count < 3) {
                     TourBot.sendMessage(source, "Count must be a number greater than 3.", chan);
                     return false;
                 }
+                
+                //  More people than new size (don't kick anyone out!)
                 if (count < tourmembers.length) {
                     TourBot.sendMessage(source, "There are more people registered than that!", chan);
                     return false;
                 }
+                
+                //  Change data
                 tournumber = count;
+                
+                //  Display change
                 sys.sendHtmlAll("<hr>", main);
                 sys.sendHtmlAll(db.playerToString(source) + " changed the size of the Tournament to " + count + "!", main);
                 sys.sendHtmlAll("<b>There are " + tourSpots() + " spots remaining!</b>", main);
                 sys.sendHtmlAll("<b>Type !join to enter the tournament!</b>", main);
                 sys.sendHtmlAll("<hr>", main);
+                
+                //  If there aren't any open spots anymore then start it
                 if (tourSpots() == 0 ) {
                     tourmode = 2;
                     roundnumber = 0;
@@ -4295,21 +4400,30 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  Kick someone out of the tournament
         "dq" : {
             param : ["name"],
             run : function (source, chan) {
+                
+                //  No tournament to DQ from
                 if (tourmode == 0) {
                     TourBot.sendMessage(source, "Wait until the tournament has started.", chan);
                     return false;
                 }
+                
+                //  Make sure the person is a battler
                 var name2 = commandData.toLowerCase();
+                
+                //  DQ if so
                 if (tourmembers.indexOf(name2) != -1) {
                     tourmembers.splice(tourmembers.indexOf(name2),1);
                     delete tourplayers[name2];
                     TourBot.sendAll(commandData + " was disqualified by " + db.playerToString(source) + "!", chan);
                     return true;
                 }
+                
+                //  End this person's battle
                 if (tourbattlers.indexOf(name2) != -1) {
                     battlesStarted[Math.floor(tourbattlers.indexOf(name2)/2)] = true;
                     TourBot.sendAll(commandData + " was disqualified by " + db.playerToString(source) + "!", chan);
@@ -4319,69 +4433,83 @@ init : function (){
                 return false;
             }
         },
-
+        
+        //  Close a tournament
         "endtour" : {
             run : function (source, chan) {
+                //  Can only close tournaments that are running
                 if (tourmode != 0) {
+                
+                    //  End it
                     tourmode = 0;
                     sys.sendHtmlAll("<hr>", main);
                     sys.sendHtmlAll(db.playerToString(source, true) + " closed the tournament.", main);
                     sys.sendHtmlAll("<hr>", main);
                     return true;
                 }
+                
                 TourBot.sendMessage(source, "There is no tournament to end.", chan);
                 return false;
             }
         },
-
+        
+        //  Push someone in manually
         "push" : {
             param : ["name"],
             run : function (source, chan) {
-                if (tourmode == 0) {
-                    TourBot.sendMessage(source, "Wait until the tournament has started.", chan);
+                
+                //  No pushing in a non-existing tour or one in its sign-up phase
+                if (tourmode != 2) {
+                    TourBot.sendMessage(source, "Only push people into tournaments in progress.", chan);
                     return false;
                 }
+                
+                //  Make sure target player exists
                 if (target == undefined) {
                     TourBot.sendMessage(source, "No one is logged in with that name.", chan);
                     return false;
                 }
+                
+                //  Make sure there is no duplicate entry
                 if (isInTourney(commandData.toLowerCase())) {
                     TourBot.sendMessage(source, db.playerToString(target) + " is already in the tournament.", chan);
                     return false;
                 }
+                
+                //  Force unidle
                 sys.changeAway(target, false);
-                if (tourmode == 2) {
-                    TourBot.sendAll(db.playerToString(target)+ " was added to the tournament by " + db.playerToString(source) + ".", chan);
-                    tourmembers.push(commandData.toLowerCase());
-                    tourplayers[commandData.toLowerCase()] = commandData;
-                }
-                if (tourmode == 1) {
-                    tourmembers.push(commandData.toLowerCase());
-                    tourplayers[commandData.toLowerCase()] = commandData;
-                    TourBot.sendAll(db.playerToString(target) + " was added to the tournament by " + db.playerToString(source) + ". " + tourSpots() + " more spot(s) left!", chan);
-                }
-                if (tourmode == 1 && tourSpots() == 0) {
-                    tourmode = 2;
-                    roundnumber = 0;
-                    roundPairing();
-                }
+                
+                //  Do the pushing
+                tourmembers.push(commandData.toLowerCase());
+                tourplayers[commandData.toLowerCase()] = commandData;
+                TourBot.sendAll(db.playerToString(target)+ " was added to the tournament by " + db.playerToString(source) + ".", chan);
                 return true;
             }
         },
-
+        
+        //  Restart an ongoing battle
         "restart" : {
             param : ["one of the players in the matchup"],
             run : function (source, chan) {
+            
+                //  No ongoing battles if tour hasn't started
                 if (tourmode != 2) {
                     TourBot.sendMesssage(source, "Wait until a tournament starts", chan);
                     return false;
                 }
+                
+                //  Target player must exist
                 if (target == undefined) {
                     TourBot.sendMessage(source, "No one is logged in with that name.", chan);
                     return false;
                 }
+                
                 var name = commandData.toLowerCase();
+                
+                //  Make sure the player named is in an ongoing match
                 if (tourbattlers.indexOf(name) != -1) {
+                    
+                    //  Forget the battle
                     battlesStarted[Math.floor(tourbattlers.indexOf(name)/2)] = false;
                     TourBot.sendAll(db.playerToString(target) + "'s match was restarted by " + db.playerToString(source) + "!", chan);
                     return true;
@@ -4389,23 +4517,34 @@ init : function (){
                 return false;
             }
         },
-
+        
+        //  Swap two people in a tournament
         "sub" : {
             param : ["name", "other name"],
             run : function (source, chan) {
+                
+                //  Tournament must be running
                 if (tourmode != 2) {
                     TourBot.sendMessage(source, "Wait until a tournament starts", chan);
                     return false;
                 }
+                
+                //  Swap only two players; make sure at least one is in the tour
                 var players = commandData.split(':');
                 if (!isInTourney(players[0].toLowerCase())
                  && !isInTourney(players[1].toLowerCase())) {
-                    TourBot.sendMessage("Neither are in the tourney.", chan);
+                    TourBot.sendMessage("Neither are in the tournament.", chan);
                     return false;
                 }
+                
+                //  Display now while we have the chance
                 TourBot.sendAll(players[0] + " and " + players[1] + " were exchanged places in the ongoing tournament by " + sys.name(source) + ".", 0, chan);
+                
+                //  Tour needs lowercase names
                 var p1 = players[0].toLowerCase();
                 var p2 = players[1].toLowerCase();
+                
+                //  Swap both of the names
                 for (x in tourmembers) {
                     if (tourmembers[x] == p1) {
                         tourmembers[x] = p2;
@@ -4415,17 +4554,21 @@ init : function (){
                         }
                     }
                 }
+                
+                //  Swap them here too but cancel ongoing battles
                 for (x in tourbattlers) {
                     if (tourbattlers[x] == p1) {
                         tourbattlers[x] = p2;
-                        battlesStarted[Math.floor(x/2)] = false;
+                        battlesStarted[Math.floor(x / 2)] = false;
                     } else {
                         if (tourbattlers[x] == p2) {
                             tourbattlers[x] = p1;
-                            battlesStarted[Math.floor(x/2)] = false;
+                            battlesStarted[Math.floor(x / 2)] = false;
                         }
                     }
                 }
+                
+                //  If one is no longer in the tournament, forget that player
                 if (!isInTourney(p1.toLowerCase())) {
                     tourplayers[p1] = players[0];
                     delete tourplayers[p2];
@@ -4439,53 +4582,69 @@ init : function (){
             }
         },
         
+        //  Start a game of assassin
         "startassassin" : {
             param : ["number of players"],
             run : function (source, chan) {
+                
+                //  Only one game can be running
                 if (assassin.data.mode != 0) {
                     assassin.sendMessage(source, "A game of Assassin is currently running.", chan);
                     return false;
                 }
+                
+                //  Valid number of players must be given
                 if (commandData == undefined || isNaN(commandData) || commandData < 4){
                     assassin.sendMessage(source, "Must specify a number of players larger than 3.", chan);
                     return false;
                 }
+                
+                //  Forget everything
                 assassin.clear();
+                
+                //  Set game to registration mode
                 assassin.data.mode = 1;
                 assassin.data.numplayers = commandData;
                 
+                //  Remember this in case the server restarts
                 assassin.save();
                 
-                
+                //  Display
                 sys.sendHtmlAll("<hr>", main);
                 sys.sendHtmlAll("<center><b><font color='" + Config.AssassinBot[1] + "' style='font-size: 14pt; font-family:calibri'>A new game of Assassin was been started by <font color=" + db.getColor(source) + ">"+sys.name(source)+"!</font></font></b></center>", main);
                 sys.sendAll("~~Server~~: " + assassin.data.numplayers + " people can join this game.", main);
                 assassin.sendAll("Type !assassin join to enter the game.", main);
                 sys.sendAll("~~Server~~: To view the rules, type !assassin rules.", main);
                 sys.sendHtmlAll("<hr>", main);
-                
                 return true;
             }
         },
         
+        //  End the game =(
         "endassassin" : {
             run : function (source, chan) {
+                
+                //   Only end a game that has started
                 if (assassin.data.mode == 0) {
                     assassin.sendMessage(source, "No game of Assassin is currently running.", chan);
                     return false;
                 }
+                
+                //   Display the game has ended
                 sys.sendHtmlAll("<hr>", main);
                 assassin.sendAll(sys.name(source) + " ended the game!", main);
                 sys.sendHtmlAll("<hr>", main);
+                
+                //  Show the results of the game then end it
                 if (assassin.data.mode == 2) {
                     assassin.showResults(main);
                     assassin.data.mode = 0;
                     assassin.save();
                 }
                 
+                //  Or just forget it
                 else {
                     assassin.clear();
-                    
                     assassin.save();
                 }
                 
@@ -4493,48 +4652,55 @@ init : function (){
             }
         },
         
+        //  Swap people in/out of the game
         "subassassin" : {
             param : ["to take out (this is CASE-SENSITIVE!)", "to replace (this is CASE-SENSTIVE!)"],
             run : function (source, chan) {
+                //  Stuff
                 var takeout = mcmd[0];
                 var putin = mcmd[1];
                 
+                //  Only take out a player
                 var i = assassin.data.allplayers.indexOf(takeout);
                 if (-1 == i) {
                     assassin.sendMessage(source, takeout + " isn't playing this round.", chan);
                     return false;
                 }
+                
+                //  Only put in a nonplayer
                 if (-1 < assassin.data.allplayers.indexOf(putin)) {
                     assassin.sendMessage(source, putin + " is already playing this round.", chan);
                     return false;
                 }
                 
+                //  Make the swap
                 assassin.data.allplayers[i] = putin;
                 var j = assassin.data.players.indexOf(takeout);
                 if (j != -1) {
                     assassin.data.players[j] = putin;
                 }
                 
+                //  Display
                 sys.sendHtmlAll("<hr>", main);
                 assassin.sendAll(putin  + " replaced " + takeout + " in the Assassin game!", main);
                 sys.sendAll("Players can view if their targets have changed with !assassin", main);
-                sys.sendHtmlAll("<hr>", main);
-                
+                sys.sendHtmlAll("<hr>", main);                
                 assassin.save();
-                
                 return true;
             }
         }
         
     };
     
-    //  These will eventually manage the party channel
+    //  These manage the party channel
     PartyCommands = {
+        
+        //  View them all
         "partycommands" : {
-            help : "View all Party Host commands.",
-            
+            help : "View all Party Host commands.",            
             run : function (source, chan) {
-
+            
+                //  Display everything
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><td width=15%></td><td></td></tr><tr><td><td></td><td></td></tr>";
                 for (var c in PartyCommands) {
                     showMessage+="<tr><td></td><td><b>!" + c + "</b></td>";
@@ -4555,85 +4721,72 @@ init : function (){
                 return true;
             }
         },
-
-
-    
+        
+        //  Change a setting
         "pewpewpew" : {
             param : ["on/off"],
-            
             help : "Toggle the swapping of names.",
-            
             run : function (source, chan) {
+            
+                //  Only change settings in the channel to make life easier on everyone
                 if (chan != party) {
                     CommandBot.sendMessage(source, "Pary Host commands should only be used in the Party channel.", chan);
                     return false;
                 }
                 
+                //  Change settings
                 if (commandData == "on") {
                     hash.set("party_pew", true);
-                }
-                else if (commandData == "off") {
+                } else if (commandData == "off") {
                     hash.set("party_pew", false);
-                }
-                else {
+                } else {
                     hash.set("party_pew", ! hash.get("party_pew"));
                 }
                 
+                //  Display
                 CommandBot.sendAll(source, db.playerToString(source) + " " + (hash.get("party_pew") ? "en" : "dis") + "abled pewpewpew!", chan);
                 
                 return true;
             }
         },
         
+        //  Works likew pewpewpew
         "piglatin" : {
             param : ["on/off"],
-            
             help : "Toggle the oinkifying of text.",
-            
             run : function (source, chan) {
                 if (chan != party) {
                     CommandBot.sendMessage(source, "Pary Host commands should only be used in the Party channel.", chan);
                     return false;
                 }
-                
                 if (commandData == "on") {
                     hash.set("party_pig", true);
-                }
-                else if (commandData == "off") {
+                } else if (commandData == "off") {
                     hash.set("party_pig", false);
-                }
-                else {
+                } else {
                     hash.set("party_pig", ! hash.get("party_pig"));
                 }
-                
                 CommandBot.sendAll(source, db.playerToString(source) + " " + (hash.get("party_pig") ? "en" : "dis") + "abled pig latin!", chan);
-                
                 return true;
             }
-        
         },
         
+        //  Works the same as pewpewpe
         "colorize" : {
             param : ["on/off"],
-            
             help : "Toggle the colorizing of text.",
-            
             run : function (source, chan) {
                 if (chan != party) {
                     CommandBot.sendMessage(source, "Pary Host commands should only be used in the Party channel.", chan);
                     return false;
                 }
-                
                 if (commandData == "on") {
                     hash.set("party_color", true);
-                }
-                else if (commandData == "off") {
+                } else if (commandData == "off") {
                     hash.set("party_color", false);
-                }
-                else {
+                } else {
                     hash.set("party_color", ! hash.get("party_color"));
                 }
-                
                 if (hash.get("party_color")) {
                     hash.set("party_rainbow", false);
                 }
@@ -4642,28 +4795,23 @@ init : function (){
             }
         },
         
+        //  Works the same as pewpewpew
         "rainbow" : {
             param : ["on/off"],
-            
             help : "Toggle the rainbow in text.",
-            
             run : function (source, chan) {
                 if (chan != party) {
                     CommandBot.sendMessage(source, "Pary Host commands should only be used in the Party channel.", chan);
                     return false;
                 }
-                
                 if (commandData == "on") {
                     hash.set("party_rainbow", true);
                     hash.set("party_color", false);
-                }
-                else if (commandData == "off") {
+                } else if (commandData == "off") {
                     hash.set("party_rainbow", false);
-                }
-                else {
+                } else {
                     hash.set("party_rainbow", ! hash.get("party_rainbow"));
                 }
-                
                 if (hash.get("party_rainbow")) {
                     hash.set("party_color", false);
                 }
@@ -4672,27 +4820,22 @@ init : function (){
             }
         },
         
+        //  Works the same as pewpewpew
         "reverse" : {
             param : ["on/off"],
-            
             help : ".tahc eht fo txet eht esreveR",
-            
             run : function (source, chan) {
                 if (chan != party) {
                     CommandBot.sendMessage(source, "Pary Host commands should only be used in the Party channel.", chan);
                     return false;
                 }
-                
                 if (commandData == "on") {
                     hash.set("party_reverse", true);
-                }
-                else if (commandData == "off") {
+                } else if (commandData == "off") {
                     hash.set("party_reverse", false);
-                }
-                else {
+                } else {
                     hash.set("party_reverse", ! hash.get("party_reverse"));
                 }
-                
                 CommandBot.sendAll(source, db.playerToString(source) + " " + (hash.get("party_reverse") ? "en" : "dis") + "abled reversing!", chan);
                 return true;
             }
@@ -4701,13 +4844,11 @@ init : function (){
     
     //  These are moderation commands
     ModCommands = {
+        //  Display commands
         "modcommands" : {
             cost : 0,
-            
             help : "View all Moderator commands.",
-            
             run : function (source, chan) {
-
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><td width=15%></td><td></td></tr><tr><td><td></td><td></td></tr>";
                 for (var c in ModCommands) {
                     showMessage+="<tr><td></td><td><b>!" + c + "</b></td>";
@@ -4722,51 +4863,69 @@ init : function (){
                 return true;
             }
         },
-
+        
+        //  Mute someone without them knowing
         "confine" : {
             param : ["name"],
             run : function (source, chan) {
-
+                //  Only confine people who exist
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "No player by this name.", chan);
                     return false;
                 }
+                
+                //  Can't double confine
                 if (players[target].confined) {
                     CommandBot.sendMessage(source, "That player is already confined.", chan);
                     return false;
                 }
+                
+                //  Can't confine greater auth
                 if (db.auth(source) < db.auth(target)) {
                     CommandBot.sendMessage(source, "Insufficient auth!", chan);
                     return false;
                 }
+                
+                //  Do eet
                 players[target].confined = true;
                 CommandBot.sendMessage(source, "Confined " + sys.name(target) + "!", chan);
                 return true;
             }
         },
-
+        
+        //  Or just have them relog
         "unconfine" : {
             param : ["name"],
             run : function (source, chan) {
-
+            
+                //  Must exist
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "No player by this name.", chan);
                     return false;
                 }
+                
+                //  Must already be confined
                 if (!players[target].confined) {
                     CommandBot.sendMessage(source, "That player is not confined.", chan);
                     return false;
                 }
+                
+                //  Do eet
                 players[target].confined = false;
                 CommandBot.sendMessage(source, "Unconfined " + sys.name(target) + "!", chan);
                 return true;
             }
         },
-
+        
+        //  Let someone into the clan
         "addmember" : {
             param : ["name"],
             run : function (source, chan) {
-
+            
+                //  Enforce restrictions because some auth don't pay attention
+                if (commandData.length < 4 || !/^[A-Za-z0-9 _\!]*$/.test(commandData)) {
+                    CommandBot.sendMessage(source, "Name is not in a valid format.", chan);
+                }
                 clan.addMember(source, commandData);
                 return true;
             }
@@ -4775,7 +4934,7 @@ init : function (){
         "delmember" : {
             param : ["name"],
             run : function (source, chan) {
-
+                
                 clan.removeMember(source, commandData);
                 return true;
             }
@@ -6196,7 +6355,7 @@ init : function (){
                 break;
             }
             case 10: {
-                this.sendAll(pictures.get("planktonwins"), main);
+                this.sendAll(Pictures["planktonwins"], main);
                 break;
             }
             case 15: {
@@ -6212,7 +6371,7 @@ init : function (){
                 break;
             }
             case 25: {
-                this.sendAll(pictures.get("completed"), main);
+                this.sendAll(Pictures["completed"], main);
                 break;
             }
             default: {
@@ -6363,7 +6522,7 @@ init : function (){
 
     var memberFile = "Members.json";
     function Clan() {
-        db.createFile(memberFile, "{}");
+        db.createFile(memberFile, "[]");
         this.members = JSON.parse(sys.getFileContent(memberFile));
     }
     Clan.prototype.tagToString = function () {
@@ -6495,7 +6654,7 @@ init : function (){
         this.sendMessage(source, "The awards available:", chan);
         var table = "";
         for (key in this.hash) {
-            table += "<td><table><tr><td>" + pictures.get(this.hash[key].badge) + "</td><tr><td>" + key + "</td></tr></table></td>";
+            table += "<td><table><tr><td>" + Pictures[this.hash[key].badge] + "</td><tr><td>" + key + "</td></tr></table></td>";
         }
         sys.sendHtmlMessage(source, "<table><tr>" + table + "</tr></table", chan);
         sys.sendMessage(source, "Use !awards [award name] for more information", chan);
@@ -6507,7 +6666,7 @@ init : function (){
         var table = "";
         for (key in this.hash) {
             if (-1 < this.hash[key].value.indexOf(sys.name(source))) {
-                table += "<td><table><tr><td>" + pictures.get(this.hash[key].badge) + "</td><tr><td>" + key + "</td></tr></table></td>";
+                table += "<td><table><tr><td>" + Pictures[this.hash[key].badge] + "</td><tr><td>" + key + "</td></tr></table></td>";
             }
         }
         if (table.length == 0) {
@@ -6530,7 +6689,7 @@ init : function (){
             return;
         }
         sys.sendHtmlMessage(source, "<hr>", chan);
-        this.sendMessage(source, "<h1>"+ pictures.get(this.hash[key].badge) + " " + key + "</h1>" , chan);
+        this.sendMessage(source, "<h1>" + Pictures[this.hash[key].badge] + " " + key + "</h1>" , chan);
         sys.sendHtmlMessage(source, "<timestamp /><b>Earned by " + this.hash[key].desc + "</b>", chan);
         sys.sendHtmlMessage(source, "<timestamp /><b>Having it will " + this.hash[key].perks + "</b>", chan);
         if (this.hash[key].value.length == 0)
@@ -6550,7 +6709,7 @@ init : function (){
         }
         if (-1 == this.hash[key].value.indexOf(name)) {
             this.hash[key].value.push(name);
-            this.sendAll(name + " " + this.hash[key].desc.replace("getting", "got").replace("identifying", "identified").replace("posting", "posted").replace("landing", "landed").replace("placing", "placed").replace("winning", "won") + " and won the " + key + " award: " + pictures.get(this.hash[key].badge), main);
+            this.sendAll(name + " " + this.hash[key].desc.replace("getting", "got").replace("identifying", "identified").replace("posting", "posted").replace("landing", "landed").replace("placing", "placed").replace("winning", "won") + " and won the " + key + " award: " + Pictures[this.hash[key].badge], main);
             if (sys.id(name) != undefined) {
                 this.sendMessage(sys.id(name), "Ask an auth for the appropriate forum medal.", main);
             }
@@ -6587,77 +6746,7 @@ init : function (){
     }
     award = new Award();
     
-    pictureFile = "Pictures.txt";
-    function Pictures() {
-        db.createFile(pictureFile, "");
-        var piclist = sys.getFileContent(pictureFile).split("|");
-        this.pics = [];
-        for (var i = 0; i < piclist.length; i++) {
-            this.pics[i] = piclist[i].split("@");
-        }
-    }
-    Pictures.prototype.indexOf = function (key) {
-        for (var i = 0; i < this.pics.length; i++) {
-            if (this.pics[i][0] == key) return i;
-        }
-        return -1;
-    }
-    Pictures.prototype.get = function (key) {
-        for (var i = 0; i < this.pics.length; i++) {
-            if (this.pics[i][0] == key) return this.pics[i][1];
-        }
-        sys.sendAll("~~Server~~: Unable to find picture " + key, watch);
-        return 0;
-    };
-    Pictures.prototype.showAll = function (){
-        var msg = "<table><tr>";
-        var i = 0;
-        while (i < this.pics.length) {
-            for (var j = 0; j < 4; j++) {
-                if (i < this.pics.length) {
-                    msg += "<th><center>" + this.pics[i][0] + "</center></th>";
-                    i++;
-                } else {
-                    msg += "<th></th>";
-                    i++;
-                }
-            }
-            i -= 4;
-            msg += "</tr><tr>";
-            for (var j = 0; j < 4; j++) {
-                if (i < this.pics.length) {
-                    msg += "<td><center>" + this.pics[i][1] + "</center></td>";
-                    i++;
-                } else {
-                    msg += "<td></td>";
-                    i++;
-                }
-            }
-            msg += "</tr><tr>";
-        }
-        msg += "</tr><tr>";
-        return msg + "</tr></table>";
-    };
-    Pictures.prototype.updatePics = function (source, url) {
-        var changePictures = function (resp) {
-            if (resp === "") {
-                return false;
-            }
-            try {
-                sys.writeToFile(pictureFile, resp);
-                sys.changeScript(sys.getFileContent('scripts.js'));
-            } catch (err) {
-                sys.sendAll('Updating failed!', watch);
-                sys.sendMessage(source, err, chan);
-                sys.sendAll(err, watch);
-                print(err);
-                return false;
-            }
-        };
-        sys.webCall(url, changePictures);
-        return true;
-    };
-    pictures = new Pictures();
+    Pictures = JSON.parse("pictures.json");
     
     var AssassinFile = "Assassin.json";
     function Assassin() {
@@ -7301,9 +7390,8 @@ afterLogIn : function (source) {
     }
 },
 
-beforeLogOut : function (source){},
-
 afterLogOut : function (source) {
+    sys.writeToFile("somestuff.txt", "before");
     if (players[source] == undefined) {
         newPlayer(source);
     }
