@@ -1,0 +1,112 @@
+{
+    
+    "Juggernaut" : {
+        
+        "by" : "getting a score of 10 as the Juggernaut",
+        
+        "effect" : "lower the maximum Secret ID, increasing your odds of getting Shiny",
+        
+        "badge" : "juggernautaward"
+    
+    },
+    
+    "Elite JN" : {
+        
+        "by" : "getting a score of 20 as the Juggernaut",
+        
+        "effect" : "further lower your maximum Secret ID",
+        
+        "badge" : "elitejuggernautaward"
+    
+    },
+    
+    "Master JN" : {
+        
+        "by" : "getting a score of 30 as the Juggernaut",
+        
+        "effect" : "make shiny very likely",
+        
+        "badge" : "masterjuggernautaward"
+    
+    },
+    
+    "Shiny" : {
+        
+        "by" : "getting a Secret ID of exactly 13",
+        
+        "effect" : "drastically increase your PP regeneration rate, drastically increase odds of successive shininess, and drastically improve your odds of a critical hit",
+        
+        "badge" : "shinyaward"
+    
+    },
+    
+    "Pokerus" : {
+        
+        "by" : "getting a Secret ID of exactly 23",
+        
+        "effect" : "lower the maximum Secret ID, increasing your odds of getting Shiny",
+        
+        "badge" : "infectedaward"
+    
+    },
+    
+    "Inverted" : {
+        
+        "by" : "getting a Secret ID of exactly 0",
+        
+        "effect" : "invert type effectiveness",
+        
+        "badge" : "invertedaward"
+    
+    },
+    
+    "ThinkFast" : {
+        
+        "by" : "posting before the time is up",
+        
+        "effect" : "halve PP usage when using commands.", 
+        
+        "badge" : "thinkfastaward"
+    
+    },
+    
+    "Who's Your Daddy" : {
+        
+        "by" : "landing a super-effective critical hit",
+        
+        "effect" : "improve your odds of subsequent critical hits",
+        
+        "badge" : "daddyaward"
+    
+    },
+    
+    "Bug Catcher" : {
+        
+        "by" : "correctly identifying a flaw in the script",
+        
+        "effect" : "increase your PP regeneration rate",
+        
+        "badge" : "debugaward"
+    
+    },
+    
+    "The Developers" : {
+        
+        "by" : "contributing to the code of the script",
+        
+        "effect" : "add 50 to your max PP.",
+        
+        "badge" : "makeraward"
+        
+    },
+    
+    "Ender's Jeesh" : {
+        
+        "by" : "placing high in one of Ender's Battle competitions",
+        
+        "effect" : "add 50 to your max PP.", 
+        
+        "badge" : "endersaward"
+    
+    }
+}

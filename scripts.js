@@ -6304,7 +6304,7 @@ init : function (){
             jug.name = Config.DefaultJuggernaut;
             jug.ips = ["192.168."];
             jug.time = sys.time();
-            this.savecache();
+            this.save();
         } else {
             jug = JSON.parse(sys.getFileContent(juggerFile));
         }
@@ -6382,7 +6382,7 @@ init : function (){
                 }
             }
         }
-        this.savecache();
+        this.save();
         Banner.update();
     };
     Juggernaut.prototype.getName = function (){
@@ -6397,11 +6397,11 @@ init : function (){
         var sep = sys.dbIp(name).split('.');
         var str = sep[0] + '.' + sep[1] + '.';
         jug.ips = [str];
-        this.savecache();
+        this.save();
         this.sendAll(name + " is the new Juggernaut!", main);
         Banner.update();
     };
-    Juggernaut.prototype.savecache = function () {
+    Juggernaut.prototype.save = function () {
         sys.writeToFile(juggerFile, JSON.stringify(jug));
     };
     juggernaut = new Juggernaut();
@@ -6431,7 +6431,7 @@ init : function (){
             "reason" : reason,
             "time" : expire
         };
-        this.savecache();
+        this.save();
         return true;
     };
     MuteCache.prototype.unmute = function(ip) {
@@ -6439,10 +6439,10 @@ init : function (){
             return false;
         }
         this.muted[ip] = 0;
-        this.savecache();
+        this.save();
         return true;
     };
-    MuteCache.prototype.savecache = function() {
+    MuteCache.prototype.save = function() {
         sys.writeToFile(muteFile,JSON.stringify(this.muted));
     };
     MuteCache.prototype.muteMessage = function (source, chan) {
@@ -6488,7 +6488,7 @@ init : function (){
             return false;
         }
         this.banned[str] = true;
-        this.savecache();
+        this.save();
         return true;
     };
     RangeCache.prototype.unban = function(str) {
@@ -6496,10 +6496,10 @@ init : function (){
             return false;
         }
         this.banned[str] = false;
-        this.savecache();
+        this.save();
         return true;
     };
-    RangeCache.prototype.savecache = function() {
+    RangeCache.prototype.save = function() {
         sys.writeToFile(banFile,JSON.stringify(this.banned));
     };
     RangeCache.prototype.display = function(source, chan){
@@ -6599,152 +6599,129 @@ init : function (){
     }
     Hash.prototype.set = function (key, value) {
         this.hash[key] = value;
-        this.savecache();
+        this.save();
     };
     Hash.prototype.get = function (key) {
         return this.hash[key];
     };
     Hash.prototype.add = function (key, value) {
         this.hash[key].push(value);
-        this.savecache();
+        this.save();
     };
     Hash.prototype.makeKey = function (key, value) {
         if (this.hash[key] == undefined) {
             this.hash[key] = value;
-        this.savecache();
+        this.save();
         }
     };
-    Hash.prototype.savecache = function() {
+    Hash.prototype.save = function() {
         sys.writeToFile(hashFile, JSON.stringify(this.hash));
     };
     hash = new Hash();
     
-    
-    
-    awardFile = "Awards.json";
-    function Award () {
-        db.createFile(awardFile, "{}");
-        this.hash = JSON.parse(sys.getFileContent(awardFile));
-        this.makeAward("Juggernaut", "getting a score of 10 as the Juggernaut", "lower the maximum Secret ID, increasing your odds of getting Shiny", "juggernautaward");
-        this.makeAward("Elite JN", "getting a score of 20 as the Juggernaut", "further lower your maximum Secret ID", "elitejuggernautaward");
-        this.makeAward("Master JN", "getting a score of 30 as the Juggernaut", "make shiny very likely", "masterjuggernautaward");
-        this.makeAward("Shiny", "getting a Secret ID of exactly 13", "drastically increase your PP regeneration rate, drastically increase odds of successive shininess, and drastically improve your odds of a critical hit", "shinyaward");
-        this.makeAward("Pokerus", "getting a Secret ID of exactly 23", "lower the maximum Secret ID, increasing your odds of getting Shiny", "infectedaward");
-        this.makeAward("Inverted", "getting a Secret ID of exactly 0", "invert type effectiveness", "invertedaward");
-        this.makeAward("ThinkFast", "posting before the time is up", "halve PP usage when using commands.", "thinkfastaward");
-        this.makeAward("Who's Your Daddy", "landing a super-effective critical hit", "improve your odds of subsequent critical hits", "daddyaward");
-        this.makeAward("Bug Catcher", "correctly identifying a flaw in the script", "increase your PP regeneration rate", "debugaward");
-        this.makeAward("The Developers", "contributing to the code of the script", "add 50 to your max PP.", "makeraward");
-        this.makeAward("Ender's Jeesh", "placing high in one of Ender's Battle competitions", "add 50 to your max PP.", "endersaward");
-    }
-    Award.prototype.makeAward = function (key, description, perk, image) {
-        if (this.hash[key] == undefined) {
-            this.hash[key] = { desc : description, perks : perk, value : [], badge : image};
-        }
-        this.savecache();
-    }
-    Award.prototype.sendMessage = function (target, msg, chan) {
-        db.sendBotMessage(target, msg, chan, Config.AwardBot[0], Config.AwardBot[1]);
-    };
-    Award.prototype.sendAll = function (msg, chan) {
-        db.sendBotAll(msg, chan, Config.AwardBot[0], Config.AwardBot[1]);
-    };
-    Award.prototype.allAwards = function(source, chan) {
-        sys.sendHtmlMessage(source, "<hr>", chan);
-        this.sendMessage(source, "The awards available:", chan);
-        var table = "";
-        for (key in this.hash) {
-            table += "<td><table><tr><td>" + Pictures[this.hash[key].badge] + "</td><tr><td>" + key + "</td></tr></table></td>";
-        }
-        sys.sendHtmlMessage(source, "<table><tr>" + table + "</tr></table", chan);
-        sys.sendMessage(source, "Use !awards [award name] for more information", chan);
-        sys.sendHtmlMessage(source, "<hr>", chan);
-    }
-    Award.prototype.myAwards = function(source, chan) {
-        sys.sendHtmlMessage(source, "<hr>", chan);
-        this.sendMessage(source, "Your record so far:", chan);
-        var table = "";
-        for (key in this.hash) {
-            if (-1 < this.hash[key].value.indexOf(sys.name(source))) {
-                table += "<td><table><tr><td>" + Pictures[this.hash[key].badge] + "</td><tr><td>" + key + "</td></tr></table></td>";
+    db.createFile("awards.json", "{}");
+    Award = {
+        data : JSON.parse(sys.getFileContent("awarddat.json")),
+        
+        awards : JSON.parse(sys.getFileContent("awards.json")),
+        
+        sendMessage : function (target, msg, chan) {
+            db.sendBotMessage(target, msg, chan, Config.AwardBot[0], Config.AwardBot[1]);
+        },
+        
+        sendAll : function (msg, chan) {
+            db.sendBotAll(msg, chan, Config.AwardBot[0], Config.AwardBot[1]);
+        },
+        
+        allAwards : function(source, chan) {
+            sys.sendHtmlMessage(source, "<hr>", chan);
+            this.sendMessage(source, "The awards available:", chan);
+            var table = "";
+            for (key in this.data) {
+                table += "<td><table><tr><td>" + Pictures[this.data[key].badge] + "</td><tr><td>" + key + "</td></tr></table></td>";
             }
-        }
-        if (table.length == 0) {
-            sys.sendMessage(source, "(None yet)", chan);
-        } else {
             sys.sendHtmlMessage(source, "<table><tr>" + table + "</tr></table", chan);
-        }
-        sys.sendHtmlMessage(source, "<hr>", chan);
-    }
-    Award.prototype.showAwards = function (source, chan, award) {
-        var key;
-        for (checkkey in this.hash) {
-            if (checkkey.toLowerCase() == award.toLowerCase()) {
-                key = checkkey;
-                break;
+            sys.sendMessage(source, "Use !awards [award name] for more information", chan);
+            sys.sendHtmlMessage(source, "<hr>", chan);
+        },
+        
+        myAwards : function(source, chan) {
+            sys.sendHtmlMessage(source, "<hr>", chan);
+            this.sendMessage(source, "Your record so far:", chan);
+            var table = "";
+            for (key in this.awards) {
+                if (-1 < this.awards[key].indexOf(sys.name(source))) {
+                    table += "<td><table><tr><td>" + Pictures[this.data[key].badge] + "</td><tr><td>" + key + "</td></tr></table></td>";
+                }
             }
-        }
-        if (key == undefined || this.hash[key] == undefined) {
-            this.sendMessage(source, "(No data for this award)", chan);
-            return;
-        }
-        sys.sendHtmlMessage(source, "<hr>", chan);
-        this.sendMessage(source, "<h1>" + Pictures[this.hash[key].badge] + " " + key + "</h1>" , chan);
-        sys.sendHtmlMessage(source, "<timestamp /><b>Earned by " + this.hash[key].desc + "</b>", chan);
-        sys.sendHtmlMessage(source, "<timestamp /><b>Having it will " + this.hash[key].perks + "</b>", chan);
-        if (this.hash[key].value.length == 0)
-        {
-            sys.sendHtmlMessage(source, "<timestamp /><b>No one has earned this award yet.</b>", chan);
-        }
-        else
-        {
-            sys.sendHtmlMessage(source, "<timestamp /><b>This was earned by:</b>", chan);
-            sys.sendHtmlMessage(source, "<timestamp />" + this.hash[key].value.join(", "), chan);
-        }
-        sys.sendHtmlMessage(source, "<hr>", chan);
-    };
-    Award.prototype.won = function (key, name) {
-        if (name == undefined || name.length < 1) {
-            return;
-        }
-        if (-1 == this.hash[key].value.indexOf(name)) {
-            this.hash[key].value.push(name);
-            this.sendAll(name + " " + this.hash[key].desc.replace("getting", "got").replace("identifying", "identified").replace("posting", "posted").replace("landing", "landed").replace("placing", "placed").replace("winning", "won") + " and won the " + key + " award: " + Pictures[this.hash[key].badge], main);
-            if (sys.id(name) != undefined) {
-                this.sendMessage(sys.id(name), "Ask an auth for the appropriate forum medal.", main);
+            if (table.length == 0) {
+                sys.sendMessage(source, "(None yet)", chan);
             }
-            this.savecache();
+            else {
+                sys.sendHtmlMessage(source, "<table><tr>" + table + "</tr></table", chan);
+            }
+            sys.sendHtmlMessage(source, "<hr>", chan);
+        },
+        
+        showAwards : function (source, chan, award) {
+            var key;
+            for (checkkey in this.hash) {
+                if (checkkey.toLowerCase() == award.toLowerCase()) {
+                    key = checkkey;
+                    break;
+                }
+            }
+            if (key == undefined || this.data[key] == undefined) {
+                this.sendMessage(source, "(No data for this award)", chan);
+                return;
+            }
+            sys.sendHtmlMessage(source, "<hr>", chan);
+            this.sendMessage(source, "<h1>" + Pictures[this.data[key].badge] + " " + key + "</h1>" , chan);
+            sys.sendHtmlMessage(source, "<timestamp /><b>Earned by " + this.data[key].by + "</b>", chan);
+            sys.sendHtmlMessage(source, "<timestamp /><b>Having it will " + this.data[key].effect + "</b>", chan);
+            if (this.awards[key].length == 0)
+            {
+                sys.sendHtmlMessage(source, "<timestamp /><b>No one has earned this award yet.</b>", chan);
+            }
+            else
+            {
+                sys.sendHtmlMessage(source, "<timestamp /><b>This was earned by:</b>", chan);
+                sys.sendHtmlMessage(source, "<timestamp />" + this.awards[key].join(", "), chan);
+            }
+            sys.sendHtmlMessage(source, "<hr>", chan);
+        },
+        
+        won : function (key, name) {
+            if (name == undefined || name.length < 1) {
+                return;
+            }
+            
+            if (-1 == this.awards[key].indexOf(name)) {
+                this.awards[key].push(name);
+                this.sendAll(name + " " + this.data[key].by.replace("getting", "got").replace("identifying", "identified").replace("posting", "posted").replace("landing", "landed").replace("placing", "placed").replace("winning", "won") + " and won the " + key + " award: " + Pictures[this.data[key].badge], main);
+                if (sys.id(name) != undefined) {
+                    this.sendMessage(sys.id(name), "Ask an auth for the appropriate forum medal.", main);
+                }
+                this.save();
+            }
+        },
+        
+        take : function (key, name) {
+            if (name == undefined || name.length < 1) {
+                return;
+            }
+            var i = this.awards[key].indexOf(name)
+            if (-1 < i) {
+                this.awards[key].splice(i, 1);
+                this.sendAll(name + " lost the " + key + " award.", main);
+                this.save();
+            }
+        },
+        
+        save : function () {
+            sys.writeToFile("awards.json", JSON.stringify(this.awards));
         }
     }
-    Award.prototype.take = function (key, name) {
-        if (name == undefined || name.length < 1) {
-            return;
-        }
-        var i = this.hash[key].value.indexOf(name)
-        if (-1 < i) {
-            this.hash[key].value.splice(i, 1);
-            this.sendAll(name + " lost the " + key + " award.", main);
-            this.savecache();
-        }
-    }
-    Award.prototype.setdesc = function (key, newdesc) {
-        if (this.hash[key] != undefined) {
-            this.hash[key].desc = newdesc;
-            this.sendAll("The " + key + " description was changed to " + newdesc);
-            this.savecache();
-        }
-    }
-    Award.prototype.setperks = function (key, newperks) {
-        if (this.hash[key] != undefined) {
-            this.hash[key].perks = newperks;
-            this.sendAll("The " + key + " perks were changed to " + newperks);
-            this.savecache();
-        }
-    }
-    Award.prototype.savecache = function () {
-        sys.writeToFile(awardFile,JSON.stringify(this.hash));
-    }
-    award = new Award();
     
     Pictures = JSON.parse("pictures.json");
     
@@ -7099,7 +7076,7 @@ init : function (){
                 this.sendMessage(id, "Your first target is " + this.getTarget(i) + "!", main);
             }
         }
-                
+        
         sys.sendHtmlAll("<hr>", main);
         
         this.save();
