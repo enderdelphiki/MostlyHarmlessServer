@@ -82,9 +82,9 @@
         
         "Jolly": [2, 3],
         
-        "Bashful": [3, 3,],
+        "Bashful": [3, 3],
         
-        "Careful": [4, 3,],
+        "Careful": [4, 3],
         
         "Naughty": [0, 4],
         
@@ -98,7 +98,7 @@
     
     },
     
-    "clist" : ['#5811b1','#399bcd','#0474bb','#f8760d','#a00c9e','#0d762b','#5f4c00','#9a4f6d','#d0990f','#1b1390','#028678','#0324b1'],
+    "clist" : ["#5811b1","#399bcd","#0474bb","#f8760d","#a00c9e","#0d762b","#5f4c00","#9a4f6d","#d0990f","#1b1390","#028678","#0324b1"],
     "pokeDir" : "db/pokes/",
     "moveDir" : "db/moves/6G/",
     "abilityDir" : "db/abilities/",

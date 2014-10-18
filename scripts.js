@@ -57,7 +57,7 @@ var chan,
 //  Command dictionaries
     HiddenCommands, UserCommands, RPCommands, TourCommands, PartyCommands, ModCommands, AdminCommands, OwnerCommands;
 
-
+var failed = true;
 poScript = ({
 
 init : function (){
@@ -76,7 +76,7 @@ init : function (){
             future updates.
     */
     db = {
-        data : JSON.parse(sys.getFileContent("dbdata.json")),
+        data : JSON.parse(sys.getFileContent("dbdat.json")),
         
         //  Formats a bot's display message intended for just a user to see.
         sendBotMessage : function (target, message, channel, name, color) {
@@ -190,7 +190,7 @@ init : function (){
                 weightList = {};
                 
                 //  access the database
-                var data = sys.getFileContent(pokeDir + 'weight.txt').split('\n');
+                var data = sys.getFileContent(this.data.pokeDir + 'weight.txt').split('\n');
                 
                 //  manipulate the data
                 for (var i = 0; i < data.length; i++) {
@@ -227,7 +227,7 @@ init : function (){
         getHeight : function (pokeId) {
             if (heightList === undefined) {
                 heightList = {};
-                var data = sys.getFileContent(pokeDir + 'height.txt').split('\n');
+                var data = sys.getFileContent(this.data.pokeDir + 'height.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var id = data[i].substr(0, index);
@@ -247,7 +247,7 @@ init : function (){
         getMoveBP : function (moveId) {
             if (powerList === undefined) {
                 powerList = {};
-                var data = sys.getFileContent(moveDir + 'power.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'power.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -264,7 +264,7 @@ init : function (){
         getMoveCategory : function (moveId) {
             if (categoryList === undefined) {
                 categoryList = {};
-                var data = sys.getFileContent(moveDir + 'damage_class.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'damage_class.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -284,7 +284,7 @@ init : function (){
         getMoveAccuracy : function (moveId) {
             if (accList === undefined) {
                 accList = {};
-                var data = sys.getFileContent(moveDir + 'accuracy.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'accuracy.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -301,7 +301,7 @@ init : function (){
         getMovePP : function (moveId) {
             if (ppList === undefined) {
                 ppList = {};
-                var data = sys.getFileContent(moveDir + 'pp.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'pp.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -315,7 +315,7 @@ init : function (){
         getMoveEffect : function (moveId) {
             if (moveEffList === undefined) {
                 moveEffList = {};
-                var data = sys.getFileContent(moveDir + 'effect.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'effect.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -332,7 +332,7 @@ init : function (){
         getMoveContact : function (moveId) {
             if (moveFlagList === undefined) {
                 moveFlagList = {};
-                var data = sys.getFileContent(moveDir + 'flags.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'flags.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -346,7 +346,7 @@ init : function (){
         getAbility : function (abilityId) {
             if (abilityList === undefined) {
                 abilityList = {};
-                var data = sys.getFileContent(abilityDir + 'ability_battledesc.txt').split('\n');
+                var data = sys.getFileContent(this.data.abilityDir + 'ability_battledesc.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -360,7 +360,7 @@ init : function (){
         getItem : function (itemId) {
             if (itemList === undefined) {
                 itemList = {};
-                var data = sys.getFileContent(itemDir + 'items_description.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'items_description.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -374,7 +374,7 @@ init : function (){
         getBerry : function (berryId) {
             if (berryList === undefined) {
                 berryList = {};
-                var data = sys.getFileContent(itemDir + 'berries_description.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'berries_description.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -388,7 +388,7 @@ init : function (){
         getFlingPower : function (itemId) {
             if (flingPowerList === undefined) {
                 flingPowerList = {};
-                var data = sys.getFileContent(itemDir + 'items_pow.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'items_pow.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -402,7 +402,7 @@ init : function (){
         getBerryPower : function (berryId) {
             if (berryPowerList === undefined) {
                 berryPowerList = {};
-                var data = sys.getFileContent(itemDir + 'berry_pow.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'berry_pow.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -416,7 +416,7 @@ init : function (){
         getBerryType : function (berryId) {
             if (berryTypeList === undefined) {
                 berryTypeList = {};
-                var data = sys.getFileContent(itemDir + 'berry_type.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'berry_type.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -523,13 +523,13 @@ init : function (){
             if (!isNaN(nature)) nature = sys.nature(nature);
             
             //  Then make the call
-            return this.abrStats[this.naturesConversion[nature][0]];
+            return this.data.abrStats[this.data.naturesConversion[nature][0]];
         },
         
         //  Same as boosted but the reduced
         statReducedBy : function (nature){
             if (!isNaN(nature)) nature = sys.nature(nature);
-            return this.abrStats[this.naturesConversion[nature][1]];
+            return this.data.abrStats[this.data.naturesConversion[nature][1]];
         },
         
         //  Stolen from PO script. Converts a team into the universal importable format
@@ -820,16 +820,16 @@ init : function (){
             but for permanent changes to any of this, it's best to update this in the script.
     */
     Banner =  {
-        data : JSON.parse(sys.getFileContent("bannerdat.json"),
+        data : JSON.parse(sys.getFileContent("bannerdat.json")),
                 
         //  every second this ticks the counter
         step : function() {
         
             //  a second has passed
-            this.count++;
+            this.data.count++;
             
             //  after thirty seconds have passed
-            if (30 < this.count) {
+            if (30 < this.data.count) {
             
                 //  redraw the banner (this will also reset the counter
                 this.update();
@@ -843,7 +843,7 @@ init : function (){
             sys.makeServerPublic(true); 
         
             //  If we aren't managing the banner, do nothing
-            if (!this.Dynamic) {
+            if (!this.data.Dynamic) {
                 return;
             }
             
@@ -851,13 +851,13 @@ init : function (){
             var banner="<table width=100% style='background-color: qlineargradient(";
             
             //  Set up the orientation (yuck!)
-            banner += (this.GradientIsHorizontal) ? "x1:0, y1:0, x2:1, y2:0," : "x1:0, y1:0, x2:0, y2:1,";
+            banner += (this.data.GradientIsHorizontal) ? "x1:0, y1:0, x2:1, y2:0," : "x1:0, y1:0, x2:0, y2:1,";
             
             //  Now add the stops on the gradient using the colors set above
-            banner += "stop:0 " + this.GradientColors[0] + ", stop:0.4 " + this.GradientColors[1] + ", stop:0.6 " + this.GradientColors[2] + ", stop:1 " + this.GradientColors[3] + ");'>";
+            banner += "stop:0 " + this.data.GradientColors[0] + ", stop:0.4 " + this.data.GradientColors[1] + ", stop:0.6 " + this.data.GradientColors[2] + ", stop:1 " + this.data.GradientColors[3] + ");'>";
             
             //  Begin the banner content; prepare it for the left-hand league info
-            banner += "<tr><td><table width='33%' border=0 style='vertical-align: bottom; font-family:" + this.FontFamily + ";color:" + this.TextColor + ";font-size:8pt' >";
+            banner += "<tr><td><table width='33%' border=0 style='vertical-align: bottom; font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + ";font-size:8pt' >";
 
             var spl = Config.League,
             
@@ -919,13 +919,13 @@ init : function (){
             }
             
             //  Now add the middle section of the banner
-            banner += "</table></td><td><table width='34%' style='font-family:" + this.FontFamily + "; color:" + this.TextColor + "; font-size:11pt'><tr><td width='100%' align='center'><p>Welcome to " + Config.ServerName + " " + Config.SurroundTag.replace("%%", Config.ClanTag) + "!</p>";
+            banner += "</table></td><td><table width='34%' style='font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:11pt'><tr><td width='100%' align='center'><p>Welcome to " + Config.ServerName + " " + Config.SurroundTag.replace("%%", Config.ClanTag) + "!</p>";
             
             //  Print all the banner message here
-            for (var i = 0; i < this.Messages.length; i++) banner += "<p>" + this.Messages[i] +"</p>";
+            for (var i = 0; i < this.data.Messages.length; i++) banner += "<p>" + this.data.Messages[i] +"</p>";
             
             //  Prepare banner for right-hand side
-            banner += "</td></tr></table></td><td><table width=33% style='vertical-align: bottom; font-family:" + this.FontFamily + "; color:" + this.TextColor + "; font-size:8pt'>";
+            banner += "</td></tr></table></td><td><table width=33% style='vertical-align: bottom; font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:8pt'>";
             
             //  Print the E4 (same as gyms, just different range on Config.League
             for (var x = 8; x < 12; x++) {
@@ -993,13 +993,13 @@ init : function (){
             banner += "<tr><td></td><td>Server Clock:</td><td>" + hours + ":" + minutes + (isPM?"PM":"AM") + "</td></tr>";
             
             //  Finish off the banner and add the MOTD on the end
-            banner += "</table></td></tr><tr><td colspan='3' style=\"text-align:center;font-family:" + this.FontFamily + ";color:" + this.TextColor + "\"><center>" + hash.get("motd") + "</center></td></tr></table>";
+            banner += "</table></td></tr><tr><td colspan='3' style=\"text-align:center;font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + "\"><center>" + hash.get("motd") + "</center></td></tr></table>";
             
             //  Post the banner
             sys.changeAnnouncement(banner);
             
             //  The banner is updated now, so 0 seconds have passed since the last update
-            this.counter = 0;
+            this.data.counter = 0;
         }
     };
 
@@ -1384,7 +1384,7 @@ init : function (){
         ChatBot is a pseudobot that enforces chage rules automaticallly.
     */
     ChatBot = {
-        data : JSON.parse(sys.getFileContent("chatdat.json"),
+        data : JSON.parse(sys.getFileContent("chatdat.json")),
         
         //  Format the bot's private messaging.
         sendMessage : function (target, msg, chan) {
@@ -1403,7 +1403,7 @@ init : function (){
             if (db.auth(source) == 0) {
             
                 //  Always count a violation
-                players[source].floodCount += this.flood.add;
+                players[source].floodCount += this.data.flood.add;
                 
                 //  Check the frequency of posts
                 var time = parseInt(sys.time());
@@ -1424,7 +1424,7 @@ init : function (){
                     players[source].timeCount += dec * 7;
                 }
                 //  If someone's flooding...
-                if (this.flood.limit < players[source].floodCount) {
+                if (this.data.flood.limit < players[source].floodCount) {
                 
                     //  Tell everyone why they're kicked
                     this.sendAll(db.playerToString(source) + " drifted away flooding...", -1);
@@ -1451,10 +1451,10 @@ init : function (){
             }
             
             //  Check if the message is too long (clan members can post messages twice in length)
-            if (this.maxMessageLength * (clan.isInClan(sys.name(source)) ? 2 : 1) < msg.length) {
+            if (this.data.maxMessageLength * (clan.isInClan(sys.name(source)) ? 2 : 1) < msg.length) {
                 
                 //  warn the person that it's too long
-                this.sendMessage(source, "That message is too long. Messages must not be longer than " + this.maxMessageLength + " characters.", chan);
+                this.sendMessage(source, "That message is too long. Messages must not be longer than " + this.data.maxMessageLength + " characters.", chan);
                 
                 //  Only cancel the message if the speaker is not auth
                 return (db.auth(source) < 1);
@@ -1595,24 +1595,24 @@ init : function (){
             }
             
             //  If the full caps limit is exceeded,
-            if (this.caps.fullCapsMessage <= numcaps) {
+            if (this.data.caps.fullCapsMessage <= numcaps) {
             
                 //  then just add the limit to automatically mute
-                players[source].caps += this.caps.limit;
+                players[source].caps += this.data.caps.limit;
             }
             
             //  If they just triggered the violation
-            if (this.caps.capsInMessage <= numcaps) {
+            if (this.data.caps.capsInMessage <= numcaps) {
             
                 //  then add the violation (which stacks if multiple violations in one message
-                players[source].caps += this.caps.add * numcaps / this.caps.capsInMessage;
+                players[source].caps += this.data.caps.add * numcaps / this.data.caps.capsInMessage;
                 
             }
             //  The message is fine.
             else {
                 
                 //  Drop the caps count
-                players[source].caps -= this.caps.drop;
+                players[source].caps -= this.data.caps.drop;
                 
                 //  Enforce no negative caps count.
                 if (players[source].caps < 0) {
@@ -1621,7 +1621,7 @@ init : function (){
             }
 
             //  If the limit is exceeded, mute.
-            if (this.caps.limit * (1 + db.auth(source)) < players[source].caps) {
+            if (this.data.caps.limit * (1 + db.auth(source)) < players[source].caps) {
             
                 //  Tally violations- repeat offenders get stacked punishment.
                 players[source].capsMutedCount++;
@@ -1648,7 +1648,7 @@ init : function (){
         TierBot is a pseudobot that enforces all script-based tier rules. 
     */
     TierBot = {
-        data : JSON.parse(sys.getFileContent("tierdat.json"),
+        data : JSON.parse(sys.getFileContent("tierdat.json")),
         
         //  Format private message
         sendMessage : function (target, msg, chan) {
@@ -1709,10 +1709,10 @@ init : function (){
                 thecolor = '';
                 
             //  Identify its color
-            for (var color in this.Monocolor){
+            for (var color in this.data.Monocolor){
             
                 //  Save the found color
-                if (-1 < this.Monocolor[color].indexOf(poke)) {
+                if (-1 < this.data.Monocolor[color].indexOf(poke)) {
                     thecolor = color;
                     break;
                 }
@@ -1735,7 +1735,7 @@ init : function (){
                 poke = sys.pokemon(sys.teamPoke(source, tsource, i));
                 
                 //  If its color does not match the alpha's color
-                if (this.Monocolor[thecolor].indexOf(poke) == -1) {
+                if (this.data.Monocolor[thecolor].indexOf(poke) == -1) {
                 
                     //  then say so
                     this.sendMessage(source, poke + " is not " + thecolor + ".", main);
@@ -1920,7 +1920,7 @@ init : function (){
                 var poke = sys.pokemon(id);
                 
                 //  If this Pokemon is unobtainable...
-                if (-1 < this.unobtainablePoke.indexOf(poke)) {
+                if (-1 < this.data.unobtainablePoke.indexOf(poke)) {
                 
                     //  Warn...
                     this.sendMessage(source, poke + " is not available in Pokemon X and Y versions and is banned from XY battles.", main);
@@ -1934,7 +1934,7 @@ init : function (){
                 
                 //  If this item is unobtainable...
                 var item = sys.item(sys.teamPokeItem(source, tsource, i));
-                if (-1 < this.unobtainableItem.indexOf(item)) {
+                if (-1 < this.data.unobtainableItem.indexOf(item)) {
                     
                     //  Warn...
                     this.sendMessage(source, item + " is not available in Pokemon X and Y versions and is banned from XY battles.", main);
@@ -7157,6 +7157,7 @@ init : function (){
     
     
     Banner.update();
+    failed = false;
 },
 
 serverStartUp : function(){
@@ -7173,7 +7174,8 @@ serverStartUp : function(){
 
 serverShutDown : function (){},
 
-step : function (){    
+step : function (){ 
+    if (failed) return;
     Tumbleweed.step();
     Banner.step();
 },
@@ -7411,9 +7413,6 @@ beforeChannelDestroyed : function (chan) {
     if (-1 < Config.UserChannels.indexOf(sys.channel(chan))) {
         sys.stopEvent();
         return;
-    }
-    if (sys.ip(source) == "127.0.0.1") {
-        hash.set("skittytime", parseInt(sys.time()));
     }
 },
 
@@ -7969,7 +7968,7 @@ sys.ratedBattles(int,int),
 sys.ratedBattles(QString,QString),
 sys.reloadDosSettings(),
 sys.reloadTiers(),
-sys.removeDir(QString),
+sys.rethis.data.moveDir(QString),
 sys.removePlugin(int),
 sys.removeVal(QString),
 sys.removeVal(QString,QString),
