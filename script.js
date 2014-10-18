@@ -71,7 +71,7 @@ init : function (){
         
         //  The public URL to the scripts.js file. GitHub for some reason doesn't
         //      return a direct string, so I use PasteBin.
-        ScriptURL : "http://pastebin.com/raw.php?i=HBz18uuS",
+        ScriptURL : "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/script.js",
         
         //  The public URL to the tiers.xml file.
         TiersURL : "http://pastebin.com/raw.php?i=iJWpaLem",
