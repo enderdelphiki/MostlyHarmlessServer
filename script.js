@@ -11,7 +11,7 @@ var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer
 var includes = ["pictures.json"];
 
 function include() {
-    var files = sys.filesforDirectory(".");
+    var files = sys.filesForDirectory(".");
     for (var i = 0; i < includes.length; i++) {
         if (-1 == files.indexOf(includes[i])) {
             sys.webCall(root + includes[i], function(write) {
@@ -23,8 +23,8 @@ function include() {
 try {
     include();
 }
-catch() {
-    print("Failed to load dependencies");
+catch(e) {
+    print(e);
 }
 
 //  The object managed by init:Clan.prototype;
