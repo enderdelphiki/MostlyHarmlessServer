@@ -1,0 +1,28 @@
+{
+    
+    "Dynamic" : true,
+    
+    "Messages" : [
+        
+        "Check out <a href='http://w11.zetaboards.com/The_Valley/index/'><font color='orange'>the Forum</font></a>",
+        
+        "<a href='http://w11.zetaboards.com/The_Valley/topic/8136084/#new'><font color='orange'>Apply here</font></a> to be a gym leader!",
+        
+        "Gym leaders <a href='http://w11.zetaboards.com/The_Valley/topic/8820178/#new'><font color='red'>report here</font></a>",
+        
+        "Check up on <a href='http://w11.zetaboards.com/The_Valley/topic/10576461/#new'><font color=#FF00CC>Ender's Battle of October!</font></a>",
+        
+        "Message of the Day:"
+    
+    ],
+    
+    "GradientIsHorizontal" : true,
+    
+    "GradientColors" : ["#AA0650", "#000000", "#000000", "#00BFFF"],
+    
+    "TextColor" : "#FFFFFF",
+    
+    "FontFamily" : "calibri",
+    
+    "count" : 0,
+}

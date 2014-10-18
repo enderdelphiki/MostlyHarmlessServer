@@ -8,7 +8,7 @@ var Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot
 
 var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/";
 
-var includes = ["pictures.json","config.json"];
+var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json"];
 
 function include() {
     var files = sys.filesForDirectory(".");
@@ -53,13 +53,6 @@ var chan,
 //  A bunch of lists that allow for quick lookup when using database-accessing commands
     heightList, weightList, powerList, categoryList, accList, ppList, moveEffList, moveFlagList,
     abilityList, itemList, berryList, flingPowerList, berryPowerList, berryTypeList,
-    
-    //  These are some paths used by functions later on; they are the same on every server
-    //      and should not be changed for any reason.
-    pokeDir = "db/pokes/",
-    moveDir = "db/moves/6G/",
-    abilityDir = "db/abilities/",
-    itemDir = "db/items/",
 
 //  Command dictionaries
     HiddenCommands, UserCommands, RPCommands, TourCommands, PartyCommands, ModCommands, AdminCommands, OwnerCommands;
@@ -74,19 +67,17 @@ init : function (){
             It should be easy for anyone without programming ability to read and edit these as
             long as the syntax remains unchanged.
     */
-    try{
-        Config = JSON.parse(sys.getFileContent("config.json"));
-    }
-    catch(e) {
-        print(sys.getFileContent("config.json"));
-    }
+    Config = JSON.parse(sys.getFileContent("config.json"));
     Config["BadCharacters"] = /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/;
+    
     /*
         The db object acts as a static "library" of global functions, extending those built-in
             ones in the sys object. Context-free functions should be added to this object in
             future updates.
     */
     db = {
+        data : JSON.parse(sys.getFileContent("dbdata.json")),
+        
         //  Formats a bot's display message intended for just a user to see.
         sendBotMessage : function (target, message, channel, name, color) {
             //  If the chan parameter is -1, it is intended to display to all channels.
@@ -174,29 +165,6 @@ init : function (){
             //  The HP-specific formula by GameFreak; I know it's not pretty
             return Math.floor((IV + (2 * base) + Math.floor(EV / 4) + 100) * level / 100 + 10);
         },
-        
-        //  Type effectiveness chart. Half the result of the lookup for the multiplier
-        typeeff : [
-            [2, 2, 2, 2, 2, 1, 2, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-            [4, 2, 1, 1, 2, 4, 1, 0, 4, 2, 2, 2, 2, 1, 4, 2, 4, 1, 2],
-            [2, 4, 2, 2, 2, 1, 4, 2, 1, 2, 2, 4, 1, 2, 2, 2, 2, 2, 2],
-            [2, 2, 2, 1, 1, 1, 2, 1, 0, 2, 2, 4, 2, 2, 2, 2, 2, 4, 2],
-            [2, 2, 0, 4, 2, 4, 1, 2, 4, 4, 2, 1, 4, 2, 2, 2, 2, 2, 2],
-            [2, 1, 4, 2, 1, 2, 4, 2, 1, 4, 2, 2, 2, 2, 4, 2, 2, 2, 2],
-            [2, 1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 4, 2, 4, 2, 2, 4, 1, 2],
-            [0, 2, 2, 2, 2, 2, 2, 4, 1, 2, 2, 2, 2, 4, 2, 2, 1, 2, 2],
-            [2, 2, 2, 2, 2, 4, 2, 2, 1, 1, 1, 2, 1, 2, 4, 2, 2, 4, 2],
-            [2, 2, 2, 2, 2, 1, 4, 2, 4, 1, 1, 4, 2, 2, 4, 1, 2, 2, 2],
-            [2, 2, 2, 2, 4, 4, 2, 2, 2, 4, 1, 1, 2, 2, 2, 1, 2, 2, 2],
-            [2, 2, 1, 1, 4, 4, 1, 2, 1, 1, 4, 1, 2, 2, 2, 1, 2, 2, 2],
-            [2, 2, 4, 2, 0, 2, 2, 2, 2, 2, 4, 1, 1, 2, 2, 1, 2, 2, 2],
-            [2, 4, 2, 4, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 0, 2, 2],
-            [2, 2, 4, 2, 4, 2, 2, 2, 1, 1, 1, 4, 2, 2, 1, 4, 2, 2, 2],
-            [2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 4, 2, 0, 2],
-            [2, 1, 2, 2, 2, 2, 2, 4, 1, 2, 2, 2, 2, 4, 2, 2, 1, 1, 2],
-            [2, 4, 2, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 4, 4, 2, 2],
-            [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-        ],
         
         //  Formats a Pokémon's ID to match how the PO devs set up their database files.
         getDBIndex : function (pokeId) {
@@ -549,38 +517,6 @@ init : function (){
             return m.replace(/\&/g, "&amp;").replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
         },
         
-        //  shortened stat names in the order Bulbapedia lists them
-        abrStats : ["Atk", "Def", "Spd", "SAtk", "SDef"],
-        
-        //  The increased/decrease stats of each nature
-        naturesConversion : {
-            "Hardy": [0, 0],
-            "Bold": [1, 0],
-            "Timid": [2, 0],
-            "Modest": [3, 0],
-            "Calm": [4, 0],
-            "Lonely": [0, 1],
-            "Docile": [1, 1],
-            "Hasty": [2, 1],
-            "Mild": [3, 1],
-            "Gentle": [4, 1],
-            "Brave": [0, 2],
-            "Relaxed": [1, 2],
-            "Serious": [2, 2],
-            "Quiet": [3, 2],
-            "Sassy": [4, 2],
-            "Adamant": [0, 3],
-            "Impish": [1, 3],
-            "Jolly": [2, 3],
-            "Bashful": [3, 3,],
-            "Careful": [4, 3,],
-            "Naughty": [0, 4],
-            "Lax": [1, 4],
-            "Naive": [2, 4],
-            "Rash": [3, 4],
-            "Quirky":  [4, 4]
-        },
-
         //  Identifies which nature is benefitted from the given nature
         statBoostedBy : function (nature){
             //  If the name is provided, find the number
@@ -710,12 +646,9 @@ init : function (){
             
             //  If the color isn't set, find it
             if (color == '#000000') {
-            
-                //  the list of colors in the order they are assigned by the server
-                var clist = ['#5811b1','#399bcd','#0474bb','#f8760d','#a00c9e','#0d762b','#5f4c00','#9a4f6d','#d0990f','#1b1390','#028678','#0324b1'];
                 
                 //  grab the color
-                return clist[source % clist.length]; 
+                return this.data.clist[source % clist.length]; 
             }
             
             //  otherwise just use the one they gave
@@ -887,36 +820,8 @@ init : function (){
             but for permanent changes to any of this, it's best to update this in the script.
     */
     Banner =  {
-        //  If this is true, the script will manage the banner. If this is false, the host
-        //      must manually set the banner.
-        Dynamic : true,
-        
-        //  The messages to appear in the center. Note that the welcome line cannot be changed.
-        Messages : [
-            "Check out <a href='http://w11.zetaboards.com/The_Valley/index/'><font color='orange'>the Forum</font></a>",
-            "<a href='http://w11.zetaboards.com/The_Valley/topic/8136084/#new'><font color='orange'>Apply here</font></a> to be a gym leader!",
-            "Gym leaders <a href='http://w11.zetaboards.com/The_Valley/topic/8820178/#new'><font color='red'>report here</font></a>",
-            "Check up on <a href='http://w11.zetaboards.com/The_Valley/topic/10576461/#new'><font color=#FF00CC>Ender's Battle of October!</font></a>",
-            "Message of the Day:"   //  I really recommend leaving this as it is; the MOTD otherwise will just be a floating phrase.
-        ],
-        
-        //  The direction of the colors; true means the colors (red, black, blue for example)
-        //      are listed left to right
-        GradientIsHorizontal : true,
-        
-        //  The colors of the stops on the banner gradient. A solid color has them all match.
-        //      I highly recommend the middle two being the same to avoid nasty clashing
-        GradientColors : ["#AA0650", "#000000", "#000000", "#00BFFF"],
-        
-        //  The default color of the banner text.
-        TextColor : "#FFFFFF",
-        
-        //  The default font face of the banner text (for the love of god, pick one that's standard)
-        FontFamily : "calibri",
-        
-        //  not a setting; this counter is used to update the banner to keep the clock on time.
-        count : 0,
-        
+        data : JSON.parse(sys.getFileContent("bannerdat.json"),
+                
         //  every second this ticks the counter
         step : function() {
         
@@ -1479,6 +1384,8 @@ init : function (){
         ChatBot is a pseudobot that enforces chage rules automaticallly.
     */
     ChatBot = {
+        data : JSON.parse(sys.getFileContent("chatdat.json"),
+        
         //  Format the bot's private messaging.
         sendMessage : function (target, msg, chan) {
             db.sendBotMessage(target, msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
@@ -1488,37 +1395,7 @@ init : function (){
         sendAll : function (msg, chan) {
             db.sendBotAll(msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
         },
-        
-        //  The maximum number of character allowed in a post (auth bypass but are warned anyway)
-        maxMessageLength : 150,
-        
-        //  The rules for flooding
-        flood : {
-            //  This is the max violations in a short time for flood
-            limit : 6,
-            
-            //  Add this many tallies per violation (use 0 to disable floodkicks)
-            add : 1
-        },
-        
-        //  The rules for caps abuse
-        caps : {
-            //  This is the max violations in a short time for caps mute
-            limit : 7,
-            
-            //  Add this many tallies per violation (0 means no one gets muted for caps spam)
-            add : 0,
-            
-            //  Give this much air when a post isn't caps spam
-            drop : 1,
-            
-            //  Number of caps in a mesage to count toward caps spam
-            capsInMessage : 5,
-            
-            //  instantly mute someone if this many caps are used; it's higher than max message atm so no one gets muted
-            fullCapsMessage : 255
-        },
-        
+                
         //  Called by script.beforeChatMessage(). Enforces all chat rules.
         beforeChatMessage : function (source, msg, chan) {
         
@@ -1771,6 +1648,8 @@ init : function (){
         TierBot is a pseudobot that enforces all script-based tier rules. 
     */
     TierBot = {
+        data : JSON.parse(sys.getFileContent("tierdat.json"),
+        
         //  Format private message
         sendMessage : function (target, msg, chan) {
             db.sendBotMessage(target, msg, chan, Config.TierBot[0], Config.TierBot[1]);
@@ -1781,39 +1660,6 @@ init : function (){
             db.sendBotAll(msg, chan, Config.TierBot[0], Config.TierBot[1]);
         },
         
-        //  List of all items that cannot be obtained in Pokemon X and Y (bans team)
-        unobtainableItem : ["Bug Gem", "Custap Berry", "Dark Gem", "Dragon Gem", "Electric Gem", "Enigma Berry", "Fighting Gem", "Fire Gem",  "Flying Gem", "Ghost Gem", "Grass Gem", "Ground Gem", "Ice Gem", "Jaboca Berry", "Micle Berry", "Poison Gem", "Psychic Gem", "Rock Gem", "Rowap Berry", "Soul Dew", "Steel Gem", "Water Gem"]    ,
-        
-        //  List of all Pokemon that cannot be obtained in Pokemon X and Y (bans team)
-        unobtainablePoke : ["Diancie", "Hoopla", "Volcanion"],
-        
-        //  Sort Pokemon by their Pokedex colors
-        Monocolor : {
-            "red" : ["Delphox", "Fletchling", "Fletchinder", "Talonflame", "Tyrantrum", "Yveltal", "Charmander", "Charmeleon", "Charizard", "Vileplume", "Paras", "Parasect", "Krabby", "Kingler", "Voltorb", "Electrode", "Goldeen", "Seaking", "Jynx", "Magikarp", "Magmar", "Flareon", "Ledyba", "Ledian", "Ariados", "Yanma", "Scizor", "Slugma", "Magcargo", "Octillery", "Delibird", "Porygon2", "Magby", "Ho-Oh", "Torchic", "Combusken", "Blaziken", "Wurmple", "Medicham", "Carvanha", "Camerupt", "Solrock", "Corphish", "Crawdaunt", "Latias", "Groudon", "Deoxys", "Deoxys-A", "Deoxys-D", "Deoxys-S", "Kricketot", "Kricketune", "Magmortar", "Porygon-Z", "Rotom", "Rotom-H", "Rotom-F", "Rotom-W", "Rotom-C", "Rotom-S", "Tepig", "Pignite", "Emboar", "Pansear", "Simisear", "Throh", "Venipede", "Scolipede", "Krookodile", "Darumaka", "Darmanitan", "Dwebble", "Crustle", "Scrafty", "Shelmet", "Accelgor", "Druddigon", "Pawniard", "Bisharp", "Braviary", "Heatmor"]
-            ,
-            "blue" : ["Froakie", "Frogadier", "Greninja", "Inkay", "Malamar", "Clauncher", "Clawitzer", "Amaura", "Aurorus", "Bergmite", "Avalugg", "Xerneas", "Squirtle", "Wartortle", "Blastoise", "Nidoran-F", "Nidorina", "Nidoqueen", "Oddish", "Gloom", "Golduck", "Poliwag", "Poliwhirl", "Poliwrath", "Tentacool", "Tentacruel", "Tangela", "Horsea", "Seadra", "Gyarados", "Lapras", "Vaporeon", "Omanyte", "Omastar", "Articuno", "Dratini", "Dragonair", "Totodile", "Croconaw", "Feraligatr", "Chinchou", "Lanturn", "Marill", "Azumarill", "Jumpluff", "Wooper", "Quagsire", "Wobbuffet", "Heracross", "Kingdra", "Phanpy", "Suicune", "Mudkip", "Marshtomp", "Swampert", "Taillow", "Swellow", "Surskit", "Masquerain", "Loudred", "Exploud", "Azurill", "Meditite", "Sharpedo", "Wailmer", "Wailord", "Swablu", "Altaria", "Whiscash", "Chimecho", "Wynaut", "Spheal", "Sealeo", "Walrein", "Clamperl", "Huntail", "Bagon", "Salamence", "Beldum", "Metang", "Metagross", "Regice", "Latios", "Kyogre", "Piplup", "Prinplup", "Empoleon", "Shinx", "Luxio", "Luxray", "Cranidos", "Rampardos", "Gible", "Gabite", "Garchomp", "Riolu", "Lucario", "Croagunk", "Toxicroak", "Finneon", "Lumineon", "Mantyke", "Tangrowth", "Glaceon", "Azelf", "Phione", "Manaphy", "Oshawott", "Dewott", "Samurott", "Panpour", "Simipour", "Roggenrola", "Boldore", "Gigalith", "Woobat", "Swoobat", "Tympole", "Palpitoad", "Seismitoad", "Sawk", "Tirtouga", "Carracosta", "Ducklett", "Karrablast", "Eelektrik", "Eelektross", "Elgyem", "Cryogonal", "Deino", "Zweilous", "Hydreigon", "Cobalion", "Thundurus"]
-            ,
-            "green" : ["Chespin", "QUilladin", "Chesnaught", "Hawlucha", "Zygarde", "Bulbasaur", "Ivysaur", "Venusaur", "Caterpie", "Metapod", "Bellsprout", "Weepinbell", "Victreebel", "Scyther", "Chikorita", "Bayleef", "Meganium", "Spinarak", "Natu", "Xatu", "Bellossom", "Politoed", "Skiploom", "Larvitar", "Tyranitar", "Celebi", "Treecko", "Grovyle", "Sceptile", "Dustox", "Lotad", "Lombre", "Ludicolo", "Breloom", "Electrike", "Roselia", "Gulpin", "Vibrava", "Flygon", "Cacnea", "Cacturne", "Cradily", "Kecleon", "Tropius", "Rayquaza", "Turtwig", "Grotle", "Torterra", "Budew", "Roserade", "Bronzor", "Bronzong", "Carnivine", "Yanmega", "Leafeon", "Shaymin", "Shaymin-S", "Snivy", "Servine", "Serperior", "Pansage", "Simisage", "Swadloon", "Cottonee", "Whimsicott", "Petilil", "Lilligant", "Basculin", "Maractus", "Trubbish", "Garbodor", "Solosis", "Duosion", "Reuniclus", "Axew", "Fraxure", "Golett", "Golurk", "Virizion", "Tornadus"]
-            ,
-            "yellow" : ["Helioptile", "Heliolisk", "Dedenne", "Kakuna", "Beedrill", "Pikachu", "Raichu", "Sandshrew", "Sandslash", "Ninetales", "Meowth", "Persian", "Psyduck", "Ponyta", "Rapidash", "Drowzee", "Hypno", "Exeggutor", "Electabuzz", "Jolteon", "Zapdos", "Moltres", "Cyndaquil", "Quilava", "Typhlosion", "Pichu", "Ampharos", "Sunkern", "Sunflora", "Girafarig", "Dunsparce", "Shuckle", "Elekid", "Raikou", "Beautifly", "Pelipper", "Ninjask", "Makuhita", "Manectric", "Plusle", "Minun", "Numel", "Lunatone", "Jirachi", "Mothim", "Combee", "Vespiquen", "Chingling", "Electivire", "Uxie", "Cresselia", "Victini", "Sewaddle", "Leavanny", "Scraggy", "Cofagrigus", "Archen", "Archeops", "Deerling", "Joltik", "Galvantula", "Haxorus", "Mienfoo", "Keldeo"]
-            ,
-            "purple" : ["Goomy", "Sliggoo", "Goodra", "Noibat", "Noivern", "Rattata", "Ekans", "Arbok", "Nidoran-M", "Nidorino", "Nidoking", "Zubat", "Golbat", "Venonat", "Venomoth", "Grimer", "Muk", "Shellder", "Cloyster", "Gastly", "Haunter", "Gengar", "Koffing", "Weezing", "Starmie", "Ditto", "Aerodactyl", "Mewtwo", "Crobat", "Aipom", "Espeon", "Misdreavus", "Forretress", "Gligar", "Granbull", "Mantine", "Tyrogue", "Cascoon", "Delcatty", "Sableye", "Illumise", "Swalot", "Grumpig", "Lileep", "Shellos", "Gastrodon", "Ambipom", "Drifloon", "Drifblim", "Mismagius", "Stunky", "Skuntank", "Spiritomb", "Skorupi", "Drapion", "Gliscor", "Palkia", "Purrloin", "Liepard", "Gothita", "Gothorita", "Gothitelle", "Mienshao", "Genesect"]
-            ,
-            "pink" : ["Spritzee", "Aromatisse", "Sylveon", "Clefairy", "Clefable", "Jigglypuff", "Wigglytuff", "Slowpoke", "Slowbro", "Exeggcute", "Lickitung", "Chansey", "Mr. Mime", "Porygon", "Mew", "Cleffa", "Igglybuff", "Flaaffy", "Hoppip", "Slowking", "Snubbull", "Corsola", "Smoochum", "Miltank", "Blissey", "Whismur", "Skitty", "Milotic", "Gorebyss", "Luvdisc", "Cherubi", "Cherrim", "Mime Jr.", "Happiny", "Lickilicky", "Mesprit", "Munna", "Musharna", "Audino", "Alomomola"]
-            ,
-            "brown" : ["Bunnelby", "Diggersby", "Litleo", "Pyroar", "Skiddo", "Gogoat", "Honedge", "Doublade", "Aegislash", "Binacle", "Barbaracle", "Skrelp", "Dtragalge", "Tyrunt", "Phantump", "Trevenant", "Pumpkaboo", "Gourgeist", "Weedle", "Pidgey", "Pidgeotto", "Pidgeot", "Raticate", "Spearow", "Fearow", "Vulpix", "Diglett", "Dugtrio", "Mankey", "Primeape", "Growlithe", "Arcanine", "Abra", "Kadabra", "Alakazam", "Geodude", "Graveler", "Golem", "Farfetch\"d", "Doduo", "Dodrio", "Cubone", "Marowak", "Hitmonlee", "Hitmonchan", "Kangaskhan", "Staryu", "Pinsir", "Tauros", "Eevee", "Kabuto", "Kabutops", "Dragonite", "Sentret", "Furret", "Hoothoot", "Noctowl", "Sudowoodo", "Teddiursa", "Ursaring", "Swinub", "Piloswine", "Stantler", "Hitmontop", "Entei", "Zigzagoon", "Seedot", "Nuzleaf", "Shiftry", "Shroomish", "Slakoth", "Slaking", "Shedinja", "Hariyama", "Torkoal", "Spinda", "Trapinch", "Baltoy", "Feebas", "Regirock", "Chimchar", "Monferno", "Infernape", "Starly", "Staravia", "Staraptor", "Bidoof", "Bibarel", "Buizel", "Floatzel", "Buneary", "Lopunny", "Bonsly", "Hippopotas", "Hippowdon", "Mamoswine", "Heatran", "Patrat", "Watchog", "Lillipup", "Conkeldurr", "Sandile", "Krokorok", "Sawsbuck", "Beheeyem", "Stunfisk", "Bouffalant", "Vullaby", "Mandibuzz", "Landorus"]
-            ,
-            "black" : ["Scatterbug", "Spewpa", "Vivillon", "Snorlax", "Umbreon", "Murkrow", "Unown", "Sneasel", "Houndour", "Houndoom", "Mawile", "Spoink", "Seviper", "Claydol", "Shuppet", "Banette", "Duskull", "Dusclops", "Honchkrow", "Chatot", "Munchlax", "Weavile", "Dusknoir", "Giratina", "Darkrai", "Blitzle", "Zebstrika", "Sigilyph", "Yamask", "Chandelure", "Zekrom"]
-            ,
-            "gray" : ["Espurr", "Carbink", "Klefki", "Machop", "Machoke", "Machamp", "Magnemite", "Magneton", "Onix", "Rhyhorn", "Rhydon", "Pineco", "Steelix", "Qwilfish", "Remoraid", "Skarmory", "Donphan", "Pupitar", "Poochyena", "Mightyena", "Nincada", "Nosepass", "Aron", "Lairon", "Aggron", "Volbeat", "Barboach", "Anorith", "Armaldo", "Snorunt", "Glalie", "Relicanth", "Registeel", "Shieldon", "Bastiodon", "Burmy", "Wormadam", "Wormadam-G", "Wormadam-S", "Glameow", "Purugly", "Magnezone", "Rhyperior", "Probopass", "Arceus", "Herdier", "Stoutland", "Pidove", "Tranquill", "Unfezant", "Drilbur", "Excadrill", "Timburr", "Gurdurr", "Whirlipede", "Zorua", "Zoroark", "Minccino", "Cinccino", "Escavalier", "Ferroseed", "Ferrothorn", "Klink", "Klang", "Klinklang", "Durant", "Terrakion", "Kyurem"]
-            ,
-            "white" : ["Floette", "Florges", "Pancham", "Pangoro", "Furfrou", "Mewostic", "Swirlix", "Slurpluff", "Butterfree", "Seel", "Dewgong", "Togepi", "Togetic", "Mareep", "Smeargle", "Lugia", "Linoone", "Silcoon", "Wingull", "Ralts", "Kirlia", "Gardevoir", "Vigoroth", "Zangoose", "Castform", "Absol", "Shelgon", "Pachirisu", "Snover", "Abomasnow", "Togekiss", "Gallade", "Froslass", "Dialga", "Regigigas", "Swanna", "Vanillite", "Vanillish", "Vanilluxe", "Emolga", "Foongus", "Amoonguss", "Frillish", "Jellicent", "Tynamo", "Litwick", "Lampent", "Cubchoo", "Beartic", "Rufflet", "Larvesta", "Volcarona", "Reshiram", "Meloetta", "Meloetta-S"]
-        },
-        
-        //  The number of Pokemon per generation.
-        Monogen : {
-            bounds : [0, 151, 251, 386, 493, 649, 721]
-        },
         
         //  Check to see if a player's team contains only one type of Pokemon
         hasMonotype : function (source, tsource){

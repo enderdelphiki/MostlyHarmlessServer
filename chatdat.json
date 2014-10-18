@@ -1,0 +1,27 @@
+{
+    
+    "maxMessageLength" : 150,
+    
+    "flood" : {
+        
+        "limit" : 6,
+        
+        "add" : 1
+    
+    },
+    
+    "caps" : {
+        
+        "limit" : 7,
+        
+        "add" : 0,
+        
+        "drop" : 1,
+        
+        "capsInMessage" : 5,
+        
+        "fullCapsMessage" : 255
+    
+    }
+
+}

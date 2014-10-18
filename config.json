@@ -65,7 +65,7 @@
     
     "DefaultJuggernaut" : "[HH]HelloSkitty9",
     
-    "AwardBot" : "[Awards", "#AA0650"],
+    "AwardBot" : ["Awards", "#AA0650"],
     
     "ChatBot" : ["ChatBot", "blue"],
     
