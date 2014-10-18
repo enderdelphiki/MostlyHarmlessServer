@@ -1,0 +1,217 @@
+{
+    debug : false,
+    
+    ScriptOwner : "[HH]Ender",
+    
+    ServerHost : "[HH]HelloSkitty9",
+    
+    TierOwner : "[HH]Frost1076",
+    
+    ScriptURL : "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/script.js",
+    
+    TiersURL : "http://pastebin.com/raw.php?i=iJWpaLem",
+    
+    SuperUsers : ["[HH]Penny", "[HH]Homura", "[HH]Ender", "[HH] L","[HH]Sephus", "[HH]The Professor", "[HH]Dr. Nim"],
+    
+    ClanTag : "HH",
+    
+    SurroundTag : "[%%]",
+    
+    ServerName : "Mostly Harmless",
+    
+    MainChannelName : "The Restaurant",
+    
+    AuthChannelName : "Auth Cave",
+    
+    WatchChannelName : "Watch",
+    
+    PartyChannelName : "Party Time!",
+    
+    Elsewhere : "Elsewhere",
+    
+    UserChannels : ["Goldenrod City"],
+    
+    ChannelColors : ['orange', 'purple', 'green', 'red', 'black', 'grey', 'brown'],
+    
+    BadWords : ["cum", "cunt", "qunt", "dick", "gullible", "heil", "nigg", "penis", "pussy", "schlog", "schlong", "vagina", "voldemort"],
+    
+    BadNames : ["$g", "[hh[", "]hh]", "]hh[", "{hh}", "{hh]", "[hh}", "[hhh]", "69", "anus", "anvs", "bich", "bitch", "bltch", "chatbot", "christ", "chrlst", "cock", "command", "creeper", "cum", "cvm", "cunt", "cvnt", "dlck", "dick", "ejaculate", "ex™", "fag", "fck", "fuck", "fvck", "fuhrer", "fvhrer", "fuk", "fvk", "gbrother", "god", "goodbye", "harmless", "heil", "hiel", "hitchhiker", "hitler", "horny", "jesus", "jesvs", "kbot", "knight of zero", "kyubey", "masterbate", "masterbait", "mostly", "nigg", "penis", "pure", "pvre", "pussy", "pvssy", "pusy", "server", "sex", "shit", "slap", "std", "swag", "tier", "troll", "vagina", "uagina", "vaglna", "valley", "vfd", "welcome", "ender", "skitty", "shofu"].concat(this.BadWords),
+    
+    BadCharacters : /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/,
+    
+    Rules : [
+        
+        "Don't ask for auth. Don't ask for the script. Don't ask the owners to host your clan/server. The answer is no.",
+        
+        "Underage sexting, distribution of copyrighted materials, Denial of Service, impersonation, advertising, evasion of mutes, bans, the name censor, or the chat censor may result in a ban without warning.",
+        
+        "'Joking', 'stating a fact', or similar excuses do not justify being an asshole.",
+        
+        "Telling someone to calm down, no matter how nicely put, causes people to be in bad moods. This is considered trolling and is punishable.",
+        
+        "Don't cross the line on sexual topics. The line is whatever the active auth deem appropriate or otherwise.",
+        
+        "Race, sex, age, and all that other shit... Not reasons to argue.",
+        
+        "You must try out to join the clan. Wearing any variant of the tag without being registered is a violation of Rule 2.",
+        
+        "Abusing glitches, spamming, or general trolling are bad, mmk.",
+        
+        "If you have to be a smartass to get around the rules, you're breaking them.",
+        
+        "Don't be cocky.",
+        
+        "If you're known to easily evade bans, you will be more easily banned. It's not a big deal and you know it."
+    
+    ],
+    
+    DefaultJuggernaut : "[HH]HelloSkitty9",
+    
+    AwardBot : ["Awards", "#AA0650"],
+    
+    ChatBot : ["ChatBot", "blue"],
+    
+    CommandBot : ["CommandBot", "#006888"],
+    
+    Welcome : ["WelcomeBot", "#06AA50"],
+    
+    Goodbye : ["GoodByeBot", "orange"],
+    
+    Guard : ["Knight of Zero", "black"],
+    
+    Juggernaut : ["JuggerBaut", "#88000"],
+    
+    NickBot : ["NickServ", "brown"],
+    
+    TierBot : ["Tiers", "red"],
+    
+    TourBot : ["Announcer", "#FF00CC"],
+    
+    AssassinBot : ["AssassinBot", "black"],
+    
+    League : [
+    
+        ["[HH]Shadowborg", "Ice"],
+        
+        ["[HH]Flame", "Psychic"],
+        
+        ["[HH]Hazard", "Ground"],
+        
+        ["[HH]Midian", "Electric"],
+        
+        ["[HH]THIS GUY!", "Flying"],
+        
+        ["[HH]ChuchuLP0", "Normal"],
+        
+        ["[HH]SilverRain", "Fighting"],
+        
+        ["[HH]HelloSkitty9", "Grass"],
+        
+        ["[HH]Blade", "Rock"],
+        
+        ["[HH]Mystery Gift", "Fire"],
+        
+        ["[HH]Messiah", "Water"],
+        
+        ["[HH]Luca", "Steel"],
+        
+        ["Coming Soon", "???"]
+    ],
+    
+    LeagueRules : [
+        
+        "Make a team that is allowed in XY OU. You get up to 8 Pokemon of your choice, but you may choose to have fewer.",
+        
+        "Register your team by giving the list of species to an auth. Note: You are allowed to change moves, items, and abilities between (but not during) challenges.",
+        
+        "You may play gyms 1-8 in any order.",
+        
+        "Ask for league challenges in PM, not in main chat.",
+        
+        "Whether the challenge is a single match or best of 3 is decided by the gym leader and can only be negotiated prior to the first match.",
+        
+        "Neither challengers nor the gym leaders can change teams between battles in a best of 3. An easy way to enforce this on the PC is to have that person's name selected on the list. If the selection drops automatically to the next name down, that player has changed teams.",
+        
+        "Elite Four is challenged in order, with failure against any of the Elite Four members or the champion reseting your progress back to E4#1.",
+        
+        "Enter the Hall of Fame by winning in either a single match or a best of three against the Champion. Replace the Champion only by winning in a best of three. If there is no champion, clearing the first twelve is sufficient.",
+        
+        "While it's not required, we recommend saving your battle logs in case a dispute is made.",
+        
+        "Don't be cocky."
+    
+    ],
+    
+    HallOfFame : [
+        
+        "[HH]Mystery Gift",
+        
+        "[HH]Oversoul",
+        
+        "[HH]Riven",
+        
+        "iSmooths",
+        
+        "[HH]Alive",
+        
+        "[HH]SilverRain",
+        
+        "[HH] Shadowborg",
+        
+        "[HH]Hazard"
+    
+    ],
+    
+    FactoryHallOfFame : [
+    
+        "[HH]Messiah"
+    
+    ],
+    
+    InvertedHallOfFame : [],
+    
+    ScriptUpdateMessage : [
+        
+        "We apologize for the inconvenience.",
+        
+        "Ash leveled up to age 10!",
+        
+        "Altas shrugged",
+        
+        "Commence Inkvasion!",
+        
+        "Edward drank milk!",
+        
+        "F5",
+        
+        "Madokami's laws have been rewritten.",
+        
+        "Preparing to give a damn...",
+        
+        "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn",
+        
+        "The Noodle Incident occurred!",
+        
+        "Guard Skill: Distortion",
+        
+        "Order 66 has been executed",
+        
+        "1% Convergence Achieved!",
+        
+        "This isn't the time to use that!",
+        
+        "Good news, everyone!",
+        
+        "Pizza Delivery for I C Weiner!",
+        
+        "Activated Mind Palace",
+        
+        "Updated using the Update Method passed down through the generations of the Armstrong family.",
+        
+        "Updates finished! Do you want to restart your computer now?",
+        
+        "And another thing..."
+    
+    ]
+
+}

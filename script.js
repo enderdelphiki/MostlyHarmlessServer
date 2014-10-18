@@ -4,7 +4,28 @@
 
 
 //  Global "Object" names
-var Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot
+var Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot;
+
+var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/";
+
+var includes = ["pictures.json"];
+
+function include() {
+    var files = sys.filesforDirectory(".");
+    for (var i = 0; i < includes.length; i++) {
+        if (-1 == files.indexOf(includes[i])) {
+            sys.webCall(root + includes[i], function(write) {
+                sys.writeToFile(root + includes[i], write);
+            });
+        }
+    }
+}
+try {
+    include();
+}
+catch() {
+    print("Failed to load dependencies");
+}
 
 //  The object managed by init:Clan.prototype;
 var chan,
@@ -53,253 +74,7 @@ init : function (){
             It should be easy for anyone without programming ability to read and edit these as
             long as the syntax remains unchanged.
     */
-    Config = {
-        //  This flag does nothing for release versions; only when testing out a new feature
-        //      is it used. It should always be false otherwise.
-        debug : false,
-        
-        //  This person can use @override as a command to update the script in case
-        //      beforeChatMessage somehow stops working. ScriptOwner has access to
-        //      @override, /updatescript, and /updatetiers regardless of auth level.
-        ScriptOwner : "[HH]Ender",
-        
-        //  This flag grants the host unlimited right to pp and other anti-flood features.
-        ServerHost : "[HH]HelloSkitty9",
-        
-        //  This user has special access to /updatetiers regardless of auth level.
-        TierOwner : "[HH]Frost1076",
-        
-        //  The public URL to the scripts.js file. GitHub for some reason doesn't
-        //      return a direct string, so I use PasteBin.
-        ScriptURL : "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/script.js",
-        
-        //  The public URL to the tiers.xml file.
-        TiersURL : "http://pastebin.com/raw.php?i=iJWpaLem",
-        
-        //  Users in this list have unlimited access to all features, including all
-        //      auth-level commands and priveledges, /eval, and debug mode.
-        SuperUsers : ["[HH]Penny", "[HH]Homura", "[HH]Ender", "[HH] L","[HH]Sephus", "[HH]The Professor", "[HH]Dr. Nim"],
-        
-        
-        /*--------------*/
-        //  Community   */
-        /*--------------*/
-        //  Just the letters of the clan tag. The tag (with the surround) is enforced and
-        //      non-registered names wearing the tag are rejected on login and kicked off.
-        ClanTag : "HH",
-        
-        //  %% where the letters go; put two % even if the clan tag is not two characters
-        //      in length. Any unicode characters are supported but [] also has some
-        //      client-side features.
-        SurroundTag : "[%%]",
-        
-        //  Just for some print messages; it does not actually need to match the server name.
-        ServerName : "Mostly Harmless",
-        
-        //  The main channel; users that leave this channel are kicked off of the server.
-        MainChannelName : "The Restaurant",
-        
-        //  A channel dedicated to auth-only discussion. Auth or invitation only can
-        //      enter this channel.
-        AuthChannelName : "Auth Cave",
-        
-        //  This channel displays most events worth knowing.
-        //      It would be impractical to have a conversation here, so it is set to read-only.
-        WatchChannelName : "Watch",
-        
-        //  This channel messes around a lot with the chat to make interesting changes that would
-        //      be way too tiring to have put in main.
-        PartyChannelName : "Party Time!",
-        
-        Elsewhere : "Elsewhere",
-        
-        //  There is no scripting behind these channels; they are simply added automatically. 
-        UserChannels : ["Goldenrod City"],
-        
-        //  One of these is picked when displaying channels in the watch channel for readability
-        ChannelColors : ['orange', 'purple', 'green', 'red', 'black', 'grey', 'brown'],
-        
-        //  Any time one of these words is used, it is censored and the user is warned. Auth
-        //      are not censored, but they do still get the warning.
-        BadWords : ["cum", "cunt", "qunt", "dick", "gullible", "heil", "nigg", "penis", "pussy", "schlog", "schlong", "vagina", "voldemort"],
-        
-        //  Any user with any part of any of these items in its name is rejected from logon and
-        //      kicked if already online. The Server Host is immune to these restrictions, so
-        //      it's safe to ban the owner's name to prevent variations and impersonations.
-        //  Note the concatonation with BadWords- that's because if a name can't be typed it's bad.
-        BadNames : ["$g", "[hh[", "]hh]", "]hh[", "{hh}", "{hh]", "[hh}", "[hhh]", "69", "anus", "anvs", "bich", "bitch", "bltch", "chatbot", "christ", "chrlst", "cock", "command", "creeper", "cum", "cvm", "cunt", "cvnt", "dlck", "dick", "ejaculate", "ex™", "fag", "fck", "fuck", "fvck", "fuhrer", "fvhrer", "fuk", "fvk", "gbrother", "god", "goodbye", "harmless", "heil", "hiel", "hitchhiker", "hitler", "horny", "jesus", "jesvs", "kbot", "knight of zero", "kyubey", "masterbate", "masterbait", "mostly", "nigg", "penis", "pure", "pvre", "pussy", "pvssy", "pusy", "server", "sex", "shit", "slap", "std", "swag", "tier", "troll", "vagina", "uagina", "vaglna", "valley", "vfd", "welcome", "ender", "skitty", "shofu"].concat(this.BadWords),
-        
-        
-        
-        // text reversing symbols
-        BadCharacters : /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/,
-        
-        //  This list is the rules, called in the /rules and /forcerules (target) commands.
-        Rules : [
-            "Don't ask for auth. Don't ask for the script. Don't ask the owners to host your clan/server. The answer is no.",
-            "Underage sexting, distribution of copyrighted materials, Denial of Service, impersonation, advertising, evasion of mutes, bans, the name censor, or the chat censor may result in a ban without warning.",
-            "'Joking', 'stating a fact', or similar excuses do not justify being an asshole.",
-            "Telling someone to calm down, no matter how nicely put, causes people to be in bad moods. This is considered trolling and is punishable.",
-            "Don't cross the line on sexual topics. The line is whatever the active auth deem appropriate or otherwise.",
-            "Race, sex, age, and all that other shit... Not reasons to argue.",
-            "You must try out to join the clan. Wearing any variant of the tag without being registered is a violation of Rule 2.",
-            "Abusing glitches, spamming, or general trolling are bad, mmk.",
-            "If you have to be a smartass to get around the rules, you're breaking them.",
-            "Don't be cocky.",
-            "If you're known to easily evade bans, you will be more easily banned. It's not a big deal and you know it."
-        ],
-        
-        //  When the juggernaut breaks for any reason, this is the user that it defaults to.
-        DefaultJuggernaut : "[HH]HelloSkitty9",
-        
-        /*-----------*/
-        //   Bots    //
-        /*-----------*/
-        //  Bot format:
-        //  Variable : ["Name", "Color"]
-        //  Making new bots requires adding script functionality, but changing names/colors
-        //      should not be too difficult. To make a new bot, add instantitation in
-        //      the script.init() event
-
-        //  This is the bot that tracks the awards earned so far. See the Awards implementation
-        //      in the script.init() event for more details.
-        AwardBot : ["Awards", "#AA0650"],
-        
-        //  This is the bot that tracks if messages are appropriate, manages the mute system,
-        //      stops flooding, and enforces anti-CAPS spam (currently disabled).
-        ChatBot : ["ChatBot", "blue"],
-        
-        //  This bot takes all messages beginning with /, !, and %, pulls out the command and
-        //      the command data, and runs code out of one of the Commands dictionaries.
-        CommandBot : ["CommandBot", "#006888"],
-        
-        //  This bot performs all welcoming computation.
-        Welcome : ["WelcomeBot", "#06AA50"],
-        
-        //  This is just a different message that appears when someone leaves. It is still a
-        //      piece of the WelcomeBot.
-        Goodbye : ["GoodByeBot", "orange"],
-        
-        //  This guard is used for display messages involving a script-based restriction.
-        Guard : ["Knight of Zero", "black"],
-        
-        //  This is the bot responsible for the Juggernaut game.
-        Juggernaut : ["JuggerBaut", "#88000"],
-        
-        //  This bot checks if someone's changing name is appropriate, kicking the user if not
-        //      while alerting others of the name change if it is.
-        NickBot : ["NickServ", "brown"],
-        
-        //  This is the bot resonsible for tier enforcement, alerting users of violations of
-        //      the script-enforced rules in both standard and nonstandard tiers.
-        TierBot : ["Tiers", "red"],
-        
-        //  This is the bot that manages tournaments.
-        TourBot : ["Announcer", "#FF00CC"],
-        
-        //  This is the bot that manages assassin.
-        AssassinBot : ["AssassinBot", "black"],
-
-        /*-----------------*/
-        //  Miscellaneous  //
-        /*-----------------*/
-        //  The first eight list items appear on the left side of the banner, while the other
-        //      five are on the right. This is implied to be the clan's league.
-        League : [
-            //  eight gyms
-            ["[HH]Shadowborg", "Ice"],
-            ["[HH]Flame", "Psychic"],
-            ["[HH]Hazard", "Ground"],
-            ["[HH]Midian", "Electric"],
-            ["[HH]THIS GUY!", "Flying"],
-            ["[HH]ChuchuLP0", "Normal"],
-            ["[HH]SilverRain", "Fighting"],
-            ["[HH]HelloSkitty9", "Grass"],
-            
-            //  elite four
-            ["[HH]Blade", "Rock"],
-            ["[HH]Mystery Gift", "Fire"],
-            ["[HH]Messiah", "Water"],
-            ["[HH]Luca", "Steel"],
-            
-            //  champion
-            ["Coming Soon", "???"]
-        ],
-        
-        //  The list displayed when /league rules is run.
-        LeagueRules : [
-            "Make a team that is allowed in XY OU. You get up to 8 Pokemon of your choice, but you may choose to have fewer.",
-            "Register your team by giving the list of species to an auth. Note: You are allowed to change moves, items, and abilities between (but not during) challenges.",
-            "You may play gyms 1-8 in any order.",
-            "Ask for league challenges in PM, not in main chat.",
-            "Whether the challenge is a single match or best of 3 is decided by the gym leader and can only be negotiated prior to the first match.",
-            "Neither challengers nor the gym leaders can change teams between battles in a best of 3. An easy way to enforce this on the PC is to have that person's name selected on the list. If the selection drops automatically to the next name down, that player has changed teams.",
-            "Elite Four is challenged in order, with failure against any of the Elite Four members or the champion reseting your progress back to E4#1.",
-            "Enter the Hall of Fame by winning in either a single match or a best of three against the Champion. Replace the Champion only by winning in a best of three. If there is no champion, clearing the first twelve is sufficient.",
-            "While it's not required, we recommend saving your battle logs in case a dispute is made.",
-            "Don't be cocky."
-        ],
-        
-        //  Implied to be those who've beaten the league. When these users log in, they are
-        //      automatically shiny. However, they still get random Secret ID's and therefore
-        //      do not automatically win the Shiny award.
-        HallOfFame : [
-            "[HH]Mystery Gift",
-            "[HH]Oversoul",
-            "[HH]Riven",
-            "iSmooths",
-            "[HH]Alive",
-            "[HH]SilverRain",
-            "[HH] Shadowborg",
-            "[HH]Hazard"
-        ],
-        
-        //  Implied to be those who've beaten the Battle Factory. Most servers don't even have
-        //      one of these but just go with it cuz we do. When these users log in, they are
-        //      automatically Infected [with Pokerus]. However, like with the above list, the
-        //      Secret ID's are still random. Which message is
-        //      displayed is selected from the following in order:
-        //  
-        //  1- If the user has a Secret ID of 13, the user is Shiny and not Infected.
-        //  2- If the user has a Secret ID of 23, the user is Infected and not shiny.
-        //  3- If the user appears on only one of the lists, that list is used.
-        //  4- If the user has neither ID but appears on both lists, a coin toss decides which
-        //      status to be used.
-        //
-        //  Being on this list does not grant the perks of Infected, which include halved PP
-        //      usage, increased critical hit rate, and the Infected award.
-        FactoryHallOfFame : [
-            "[HH]Messiah"
-        ],
-        
-        InvertedHallOfFame : [
-        
-        ],
-        
-        //  When the script updates, one of these at random is displayed in big bold font.
-        ScriptUpdateMessage : [
-            "We apologize for the inconvenience.",
-            "Ash leveled up to age 10!",
-            "Altas shrugged",
-            "Commence Inkvasion!",
-            "Edward drank milk!",
-            "F5",
-            "Madokami's laws have been rewritten.",
-            "Preparing to give a damn...",
-            "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn",
-            "The Noodle Incident occurred!",
-            "Guard Skill: Distortion",
-            "Order 66 has been executed",
-            "1% Convergence Achieved!",
-            "This isn't the time to use that!",
-            "Good news, everyone!",
-            "Pizza Delivery for I C Weiner!",
-            "Activated Mind Palace",
-            "Updated using the Update Method passed down through the generations of the Armstrong family.",
-            "Updates finished! Do you want to restart your computer now?",
-            "And another thing..."
-        ]
-    }
+    Config = JSON.parse(db.getFileContents("config.json"));
     
     /*
         The db object acts as a static "library" of global functions, extending those built-in
@@ -7550,9 +7325,7 @@ step : function (){
     Banner.step();
 },
 
-beforeIPConnected : function (ip) {
-}
-,
+beforeIPConnected : function (ip) {},
 
 //Log on/off
 beforeLogIn : function (source) {
