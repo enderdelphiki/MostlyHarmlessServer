@@ -1,55 +1,53 @@
 {
-    debug : false,
+    "debug" : "false",
     
-    ScriptOwner : "[HH]Ender",
+    "ScriptOwner" : "[HH]Ender",
     
-    ServerHost : "[HH]HelloSkitty9",
+    "ServerHost" : "[HH]HelloSkitty9",
     
-    TierOwner : "[HH]Frost1076",
+    "TierOwner" : "[HH]Frost1076",
     
-    ScriptURL : "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/script.js",
+    "ScriptURL" : "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/scripts.js",
     
-    TiersURL : "http://pastebin.com/raw.php?i=iJWpaLem",
+    "TiersURL" : "http://pastebin.com/raw.php?i=iJWpaLem",
     
-    SuperUsers : ["[HH]Penny", "[HH]Homura", "[HH]Ender", "[HH] L","[HH]Sephus", "[HH]The Professor", "[HH]Dr. Nim"],
+    "SuperUsers" : ["[HH]Penny", "[HH]Homura", "[HH]Ender", "[HH] L","[HH]Sephus", "[HH]The Professor", "[HH]Dr. Nim"],
     
-    ClanTag : "HH",
+    "ClanTag" : "HH",
     
-    SurroundTag : "[%%]",
+    "SurroundTag" : "[%%]",
     
-    ServerName : "Mostly Harmless",
+    "ServerName" : "Mostly Harmless",
     
-    MainChannelName : "The Restaurant",
+    "MainChannelName" : "The Restaurant",
     
-    AuthChannelName : "Auth Cave",
+    "AuthChannelName" : "Auth Cave",
     
-    WatchChannelName : "Watch",
+    "WatchChannelName" : "Watch",
     
-    PartyChannelName : "Party Time!",
+    "PartyChannelName" : "Party Time!",
     
-    Elsewhere : "Elsewhere",
+    "Elsewhere" : "Elsewhere",
     
-    UserChannels : ["Goldenrod City"],
+    "UserChannels" : ["Goldenrod City"],
     
-    ChannelColors : ['orange', 'purple', 'green', 'red', 'black', 'grey', 'brown'],
+    "ChannelColors" : ["orange", "purple", "green", "red", "black", "grey", "brown"],
     
-    BadWords : ["cum", "cunt", "qunt", "dick", "gullible", "heil", "nigg", "penis", "pussy", "schlog", "schlong", "vagina", "voldemort"],
+    "BadWords" : ["cum", "cunt", "qunt", "dick", "gullible", "heil", "nigg", "penis", "pussy", "schlog", "schlong", "vagina", "voldemort"],
     
-    BadNames : ["$g", "[hh[", "]hh]", "]hh[", "{hh}", "{hh]", "[hh}", "[hhh]", "69", "anus", "anvs", "bich", "bitch", "bltch", "chatbot", "christ", "chrlst", "cock", "command", "creeper", "cum", "cvm", "cunt", "cvnt", "dlck", "dick", "ejaculate", "ex™", "fag", "fck", "fuck", "fvck", "fuhrer", "fvhrer", "fuk", "fvk", "gbrother", "god", "goodbye", "harmless", "heil", "hiel", "hitchhiker", "hitler", "horny", "jesus", "jesvs", "kbot", "knight of zero", "kyubey", "masterbate", "masterbait", "mostly", "nigg", "penis", "pure", "pvre", "pussy", "pvssy", "pusy", "server", "sex", "shit", "slap", "std", "swag", "tier", "troll", "vagina", "uagina", "vaglna", "valley", "vfd", "welcome", "ender", "skitty", "shofu"].concat(this.BadWords),
-    
-    BadCharacters : /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/,
-    
-    Rules : [
+    "BadNames" : ["$g", "[hh[", "]hh]", "]hh[", "{hh}", "{hh]", "[hh}", "[hhh]", "69", "anus", "anvs", "bich", "bitch", "bltch", "chatbot", "christ", "chrlst", "cock", "command", "creeper", "cum", "cvm", "cunt", "cvnt", "dlck", "dick", "ejaculate", "fag", "fck", "fuck", "fvck", "fuhrer", "fvhrer", "fuk", "fvk", "gbrother", "god", "goodbye", "harmless", "heil", "hiel", "hitchhiker", "hitler", "horny", "jesus", "jesvs", "kbot", "knight of zero", "kyubey", "masterbate", "masterbait", "mostly", "nigg", "penis", "pure", "pvre", "pussy", "pvssy", "pusy", "server", "sex", "shit", "slap", "std", "swag", "tier", "troll", "vagina", "uagina", "vaglna", "valley", "vfd", "welcome", "ender", "skitty", "shofu"],
         
-        "Don't ask for auth. Don't ask for the script. Don't ask the owners to host your clan/server. The answer is no.",
+    "Rules" : [
+        
+        "Do not ask for auth. Do not ask for the script. Do not ask the owners to host your clan/server. The answer is no.",
         
         "Underage sexting, distribution of copyrighted materials, Denial of Service, impersonation, advertising, evasion of mutes, bans, the name censor, or the chat censor may result in a ban without warning.",
         
-        "'Joking', 'stating a fact', or similar excuses do not justify being an asshole.",
+        "Joking, stating a fact, or similar excuses do not justify being an asshole.",
         
         "Telling someone to calm down, no matter how nicely put, causes people to be in bad moods. This is considered trolling and is punishable.",
         
-        "Don't cross the line on sexual topics. The line is whatever the active auth deem appropriate or otherwise.",
+        "Do not cross the line on sexual topics. The line is whatever the active auth deem appropriate or otherwise.",
         
         "Race, sex, age, and all that other shit... Not reasons to argue.",
         
@@ -57,39 +55,39 @@
         
         "Abusing glitches, spamming, or general trolling are bad, mmk.",
         
-        "If you have to be a smartass to get around the rules, you're breaking them.",
+        "If you have to be a smartass to get around the rules, you are breaking them.",
         
-        "Don't be cocky.",
+        "Do not be cocky.",
         
-        "If you're known to easily evade bans, you will be more easily banned. It's not a big deal and you know it."
+        "If you are known to easily evade bans, you will be more easily banned. It is not a big deal and you know it."
     
     ],
     
-    DefaultJuggernaut : "[HH]HelloSkitty9",
+    "DefaultJuggernaut" : "[HH]HelloSkitty9",
     
-    AwardBot : ["Awards", "#AA0650"],
+    "AwardBot" : "[Awards", "#AA0650"],
     
-    ChatBot : ["ChatBot", "blue"],
+    "ChatBot" : ["ChatBot", "blue"],
     
-    CommandBot : ["CommandBot", "#006888"],
+    "CommandBot" : ["CommandBot", "#006888"],
     
-    Welcome : ["WelcomeBot", "#06AA50"],
+    "Welcome" : ["WelcomeBot", "#06AA50"],
     
-    Goodbye : ["GoodByeBot", "orange"],
+    "Goodbye" : ["GoodByeBot", "orange"],
     
-    Guard : ["Knight of Zero", "black"],
+    "Guard" : ["Knight of Zero", "black"],
     
-    Juggernaut : ["JuggerBaut", "#88000"],
+    "Juggernaut" : ["JuggerBaut", "#88000"],
     
-    NickBot : ["NickServ", "brown"],
+    "NickBot" : ["NickServ", "brown"],
     
-    TierBot : ["Tiers", "red"],
+    "TierBot" : ["Tiers", "red"],
     
-    TourBot : ["Announcer", "#FF00CC"],
+    "TourBot" : ["Announcer", "#FF00CC"],
     
-    AssassinBot : ["AssassinBot", "black"],
+    "AssassinBot" : ["AssassinBot", "black"],
     
-    League : [
+    "League" : [
     
         ["[HH]Shadowborg", "Ice"],
         
@@ -118,7 +116,7 @@
         ["Coming Soon", "???"]
     ],
     
-    LeagueRules : [
+    "LeagueRules" : [
         
         "Make a team that is allowed in XY OU. You get up to 8 Pokemon of your choice, but you may choose to have fewer.",
         
@@ -130,19 +128,19 @@
         
         "Whether the challenge is a single match or best of 3 is decided by the gym leader and can only be negotiated prior to the first match.",
         
-        "Neither challengers nor the gym leaders can change teams between battles in a best of 3. An easy way to enforce this on the PC is to have that person's name selected on the list. If the selection drops automatically to the next name down, that player has changed teams.",
+        "Neither challengers nor the gym leaders can change teams between battles in a best of 3. An easy way to enforce this on the PC is to select their name on the list. If the selection drops automatically to the next name down, that player has changed teams.",
         
         "Elite Four is challenged in order, with failure against any of the Elite Four members or the champion reseting your progress back to E4#1.",
         
         "Enter the Hall of Fame by winning in either a single match or a best of three against the Champion. Replace the Champion only by winning in a best of three. If there is no champion, clearing the first twelve is sufficient.",
         
-        "While it's not required, we recommend saving your battle logs in case a dispute is made.",
+        "While it is not required, we recommend saving your battle logs in case a dispute is made.",
         
-        "Don't be cocky."
+        "Do not be cocky."
     
     ],
     
-    HallOfFame : [
+    "HallOfFame" : [
         
         "[HH]Mystery Gift",
         
@@ -162,15 +160,15 @@
     
     ],
     
-    FactoryHallOfFame : [
+    "FactoryHallOfFame" : [
     
         "[HH]Messiah"
     
     ],
     
-    InvertedHallOfFame : [],
+    "InvertedHallOfFame" : [],
     
-    ScriptUpdateMessage : [
+    "ScriptUpdateMessage" : [
         
         "We apologize for the inconvenience.",
         

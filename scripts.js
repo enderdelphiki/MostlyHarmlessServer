@@ -8,17 +8,17 @@ var Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot
 
 var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/";
 
-var includes = ["pictures.json"];
+var includes = ["pictures.json","config.json"];
 
 function include() {
     var files = sys.filesForDirectory(".");
-    for (var i = 0; i < includes.length; i++) {
-        if (-1 == files.indexOf(includes[i])) {
-            sys.webCall(root + includes[i], function(write) {
-                sys.writeToFile(root + includes[i], write);
+    includes.forEach(function(element, index, array) {
+        if (-1 == files.indexOf(element)) {
+            sys.webCall(root + element, function(write) {
+                sys.writeToFile(element, write);
             });
         }
-    }
+    });
 }
 try {
     include();
@@ -74,8 +74,13 @@ init : function (){
             It should be easy for anyone without programming ability to read and edit these as
             long as the syntax remains unchanged.
     */
-    Config = JSON.parse(db.getFileContents("config.json"));
-    
+    try{
+        Config = JSON.parse(sys.getFileContent("config.json"));
+    }
+    catch(e) {
+        print(sys.getFileContent("config.json"));
+    }
+    Config["BadCharacters"] = /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/;
     /*
         The db object acts as a static "library" of global functions, extending those built-in
             ones in the sys object. Context-free functions should be added to this object in
@@ -7303,11 +7308,13 @@ init : function (){
     
 //just leave this in for later when party comes back
     var zolarColors = ["blue", "darkblue", "green", "darkgreen", "red", "darkred", "orange", "skyblue", "purple", "violet", "black", "lightsteelblue", "navy", "burlywood", "DarkSlateGrey", "darkviolet", "Gold", "Lawngreen", "silver"];
+    
+    
+    Banner.update();
 },
 
 serverStartUp : function(){
     this.init();
-    Banner.update();
     uptime = sys.time();
     var repeat = sys.rand(1, sys.rand(2, 10));
     var index = 0;
