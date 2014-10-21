@@ -4,7 +4,7 @@
 
 
 //  Global "Object" names
-var Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot;
+var Award, Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot, Pictures;
 
 var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/";
 
@@ -33,11 +33,7 @@ var chan,
 /*  The object managed by init:Hash.prototype; stores local variables that are to be saved
         between server sessions in case of crash, disconnection, etc.    */
     hash,
-    
-/*  The object managed by init:Pictures.prototype; allows interface with pictures that are
-        not stored in any Pokemon Online folder.    */
-    pictures,
-    
+        
 //  The object managed by Init:Assassin.prototype; allows the ability to play the game Assassin
     assassin,
     
@@ -47,9 +43,6 @@ var chan,
 //  The object managed by init:Tournament.prototype; manages tournaments
     tour,
     
-//  command definitions; mcmd is an array of commandData split by :
-    command, commandData, mcmd,
-
 //  A bunch of lists that allow for quick lookup when using database-accessing commands
     heightList, weightList, powerList, categoryList, accList, ppList, moveEffList, moveFlagList,
     abilityList, itemList, berryList, flingPowerList, berryPowerList, berryTypeList,
@@ -648,7 +641,7 @@ init : function (){
             if (color == '#000000') {
                 
                 //  grab the color
-                return this.data.clist[source % clist.length]; 
+                return this.data.clist[source % this.data.clist.length]; 
             }
             
             //  otherwise just use the one they gave
@@ -937,7 +930,7 @@ init : function (){
                 }
                 if (sys.id(name) == undefined) {
                     if (name == "[HH]Luca") {
-                        banner += pictures["gsaway"];
+                        banner += Pictures["gsaway"];
                     } else if (name == "[HH]SilverRain") {
                         banner += Pictures["gbaway"];
                     } else {
@@ -1094,10 +1087,10 @@ init : function (){
             if (name == "[HH]PinkBlaze" || name == "[HH]Prism") {
             
                 //  First give them the other awards; otherwise it'd be impossible for them to get these
-                if (-1 == award.hash["Pokerus"].value.indexOf(sys.name(source))) {
+                if (-1 == Award.awards["Pokerus"].indexOf(sys.name(source))) {
                     rand = 23;
                 }
-                else if (-1 == award.hash["Inverted"].value.indexOf(sys.name(source))) {
+                else if (-1 == Award.awards["Inverted"].indexOf(sys.name(source))) {
                     rand = 0;
                 }
                 
@@ -1114,20 +1107,20 @@ init : function (){
                 var cap = 4096; //shiny odds in gen 6
                 
                 //  Double odds if they have the pokerus award
-                if (-1 < award.hash["Pokerus"].value.indexOf(sys.name(source))) {
+                if (-1 < Award.awards["Pokerus"].indexOf(sys.name(source))) {
                     cap /= 2;   //  2048
                 }
                 
                 //  Higher odds for successive shininess
-                if (-1 < award.hash["Shiny"].value.indexOf(sys.name(source))) {
+                if (-1 < Award.awards["Shiny"].indexOf(sys.name(source))) {
                     cap /= 4;   //  512
                 }
                 //  Further double odds per juggernaut award; doubling stacks
-                if (-1 < award.hash["Juggernaut"].value.indexOf(sys.name(source))) {
+                if (-1 < Award.awards["Juggernaut"].indexOf(sys.name(source))) {
                     cap /= 2;   //  256
-                    if (-1 < award.hash["Elite JN"].value.indexOf(sys.name(source))) {
+                    if (-1 < Award.awards["Elite JN"].indexOf(sys.name(source))) {
                         cap /= 4;   //  64
-                        if (-1 < -1 < award.hash["Master JN"].value.indexOf(sys.name(source))) {
+                        if (-1 < -1 < Award.awards["Master JN"].indexOf(sys.name(source))) {
                             cap /= 2;   //  32
                         }
                     }
@@ -1219,13 +1212,13 @@ init : function (){
             
             //  Give awards where they're due
             if (players[source].seed == 13) {
-                award.won("Shiny", sys.name(source));
+                Award.won("Shiny", sys.name(source));
             }
             else if (players[source].seed == 23) {
-                award.won("Pokerus", sys.name(source));
+                Award.won("Pokerus", sys.name(source));
             }
             else if (players[source].seed == 0){
-                award.won("Inverted", sys.name(source));
+                Award.won("Inverted", sys.name(source));
             }
         },
         
@@ -1333,7 +1326,7 @@ init : function (){
             if (this.count == 1249) {
             
                 //  If this is reached, no one caught the ThinkFast.
-                award.sendAll("Time's up!", main);
+                Award.sendAll("Time's up!", main);
                 
                 //  We're done printing idle messages
                 this.count = 0;
@@ -1352,7 +1345,7 @@ init : function (){
                     this.count = 1250;
                     
                     //  Alert that the time has come
-                    award.sendAll("**Think fast!**", main);
+                    Award.sendAll("**Think fast!**", main);
                     return;
                     
                 }
@@ -1374,7 +1367,7 @@ init : function (){
             if (1248 < this.count) {
             
                 //  If the player won the award, give it.
-                award.won("ThinkFast", sys.name(source));
+                Award.won("ThinkFast", sys.name(source));
             }
             
             //  A post was made; reset the timer.
@@ -2012,7 +2005,7 @@ init : function (){
     //  These commands do not show up on any commands list. If failed, no warning is given.
     HiddenCommands =  {
         "skittytime" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 sys.sendMessage(source, "~~Server~~: Skitty was last active " + db.getTimeString((parseInt(sys.time()) - parseInt(hash.get("skittytime")))) + " ago.", chan);
                 sys.sendHtmlMessage(source, "<hr>", chan);
@@ -2022,7 +2015,7 @@ init : function (){
         
         //  Show the list of *publically known* pictures
         "memecommands" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  Just show the information
                 sys.sendHtmlMessage(source, "<hr>", chan);
@@ -2045,7 +2038,7 @@ init : function (){
 
         //  Makes the server public (if it can, which shitty internet connections can complicate)
         "public" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Make the server public.
                 sys.makeServerPublic(true); 
                 
@@ -2059,7 +2052,7 @@ init : function (){
         
         //  Allows an owner to shut down the server via command (use wisely!)
         "shutdown" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  If they're not owner, don't bother.
                 if (db.auth() < 3) {
@@ -2079,7 +2072,7 @@ init : function (){
 
         //  Grants SuperUser instant owner.
         "promote" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  If you aren't SuperUser, gtfo
                 if (db.auth(source) == 4) {
@@ -2113,7 +2106,7 @@ init : function (){
 
         //  Check the list of all Pokemon which have unreleased hidden abilities.
         "dwlist" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 sys.sendHtmlMessage(source, "These Pokemon have abilities that are not released:" + hash.get("unreleasedPokes").join(", "), chan);
                 sys.sendHtmlMessage(source, "<hr>", chan);
@@ -2123,7 +2116,7 @@ init : function (){
 
         //  Allow an owner to change the script.
         "updatescript" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 //  If you aren't owner, gtfo
                 if (db.auth(source) < 3) {
@@ -2186,7 +2179,7 @@ init : function (){
         },
         
         "update" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 //  If you aren't owner, gtfo
                 if (db.auth(source) < 3) {
@@ -2235,7 +2228,7 @@ init : function (){
 
         //  Updates the tiers. Runs in much the same way as updatescript.
         "updatetiers" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 if (2 < db.auth(source) || sys.name(source) == Config.TierOwner) {
                     var updateURL = Config.TiersURL;
@@ -2264,7 +2257,7 @@ init : function (){
 
         //  Grab the preset URL for the tiers (preferably pastebin)
         "gettiers" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 CommandBot.sendMessage(source, "<a href='" + Config.TiersURL + "'>" + Config.TiersURL + "</a>", chan);
                 sys.sendHtmlMessage(source, "<hr>", chan);
@@ -2274,7 +2267,7 @@ init : function (){
 
         //  Grab the preset URL for the script
         "getscript" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 CommandBot.sendMessage(source, "<a href='" + Config.ScriptURL + "'>" + Config.ScriptURL + "</a>", chan);
                 sys.sendHtmlMessage(source, "<hr>", chan);
@@ -2284,7 +2277,7 @@ init : function (){
 
         //  Gets all commands. Does no formatting. Very unreadable. Use list handlers or macros to format it nicely.
         "getallcommands" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 sys.sendMessage(source, Object.keys(sys), chan);
                 sys.sendHtmlMessage(source, "<hr>", chan);
@@ -2294,7 +2287,7 @@ init : function (){
 
         //  Get the ID of a Pokemon. This is especially useful for alternate form IDs.
         "pokecheck" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 //  If the ID exists
                 if (-1 < sys.pokeNum(commandData)) {
@@ -2312,7 +2305,7 @@ init : function (){
 
         //  Get the ID of an item. For some reason, BrightPowder doesn't work
         "itemcheck" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 if (-1 < sys.itemNum(commandData)) {
                     sys.sendMessage(source, commandData + "'s ID number is: " + sys.itemNum(commandData), chan);
@@ -2327,7 +2320,7 @@ init : function (){
 
         //  Get the ID of a move. Struggle appears twice (lol)
         "movecheck" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 if (-1 < sys.moveNum(commandData)) {
                     sys.sendMessage(source, commandData + "'s ID number is: " + sys.moveNum(commandData), chan);
@@ -2342,7 +2335,7 @@ init : function (){
 
         //  Get the ID of an Ability. Cacophony is defined :P
         "abilitycheck" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 if (-1 < sys.abilityNum(commandData)) {
                     sys.sendMessage(source, commandData + "'s ID number is: " + sys.abilityNum(commandData), chan);
@@ -2357,7 +2350,7 @@ init : function (){
 
         //  Steal a player's trainer info
         "info" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Cancel if the player isn't online
                 if (target == undefined) {
@@ -2376,7 +2369,7 @@ init : function (){
 
         //  Unregisters a user. Use wisely. Only hidden command with responsive feedback.
         "clearpass" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  If you don't have the power, fuck you.
                 if (db.auth(source) < 1) {
                     return false;
@@ -2427,7 +2420,7 @@ init : function (){
     MemeCommands = {
         cost : 40,
         
-        run : function (source, chan, isshiny, isback) {
+        run : function (source, chan, isshiny, command, commandData, mcmd) {
         
             //  The picture for the command
             var i = Pictures[command];
@@ -2494,7 +2487,7 @@ init : function (){
             }
             
             //  Check the cost
-            var da_cost = (-1 < award.hash["ThinkFast"].value.indexOf(sys.name(source))) ? this.cost / 2 : this.cost;
+            var da_cost = (-1 < Award.awards["ThinkFast"].indexOf(sys.name(source))) ? this.cost / 2 : this.cost;
             
             //  Don't let someone use it if they can't afford it
             if (players[source].ppleft < da_cost) {
@@ -2542,7 +2535,7 @@ init : function (){
         "commands" : {
             cost : 0,
             help : "View all user commands",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Prepare the display
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 
@@ -2572,7 +2565,7 @@ init : function (){
             param : ["command"]
             ,
             help : "Provides detailed explanation of any command.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Default command to help.
                 if (commandData == undefined) {
                     commandData = "help";
@@ -2615,8 +2608,8 @@ init : function (){
         "myawards" : {
             cost : 0,
             help : "View your earned awards",
-            run : function (source, chan) {
-                award.myAwards(source, chan);
+            run : function (source, chan, command, commandData, mcmd) {
+                Award.myAwards(source, chan);
                 return true;
             }
         },
@@ -2626,16 +2619,16 @@ init : function (){
             cost : 0,
             param : ["award name (optional)"],
             help : "View all awards that have been handed out or details on a certain one",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Make sure the award it exists
                 if (commandData == undefined)
                 {
-                    award.allAwards(source, chan);
+                    Award.allAwards(source, chan);
                     return true;
                 }
             
                 //  Just use award's function
-                award.showAwards(source, chan, commandData);
+                Award.showAwards(source, chan, commandData);
                 return true;
             }
         },
@@ -2644,7 +2637,7 @@ init : function (){
         "auth" : {
             cost : 0,
             help : "View who all has server authority",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 CommandBot.sendMessage(source, "The server authority members are:", chan);
@@ -2727,7 +2720,7 @@ init : function (){
         "alts" : {
             cost : 0,
             help : "View all of your aliases/alts",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Just use built-in function
                 
                 sys.sendHtmlMessage(source, "<hr>", chan);
@@ -2742,7 +2735,7 @@ init : function (){
         "pick" : {
             cost : 30,
             help : "Make a decision",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  If the list isn't provided, refuse
                 if (commandData == undefined || mcmd.length < 2) {
@@ -2781,7 +2774,7 @@ init : function (){
         "rules" : {
             cost : 0,
             help : "View the rules",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  If the user is on an android
                 if (sys.os(source) == "Android") {
@@ -2815,7 +2808,7 @@ init : function (){
         "league" : {
             cost : 0,
             help : "View the league. To view the league rules, use !league rules",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  If they wanna know the rules
                 if (commandData == "rules") {
@@ -2874,7 +2867,7 @@ init : function (){
         "pokemon" : {
             cost : 0,
             help : "Check information about a Pokemon (for example, /pokemon Mega Lucario to see the stats of a Mega form)",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Make sure there is input
                 if (!commandData) {
                     CommandBot.sendMessage(source, "Please specify a Pokémon!", chan);
@@ -2971,7 +2964,7 @@ init : function (){
         "types" : {
             cost : 0,
             help : "Check information about type effectiveness",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var msg = "<table style='text-align:center'><tr><th></th><th></th><th colspan='18'>Target Type</th></tr>";
                 msg += "<tr><td></td><td></td>";
                 for (var i = 0; i < 18; i++) {
@@ -2991,7 +2984,7 @@ init : function (){
                     msg += "<td><img src='Themes/Classic/types/type" + i + ".png'/></td>";
                     for (var j = 0; j < 18; j++)
                     {
-                        var eff = db.typeeff[i][j];
+                        var eff = db.data.typeeff[i][j];
                         msg += "<td style='text-align:center;background-color: " + (eff == 0 ? 'black' : (eff == 1 ? 'red' : (eff == 2 ? 'white' : 'green'))) + "'>" + (eff/2) + "x</td>";
                     }
                 }
@@ -3007,7 +3000,7 @@ init : function (){
         "invertedtypes" : {
             cost : 0,
             help : "Check information about inverted type effectiveness",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var msg = "<table style='text-align:center'><tr><th></th><th></th><th colspan='18'>Target Type</th></tr>";
                 msg += "<tr><td></td><td></td>";
                 for (var i = 0; i < 18; i++) {
@@ -3027,7 +3020,7 @@ init : function (){
                     msg += "<td><img src='Themes/Classic/types/type" + i + ".png'/></td>";
                     for (var j = 0; j < 18; j++)
                     {
-                        var eff = db.typeeff[i][j];
+                        var eff = db.data.typeeff[i][j];
                         msg += "<td style='text-align:center;background-color: " + (eff == 4 ? "red'>.5" : (eff == 2 ? "white'>1" : "green'>2")) + "x</td>";
                     }
                 }
@@ -3186,7 +3179,7 @@ init : function (){
         //  View the natures in a nice table
         "natures" : {
             cost: 0, help: "View a chart on which stats are affected by natures",
-            run : function(source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<br><b><font size=4>Natures Guide</font></b>", chan);
                 sys.sendHtmlMessage(source, "<style type='text/css'>td{border: 1px black solid; padding: 2px; text-align: center}td.left{padding-right:3px}</style><table style='text-align: center'><tr><td class='left'></td><td><b>+ Attack</b></td><td><b>+ Defense</b></td><td><b>+ Speed</b></td><td><b>+ Sp Attack</b></td><td><b>+ Sp Defense</b></td></tr><tr><td class='left'><b>- Attack</b></td><td>Hardy</td><td>Bold</td><td>Timid</td><td>Modest</td><td>Calm</td></tr><tr><td class='left'><b>- Defense</b></td><td>Lonely</td><td>Docile</td><td>Hasty</td><td>Mild</td><td>Gentle</td></tr><tr><td class='left'><b>- Speed</b></td><td>Brave</td><td>Relaxed</td><td>Serious</td><td>Quiet</td><td>Sassy</td></tr><tr><td class='left'><b>- Sp Attack</b></td><td>Adamant</td><td>Impish</td><td>Jolly</td><td>Bashful</td><td>Careful</td></tr><tr><td class='left'><b>- Sp Defense</b></td><td>Naughty</td><td>Lax</td><td>Naive</td><td>Rash</td><td>Quirky</td></tr></table>", chan);
                 return true;
@@ -3197,7 +3190,7 @@ init : function (){
         "isreleased" : {
             cost : 0,
             help : "Check if a Pokemon's hidden ability is released.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Only existing pokemon can be released
                 var p = sys.pokeNum(commandData);
                 if (p == undefined)
@@ -3213,7 +3206,7 @@ init : function (){
         //  Show the whole list
         "unreleasedabilities" : {
             cost : 0, help : "See all Pokemon with unreleased abilities",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 TierBot.sendMessage(source, hash.get("unreleasedPokes").join(", "), chan);
                 return true;
             }
@@ -3223,7 +3216,7 @@ init : function (){
         "allmembers" : {
             cost : 0,
             help : "View all members of the clan",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 clan.showAll(source, chan);
                 return true;
             }
@@ -3234,7 +3227,7 @@ init : function (){
             cost : 0,
             help : "View the current Juggernaut",
             param : ["rules (optional)"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  If they want the rules they can just look.
                 if (commandData == "rules") {
                     CommandBot.sendMessage(source, "Juggernaut Rules", chan);
@@ -3258,7 +3251,7 @@ init : function (){
         "pp" : {
             cost : 0,
             help : "View how much PP you have",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 CommandBot.sendMessage(source, "You have " + players[source].ppleft + " PP remaining.", chan);
                 return true;
@@ -3269,7 +3262,7 @@ init : function (){
         "ranking" : {
             cost : 0,
             help : "View your ranking by tier.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Show the message once it's decided
                 var announceTier = function(tier) {
                 
@@ -3335,7 +3328,7 @@ init : function (){
         "typebyid" : {
             cost : 0,
             help : "Check which type is generated by a given number",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (commandData == undefined || isNaN(commandData)) {
                     CommandBot.sendMessage(source, "Types can only be generated by numbers.", chan);
                     return false;
@@ -3350,7 +3343,7 @@ init : function (){
             cost : 0,
             help : "Change whether players can challenge you",
             param : ["on/off (optional- sets on if not specified)"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  If they wanna unidle
                 if (commandData == "off")
                 {
@@ -3372,7 +3365,7 @@ init : function (){
         "unidle" : {
             cost : 0,
             help : "Allow players to challenge you",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  An alternate (VP) way to unidle
                 sys.changeAway(source, false);
@@ -3385,7 +3378,7 @@ init : function (){
         "viewround" : {
             cost : 0,
             help : "View information on the current tournament round",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Make sure there is a tour
                 if (tourmode != 2){
@@ -3473,7 +3466,7 @@ init : function (){
         "eval" : {
             cost : 0,
             help : "Run code",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Only superusers can !eval
                 if (db.auth(source) == 4) {
@@ -3506,7 +3499,7 @@ init : function (){
         "join" : {
             cost : 0,
             help : "Join a tournament",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  There isn't a tournment to join
                 if (tourmode != 1) {
@@ -3567,7 +3560,7 @@ init : function (){
         "unjoin" : {
             cost : 0,
             help : "Leave a tournament",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Only leave a tournament that is running.
                 if (tourmode == 0) {
@@ -3609,7 +3602,7 @@ init : function (){
             cost : 90,
             help : "Catch someone's attention.",
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Only ping if allowed
                 if (!hash.get("cmd_ping")) {
@@ -3634,7 +3627,7 @@ init : function (){
         "tourrules" : {
             cost : 0,
             help : "View Tournament rules",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Just display everything
                 sys.sendHtmlMessage(source, "<hr>", chan);
@@ -3653,7 +3646,7 @@ init : function (){
         "assassin" : {
             cost : 0,
             help : "!assassin join to join a game. !assassin leave to leave the game. !assassin rules to view the rules. !assassin to view progress and your target.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Undefined breaks the switch statement
                 if (commandData == undefined) {
@@ -3716,7 +3709,7 @@ init : function (){
         "rpcommands" : {
             cost : 0,
             help : "View all Role Playing commands. All of these are free in the Role Playing channel.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Simply display everything
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><td width=15%></td><td></td></tr><tr><td><td></td><td></td><td></td></tr>";
@@ -3736,7 +3729,7 @@ init : function (){
             cost : 0,
             param : ["command"],
             help : "A detailed explanation of any Role Playing command.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Display everything
                 if (commandData == undefined) {
                     commandData = "rphelp";
@@ -3766,7 +3759,7 @@ init : function (){
             cost : 10,
             help : "Change your name in the Role Playing channel. This doesn't affect your real name on the server.",
             param : ["new name (max length 20 characters)"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Make sure it's enabled
                 if (!hash.get("cmd_nick")) {
@@ -3814,7 +3807,7 @@ init : function (){
         "nonick" : {
             cost : 0,
             help : "Revert to your old name.",
-            run : function(source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 NickBot.sendAll(sys.name(source) + " is no longer using the nickname " + players[source].rpname, rpchan);
                 players[source].rpname = false;
                 return true;
@@ -3826,7 +3819,7 @@ init : function (){
             cost : 100,
             param : ["name"],
             help : "Use a random attack on someone. Effects of certain moves may also apply. PP may be earned back if a critical hit lands. Your odds of a critical hit increase if you have the Shiny award.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Target must exist
                 if (commandData == undefined) {
@@ -3938,7 +3931,7 @@ init : function (){
                         }
                         
                         //  Get the effectiveness
-                        var eff = db.typeeff[type][players[target].type];
+                        var eff = db.data.typeeff[type][players[target].type];
                         
                         
                         var supereff = false;
@@ -3977,7 +3970,7 @@ init : function (){
                         }
                         
                         //  Double award's odds
-                        if (-1 < award.hash["Who's Your Daddy"].value.indexOf(sys.name(source))) {
+                        if (-1 < Award.awards["Who's Your Daddy"].indexOf(sys.name(source))) {
                             odds *= 2;
                         }
                         
@@ -4005,7 +3998,7 @@ init : function (){
                             
                             //  Supereffective crit
                             if (supereff && chan != rpchan) {
-                                award.won("Who's Your Daddy", sys.name(source));
+                                Award.won("Who's Your Daddy", sys.name(source));
                             }
                         }
                         
@@ -4041,7 +4034,7 @@ init : function (){
             cost : 30,
             param : ["name"],
             help : "Burn someone.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Target player must exist
                 if (target == undefined) {
@@ -4066,7 +4059,7 @@ init : function (){
             cost : 30,
             param : ["name"],
             help : "Cure someone.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
@@ -4085,7 +4078,7 @@ init : function (){
             cost : 30,
             param : ["name"],
             help : "Freeze someone.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
@@ -4104,7 +4097,7 @@ init : function (){
             cost : 30,
             help : "Paralyze someone" ,
             param : ["name"],
-            run : function(source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
@@ -4123,7 +4116,7 @@ init : function (){
             cost : 30,
             help : "Poison someone",
             param : ["name"],
-            run : function(source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
@@ -4141,7 +4134,7 @@ init : function (){
         "flip" : {
             cost : 15,
             help : "Flip a table",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 db.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + " (╯°□°）╯︵ ┻━┻", chan);
                 return true;
             }
@@ -4152,7 +4145,7 @@ init : function (){
             cost : 5 ,
             help : "Talk in the third person",
             param : ["message"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  Don't do it if we're not allowed
                 if (!hash.get("cmd_me")) {
@@ -4187,7 +4180,7 @@ init : function (){
             cost : 5,
             help : "Talk in the third person.",
             param : ["message"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (!hash.get("cmd_my")) {
                     CommandBot.sendMessage(source, "!my is disabled right now.", chan);
                     return false;
@@ -4218,7 +4211,7 @@ init : function (){
                             if (word.length == 0) break;
                             var c = word.charAt(0);
                             switch (c) {
-                                case 'a':case 'e':case 'i':case 'o':case 'u':
+                                case 'a': case 'e': case 'i': case 'o': case 'u':
                                     repeat = false;
                                     break;
                                 default:
@@ -4240,7 +4233,7 @@ init : function (){
         "slap" : {
             cost : 20,
             help : "Slap someone",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Target player must exist
                 if (target == undefined) {
@@ -4268,7 +4261,7 @@ init : function (){
         "tourcommands" : {
             cost : 0,
             help : "View all Tournament commands.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Display everything
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><th width=15%>Command</th><th>Usage</th></tr><tr><td><td></td><td></td></tr>";
@@ -4289,7 +4282,7 @@ init : function (){
         //  Start a tournament
         "tour" : {
             param : ["tier", "number of players", "prize"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  A tournament is already running
                 if (typeof(tourmode) != "undefined" && tourmode > 0) {
@@ -4358,7 +4351,7 @@ init : function (){
         //  Change the number of participants
         "changecount" : {
             param : ["num"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Can't change in-progress tour size
                 if (tourmode != 1) {
@@ -4404,7 +4397,7 @@ init : function (){
         //  Kick someone out of the tournament
         "dq" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  No tournament to DQ from
                 if (tourmode == 0) {
@@ -4436,7 +4429,7 @@ init : function (){
         
         //  Close a tournament
         "endtour" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Can only close tournaments that are running
                 if (tourmode != 0) {
                 
@@ -4456,7 +4449,7 @@ init : function (){
         //  Push someone in manually
         "push" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  No pushing in a non-existing tour or one in its sign-up phase
                 if (tourmode != 2) {
@@ -4490,7 +4483,7 @@ init : function (){
         //  Restart an ongoing battle
         "restart" : {
             param : ["one of the players in the matchup"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  No ongoing battles if tour hasn't started
                 if (tourmode != 2) {
@@ -4521,7 +4514,7 @@ init : function (){
         //  Swap two people in a tournament
         "sub" : {
             param : ["name", "other name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Tournament must be running
                 if (tourmode != 2) {
@@ -4585,7 +4578,7 @@ init : function (){
         //  Start a game of assassin
         "startassassin" : {
             param : ["number of players"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Only one game can be running
                 if (assassin.data.mode != 0) {
@@ -4622,7 +4615,7 @@ init : function (){
         
         //  End the game =(
         "endassassin" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //   Only end a game that has started
                 if (assassin.data.mode == 0) {
@@ -4655,7 +4648,7 @@ init : function (){
         //  Swap people in/out of the game
         "subassassin" : {
             param : ["to take out (this is CASE-SENSITIVE!)", "to replace (this is CASE-SENSTIVE!)"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Stuff
                 var takeout = mcmd[0];
                 var putin = mcmd[1];
@@ -4698,7 +4691,7 @@ init : function (){
         //  View them all
         "partycommands" : {
             help : "View all Party Host commands.",            
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  Display everything
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><td width=15%></td><td></td></tr><tr><td><td></td><td></td></tr>";
@@ -4726,7 +4719,7 @@ init : function (){
         "pewpewpew" : {
             param : ["on/off"],
             help : "Toggle the swapping of names.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  Only change settings in the channel to make life easier on everyone
                 if (chan != party) {
@@ -4754,7 +4747,7 @@ init : function (){
         "piglatin" : {
             param : ["on/off"],
             help : "Toggle the oinkifying of text.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (chan != party) {
                     CommandBot.sendMessage(source, "Pary Host commands should only be used in the Party channel.", chan);
                     return false;
@@ -4775,7 +4768,7 @@ init : function (){
         "colorize" : {
             param : ["on/off"],
             help : "Toggle the colorizing of text.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (chan != party) {
                     CommandBot.sendMessage(source, "Pary Host commands should only be used in the Party channel.", chan);
                     return false;
@@ -4799,7 +4792,7 @@ init : function (){
         "rainbow" : {
             param : ["on/off"],
             help : "Toggle the rainbow in text.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (chan != party) {
                     CommandBot.sendMessage(source, "Pary Host commands should only be used in the Party channel.", chan);
                     return false;
@@ -4824,7 +4817,7 @@ init : function (){
         "reverse" : {
             param : ["on/off"],
             help : ".tahc eht fo txet eht esreveR",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (chan != party) {
                     CommandBot.sendMessage(source, "Pary Host commands should only be used in the Party channel.", chan);
                     return false;
@@ -4848,7 +4841,7 @@ init : function (){
         "modcommands" : {
             cost : 0,
             help : "View all Moderator commands.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><td width=15%></td><td></td></tr><tr><td><td></td><td></td></tr>";
                 for (var c in ModCommands) {
                     showMessage+="<tr><td></td><td><b>!" + c + "</b></td>";
@@ -4867,7 +4860,7 @@ init : function (){
         //  Mute someone without them knowing
         "confine" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 //  Only confine people who exist
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "No player by this name.", chan);
@@ -4896,7 +4889,7 @@ init : function (){
         //  Or just have them relog
         "unconfine" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  Must exist
                 if (target == undefined) {
@@ -4920,7 +4913,7 @@ init : function (){
         //  Let someone into the clan
         "addmember" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
             
                 //  Enforce restrictions because some auth don't pay attention
                 if (commandData.length < 4 || !/^[A-Za-z0-9 _\!]*$/.test(commandData)) {
@@ -4933,7 +4926,7 @@ init : function (){
 
         "delmember" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 clan.removeMember(source, commandData);
                 return true;
@@ -4941,7 +4934,7 @@ init : function (){
         },
 
         "deauth" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 sys.changeAuth(source, 0);
                 sys.changeDbAuth(sys.name(source), 0);
@@ -4953,17 +4946,12 @@ init : function (){
         "announce" : {
             param : ["Big Text", "small text"],
             
-            run : function (source, chan) {
-            
-                if (Config.debug) {
-                    var loggedPlayers = sys.playerIds();
-                    source = loggedPlayers[sys.rand(0, loggedPlayers.length - 1)];
-                }
+            run : function (source, chan, command, commandData, mcmd) {
                 var data = commandData.split(':');
                 sys.sendHtmlAll("<hr>");
                 sys.sendHtmlAll(db.playerToString(source) + " says:");
                 sys.sendHtmlAll("<font size=10><b>" + data[0] + "</b></font>");
-                if (data[1]!=undefined) {
+                if (data[1] != undefined) {
                     sys.sendAll(data[1]);
                 }
                 sys.sendHtmlAll("<hr>");
@@ -4976,7 +4964,7 @@ init : function (){
         "kick" : {
             param : ["name"],
             
-            run : function(source, chan) {
+            run : function (source, chan, command, commandData, mcmd, command, commandData, mcmd) {
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
                     return false;
@@ -4995,7 +4983,7 @@ init : function (){
 
         "ckick" : {
             param : ["name", "channel (optional, picks current channel otherwise)"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.existChannel(mcmd[1])) {
                     chan = sys.channelId(mcmd[1]);
@@ -5016,7 +5004,7 @@ init : function (){
 
         "forcerules" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (target == undefined) {
                     CommandBot.sendMessage(source, "Must force rules to a real person.", chan);
@@ -5034,7 +5022,7 @@ init : function (){
 
         "lookup" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.dbIp(commandData) == undefined) {
                     CommandBot.sendMessage(source, "Target doesn't exist!", chan);
@@ -5062,7 +5050,7 @@ init : function (){
 
         "iplookup" : {
             param : ["ip address"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (commandData == undefined) {
                     CommandBot.sendMessage(source, "Must provide an IP address.", chan);
@@ -5085,7 +5073,7 @@ init : function (){
         },
 
         "mutelist" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 mutes.display(source, chan);
                 return true;
@@ -5094,7 +5082,7 @@ init : function (){
 
         "mute" : {
             param : ["name", "reason", "time"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.dbIp(mcmd[0]) == undefined) {
                     CommandBot.sendMessage(source, "This person does not exist.", chan);
@@ -5127,7 +5115,7 @@ init : function (){
 
         "unmute" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
     //            CommandBot.sendMessage(source, "This command is disabled. Don't waste your life taking things back.", chan);
     //            return true;
@@ -5148,7 +5136,7 @@ init : function (){
 
         "changename" : {
             param : ["target", "newname"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.id(mcmd[0])==undefined) {
                     CommandBot.sendMessage(source, "Target does not exist.", chan);
@@ -5191,7 +5179,7 @@ init : function (){
         "switch" : {
             param : ["key", "on/off (optional, sets to opposite value if not set)"],
             
-            run : function(source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var switches = ["attack", "facepalm", "grumble", "me", "my", "nick", "ping", "slap", "status", "meme"];
                 if (-1 == switches.indexOf(mcmd[0])) {
                     CommandBot.sendMessage(source, "Improper switch. May only switch " + switches.join(", "), chan);
@@ -5218,7 +5206,7 @@ init : function (){
         },
 
         "skittylovesyou" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 sys.sendHtmlAll("<img src='pokemon:num=300&shiny=false&gender=female&back=false&gen=3'/><font size=48 color='#ff00cc'>Skitty loves you too!</font><img src='pokemon:num=300&shiny=false&gender=female&back=false&gen=3'/>", chan);
                 return true;
@@ -5227,7 +5215,7 @@ init : function (){
 
         "allowstaffchan" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.dbIp(commandData) == undefined) {
                     CommandBot.sendMessage(source, "Target doesn't exist.", chan);
@@ -5249,7 +5237,7 @@ init : function (){
 
         "disallowstaffchan" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var name = commandData.toLowerCase(),
                     list = hash.get("allowstaffchan"),
                     index = list.indexOf(name);
@@ -5267,7 +5255,7 @@ init : function (){
         },
 
         "staffchanlist" : {
-            run : function(source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 Guard.sendMessage(source, "Staff Channel List:", chan);
                 sys.sendMessage(source, hash.get("allowstaffchan").join(", "), chan);
@@ -5278,7 +5266,7 @@ init : function (){
         
         
         "silence" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (hash.get("silence")) {
                     CommandBot.sendMessage(source, "Silence is already on.", chan);
@@ -5291,7 +5279,7 @@ init : function (){
         },
 
         "unsilence" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (!hash.get("silence")) {
                     CommandBot.sendMessage(source, "Silence isn't on.", chan);
@@ -5309,7 +5297,7 @@ init : function (){
         "admincommands" : {
             cost : 0,
             help : "View all Admin commands.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><td width=15%></td><td></td></tr><tr><td><td></td><td></td></tr>";
                 for (var c in AdminCommands) {
@@ -5329,7 +5317,7 @@ init : function (){
 
         "releasedw" : {
             param : ["Pokemon"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (db.auth(source) < 3 && sys.name(source) != Config.TierOwner) {
                     CommandBot.sendMessage(source, "Insufficient auth.", chan);
@@ -5355,7 +5343,7 @@ init : function (){
 
         "removedw" : {
             param : ["Pokemon"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (db.auth(source) < 3 && sys.name(source) != Config.TierOwner) {
                     CommandBot.sendMessage(source, "Insufficient auth.", chan);
@@ -5381,7 +5369,7 @@ init : function (){
 
         "ban" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.dbIp(commandData) == undefined) {
                     CommandBot.sendMessage(source, "No player exists by this name.", chan);
@@ -5413,7 +5401,7 @@ init : function (){
 
         "unban" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.dbIp(commandData) == undefined) {
                     CommandBot.sendMessage(source, "No player exists by this name!", chan);
@@ -5434,7 +5422,7 @@ init : function (){
 
         "clearchat" : {
             param : ["channel"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (commandData != undefined) {
                     chan = sys.channelId(commandData);
@@ -5453,7 +5441,7 @@ init : function (){
 
         "rb" : {
             param : ["IP range in the form __.__."],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (rangebans.ban(commandData)) {
                     Guard.sendAll("IP " + commandData + " was rangebanned.", -1);
@@ -5466,7 +5454,7 @@ init : function (){
 
         "unrb" : {
             param : ["IP"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (rangebans.unban(commandData)) {
                     Guard.sendAll("IP " + commandData + " is no longer rangebanned.", -1);
@@ -5478,7 +5466,7 @@ init : function (){
         },
 
         "rblist" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 rangebans.display(source, chan);
                 return true;
@@ -5486,7 +5474,7 @@ init : function (){
         },
 
         "nowelcome" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 hash.set("nowelcome", !hash.get("nowelcome"));
                 WelcomeBot.sendWelcomeAll("Welcome Messages have been toggled.", -1);
@@ -5495,7 +5483,7 @@ init : function (){
         },
 
         "lockdown" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 hash.set("lockdown", !hash.get("lockdown"));
                 Guard.sendAll("This server is " + (hash.get("lockdown")?"now":"no longer") + " on clan-only lockdown.", -1);
@@ -5506,7 +5494,7 @@ init : function (){
         "newjuggernaut" : {
             param : ["name"],
             
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.dbIp(commandData) == undefined){
                     CommandBot.sendMessage(source, "Target does not exist.", chan);
@@ -5562,7 +5550,7 @@ init : function (){
 
         "html" : {
             param : ["HTML"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 CommandBot.sendAll(source, db.playerToString(source) + " posted the following HTML:", chan);
                 sys.sendHtmlAll(commandData + "<br>", chan);
@@ -5572,7 +5560,7 @@ init : function (){
 
         "lmgtfy" : {
             param : ["query"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (commandData == undefined) {
                     CommandBot.sendMessage(source, "You must search for something.", chan);
@@ -5585,7 +5573,7 @@ init : function (){
         
         "motd" : {
             param : ["new message"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 hash.set("motd", commandData);
                 CommandBot.sendAll(source, db.playerToString(source) + " changed the Message of the Day to " + commandData, -1);
                 return true;
@@ -5594,7 +5582,7 @@ init : function (){
         
         "authnote" : {
             param : ["new message"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 hash.set("authnote", commandData);
                 sys.sendMessage(source, "~~Server~~: Auth note set to: " + commandData, chan);
                 return true;
@@ -5606,7 +5594,7 @@ init : function (){
     OwnerCommands = {
         "ownercommands" : {
             help : "View all Admin commands.",
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 var showMessage="<br><center><b><font color='orange' size=+4 style='font-family:calibri'>Commands List</font></b></center><table width=100% style='background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 white,stop:.25 orange,stop:.72 orange,stop:1 white); color:black'><tr><td width=10%></td><td width=15%></td><td></td></tr><tr><td><td></td><td></td></tr>";
                 for (var c in OwnerCommands) {
@@ -5627,7 +5615,7 @@ init : function (){
   
         "mod" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.dbIp(commandData) == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
@@ -5654,7 +5642,7 @@ init : function (){
 
         "user" : {
             param : ["name"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.dbIp(commandData) == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
@@ -5680,7 +5668,7 @@ init : function (){
         },
 
         "addmegauser" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var name = commandData.toLowerCase(),
                     list = hash.get("megauser"),
                     index = list.indexOf(name);
@@ -5702,7 +5690,7 @@ init : function (){
         },
 
         "delmegauser" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var name = commandData.toLowerCase(),
                     list = hash.get("megauser"),
                     index = list.indexOf(name);
@@ -5723,7 +5711,7 @@ init : function (){
         },
 
         "addpartyhost" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var name = commandData.toLowerCase(),
                     list = hash.get("partyhost"),
                     index = list.indexOf(name);
@@ -5744,7 +5732,7 @@ init : function (){
         },
 
         "delpartyhost" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var name = commandData.toLowerCase(),
                     list = hash.get("megauser"),
                     index = list.indexOf(name);
@@ -5767,7 +5755,7 @@ init : function (){
   
         "admin" : {
             param : ["target"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.dbIp(commandData) == undefined) {
                     CommandBot.sendMessage(source, "This person doesn't exist.", chan);
@@ -5793,7 +5781,7 @@ init : function (){
         },
 
         "bannerdirection" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 Banner.GradientIsHorizontal = !Banner.GradientIsHorizontal;
                 Banner.update();
@@ -5803,7 +5791,7 @@ init : function (){
 
         "bannertextcolor" : {
             param : ["color (either color or name)"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 Banner.TextColor = commandData;
                 Banner.update();
@@ -5813,7 +5801,7 @@ init : function (){
 
         "bannerbackground" : {
             param : ["color 1 (either hex code or name)", "color 2", "color 3"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (mcmd.length < 3) {
                     CommandBot.sendMessage(source, "Not enough arguments to call bannerbackground.", chan);
@@ -5830,7 +5818,7 @@ init : function (){
 
         "bannermsg" : {
             param : ["linenumber", "HTML"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 if (isNaN(mcmd[0]) || mcmd[0] < 0) {
                     CommandBot.sendMessage(source, "Can't edit line '" + mcmd[0] + "'.", chan);
@@ -5845,7 +5833,7 @@ init : function (){
 
         "spam" : {
             param :  ["target (optional. spams all by default)"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 var spamcolors = ["#F01010", "#B01010", "#901010", "#701010", "#501010", "#105010", "#107010", "#109010", "#10B010", "#10F010", "#10D010", "#10B010", "#107010", "#105010", "#101050", "#101070", "#1010B0", "#1010D0", "#1010F0"];
                 if (sys.dbIp(commandData) == undefined) {
@@ -5867,7 +5855,7 @@ init : function (){
         },
 
         "epicfacepalm" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 sys.sendHtmlAll("'. . . . . . . . . . . . . . . . . . . ________<br>. . . . . .. . . . . . . . . . . ,.-‘”. . . . . . . . . .``~.,<br>. . . . . . . .. . . . . .,.-”. . . . . . . . . . . . . . . . . .“-.,<br>. . . . .. . . . . . ..,/. . . . . . . . . . . . . . . . . . . . . . . ”:,<br>. . . . . . . .. .,?. . . . . . . . . . . . . . . . . . . . . . . . . . .\,<br>. . . . . . . . . /. . . . . . . . . . . . . . . . . . . . . . . . . . . . ,}<br>. . . . . . . . ./. . . . . . . . . . . . . . . . . . . . . . . . . . ,:`^`.}<br>. . . . . . . ./. . . . . . . . . . . . . . . . . . . . . . . . . ,:”. . . ./<br>. . . . . . .?. . . __. . . . . . . . . . . . . . . . . . . . :`. . . ./<br>. . . . . . . /__.(. . .“~-,_. . . . . . . . . . . . . . ,:`. . . .. ./<br>. . . . . . /(_. . ”~,_. . . ..“~,_. . . . . . . . . .,:`. . . . _/<br>. . . .. .{.._$;_. . .”=,_. . . .“-,_. . . ,.-~-,}, .~”; /. .. .}<br>. . .. . .((. . .*~_. . . .”=-._. . .“;,,./`. . /” . . . ./. .. ../<br>. . . .. . .\`~,. . ..“~.,. . . . . . . . . ..`. . .}. . . . . . ../<br>. . . . . .(. ..`=-,,. . . .`. . . . . . . . . . . ..(. . . ;_,,-”<br>. . . . . ../.`~,. . ..`-.. . . . . . . . . . . . . . ..\. . /\<br>. . . . . . \`~.*-,. . . . . . . . . . . . . . . . . ..|,./.....\,__<br>,,_. . . . . }.>-._\. . . . . . . . . . . . . . . . . .|. . . . . . ..`=~-,<br>. .. `=~-,_\_. . . `\,. . . . . . . . . . . . . . . . .\<br>. . . . . . . . . .`=~-,,.\,. . . . . . . . . . . . . . . .\<br>. . . . . . . . . . . . . . . . `:,, . . . . . . . . . . . . . `\. . . . . . ..__<br>. . . . . . . . . . . . . . . . . . .`=-,. . . . . . . . . .,%`>--==``<br>. . . . . . . . . . . . . . . . . . . . _\. . . . . ._,-%. . . ..`\'", chan);
                 return true;
@@ -5875,7 +5863,7 @@ init : function (){
         },
 
         "trollface" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 sys.sendHtmlAll("░░░░░░▄▄▄▄▀▀▀▀▀▀▀▀▄▄▄▄▄▄░░░░░░░<br/>░░░░░█░░░░▒▒▒▒▒▒▒▒▒▒▒▒░░▀▀▄░░░░<br/>░░░░█░░░▒▒▒▒▒▒░░░░░░░░▒▒▒░░█░░░<br/>░░░█░░░░░░▄██▀▄▄░░░░░▄▄▄░░░░█░░<br/>░▄▀▒▄▄▄▒░█▀▀▀▀▄▄█░░░██▄▄█░░░░█░<br/>█░▒█▒▄░▀▄▄▄▀░░░░░░░░█░░░▒▒▒▒▒░█<br/>█░▒█░█▀▄▄░░░░░█▀░░░░▀▄░░▄▀▀▀▄▒█<br/>░█░▀▄░█▄░█▀▄▄░▀░▀▀░▄▄▀░░░░█░░█░<br/>░░█░░░▀▄▀█▄▄░█▀▀▀▄▄▄▄▀▀█▀██░█░░<br/>░░░█░░░░██░░▀█▄▄▄█▄▄█▄████░█░░░<br/>░░░░█░░░░▀▀▄░█░░░█░█▀██████░█░░<br/>░░░░░▀▄░░░░░▀▀▄▄▄█▄█▄█▄█▄▀░░█░░<br/>░░░░░░░▀▄▄░▒▒▒▒░░░░░░░░░░▒░░░█░<br/>░░░░░░░░░░▀▀▄▄░▒▒▒▒▒▒▒▒▒▒░░░░█░<br/>░░░░░░░░░░░░░░▀▄▄▄▄▄░░░░░░░░█░░", chan);
                 return true;
@@ -5884,7 +5872,7 @@ init : function (){
 
         "changebanner" : {
             param : ["HTML"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 Banner.Dynamic = false;
                 sys.changeAnnouncement(commandData);
@@ -5894,7 +5882,7 @@ init : function (){
         },
 
         "resetbanner" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 Banner.Dynamic = true;
                 Banner.update();
@@ -5905,7 +5893,7 @@ init : function (){
 
         "getjson" : {
             param : ["File Name (not restricted to JSON)"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 try {
                     sys.sendMessage(source, sys.getFileContent(commandData), chan);
@@ -5919,7 +5907,7 @@ init : function (){
 
         "overridejson" : {
             param :  ["JSON File (will make the file if it doesn't exist)", "url to raw data (can fuck up the server)"],
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 var updateURL = commandData.substring(commandData.indexOf(':') + 1);
                 var changeScript = function (resp) {
@@ -5941,7 +5929,7 @@ init : function (){
         },
 
         "init" : {
-            run : function (source, chan) {
+            run : function (source, chan, command, commandData, mcmd) {
 
                 this.init();
                 return true;
@@ -5950,9 +5938,9 @@ init : function (){
 
         "giveaward" : {
             param : ["award (can ruin awards if not on the list)", "name"],
-            run : function (source, chan) {
-                award.won(mcmd[0], mcmd[1]);
-                award.sendAll("A " + mcmd[0] + " award was given to " + mcmd[1] + " by " + db.playerToString(source) + ".", -1);
+            run : function (source, chan, command, commandData, mcmd) {
+                Award.won(mcmd[0], mcmd[1]);
+                Award.sendAll("A " + mcmd[0] + " award was given to " + mcmd[1] + " by " + db.playerToString(source) + ".", -1);
                 return true;
             }
         }
@@ -5961,6 +5949,8 @@ init : function (){
     //  This is the bot that manages all of the commands
     CommandBot = {
         beforeChatMessage : function (source, msg, chan) {
+            var command, commandData, mcmd,
+
             var pos = msg.indexOf(' ');
             if (pos != -1) {
                 command = msg.substring(1, pos).toLowerCase();
@@ -5990,7 +5980,7 @@ init : function (){
                     if (players[source].seed == 13) {
                         multiplier *= 4;
                     }
-                    if (-1 < award.hash["Bug Catcher"].value.indexOf(sys.name(source))) {
+                    if (-1 < Award.awards["Bug Catcher"].indexOf(sys.name(source))) {
                         multiplier *= 2;
                     }
                     players[source].ppleft = Math.floor(players[source].ppleft + (time / 10) * multiplier);
@@ -6003,7 +5993,7 @@ init : function (){
             players[source].lastCommand = parseInt(sys.time());
             
             //  Hide messages from watch... except like super important ones
-            if (chan != elsewhere && -1 == ["kick", "ban", "rb", "mute", "delmember", "user"].indexOf(command)) {
+            if (chan != elsewhere || -1 == ["kick", "ban", "rb", "mute", "delmember", "user"].indexOf(command)) {
     /*        if (msg[0] == "%"){
                 if (players[source].confined) {
                     this.sendAll(0, db.channelToString(chan) + "Confined Command -- " + db.playerToString(source, false, false, true) + " <i>Command Hidden</i>",watch);
@@ -6019,10 +6009,10 @@ init : function (){
     //        }
             }
             
-            var halvecost = (-1 < award.hash["ThinkFast"].value.indexOf(sys.name(source)));
+            var halvecost = (-1 < Award.awards["ThinkFast"].indexOf(sys.name(source)));
             
             if (HiddenCommands[command] != undefined) {
-                if (!HiddenCommands[command].run(source, chan)) {
+                if (!HiddenCommands[command].run(source, chan, command, commandData, mcmd)) {
                     this.sendMessage(source, "There's a time and place for everything. But not now.", chan);
                 }
                 return;
@@ -6034,7 +6024,7 @@ init : function (){
                     this.sendMessage(source, "You don't have enough PP. Cost: " + cost + ". You have: " + players[source].ppleft + ".", chan);
                     return;
                 }
-                if (UserCommands[command].run(source, chan)) {
+                if (UserCommands[command].run(source, chan, command, commandData, mcmd)) {
                     players[source].ppleft -= cost;
                 } else {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
@@ -6054,7 +6044,7 @@ init : function (){
                     this.sendMessage(source, "You don't have enough PP. Cost: " + cost + ". You have: " + players[source].ppleft + ".", chan);
                     return;
                 }
-                if (RPCommands[command].run(source, chan)) {
+                if (RPCommands[command].run(source, chan, command, commandData, mcmd)) {
                     if (chan != rpchan) {
                         players[source].ppleft -= cost;
                     }
@@ -6065,13 +6055,13 @@ init : function (){
             }
             
             
-            if (MemeCommands.run(source, chan, msg[0] == "%")) {
+            if (MemeCommands.run(source, chan, msg[0] == "%", command, commandData, mcmd)) {
                 return;
             }
             
             if (0 < db.auth(source) || -1 < hash.get("megauser").indexOf(sys.name(source).toLowerCase())) {
                 if (TourCommands[command] != undefined) {
-                    if (!TourCommands[command].run(source, chan)) {
+                    if (!TourCommands[command].run(source, chan, command, commandData, mcmd)) {
                         this.sendMessage(source, "This isn't the time to use that!", chan);
                     }
                     return;
@@ -6080,7 +6070,7 @@ init : function (){
             
             if (0 < db.auth(source) || -1 < hash.get("partyhost").indexOf(sys.name(source).toLowerCase())) {
                 if (PartyCommands[command] != undefined) {
-                    if (!PartyCommands[command].run(source, chan)) {
+                    if (!PartyCommands[command].run(source, chan, command, commandData, mcmd)) {
                         this.sendMessage(source, "This isn't the time to use that!", chan);
                     }
                     return;
@@ -6092,7 +6082,7 @@ init : function (){
                 return;
             }
             if (ModCommands[command] != undefined) {
-                if (!ModCommands[command].run(source, chan)) {
+                if (!ModCommands[command].run(source, chan, command, commandData, mcmd)) {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
                 }
                 return;
@@ -6102,7 +6092,7 @@ init : function (){
                 return;
             }
             if (AdminCommands[command] != undefined) {
-                if (!AdminCommands[command].run(source, chan)) {
+                if (!AdminCommands[command].run(source, chan, command, commandData, mcmd)) {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
                 }
                 return;
@@ -6112,7 +6102,7 @@ init : function (){
                 return;
             }
             if (OwnerCommands[command] != undefined) {
-                if (!OwnerCommands[command].run(source, chan)) {
+                if (!OwnerCommands[command].run(source, chan, command, commandData, mcmd)) {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
                 }
                 return;
@@ -6340,11 +6330,11 @@ init : function (){
         
         
         if (9 < score) {
-            award.won("Juggernaut", jug.name);
+            Award.won("Juggernaut", jug.name);
             if (19 < score) {
-                award.won("Elite JN", jug.name);
+                Award.won("Elite JN", jug.name);
                 if (29 < score) {
-                    award.won("Master JN", jug.name);
+                    Award.won("Master JN", jug.name);
                 }
             }
         }
@@ -6449,7 +6439,7 @@ init : function (){
         var ip = sys.ip(source);
         ChatBot.sendMessage(source, "You are muted. (Reason:  " + this.muted[ip].reason + ". Duration: " + db.getTimeString(this.muted[ip].time - parseInt(sys.time())) + ")", chan);
     };
-    MuteCache.prototype.display = function(source, chan) {
+    MuteCache.prototype.display = function (source, chan, command, commandData, mcmd) {
         sys.sendHtmlMessage(source, "<hr>", chan);
         ChatBot.sendMessage(source, "Mute List:", chan);
         var str = "<table width='100%'><tr><th width=20%>IP</th><th width=20%>Muter</th><th width=30%>Reason</th><th width=30%>Time</th></tr>";
@@ -6502,7 +6492,7 @@ init : function (){
     RangeCache.prototype.save = function() {
         sys.writeToFile(banFile,JSON.stringify(this.banned));
     };
-    RangeCache.prototype.display = function(source, chan){
+    RangeCache.prototype.display = function (source, chan, command, commandData, mcmd){
         if(this.banned.length == 0) {
           sys.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", chan);
           return;
@@ -6633,7 +6623,7 @@ init : function (){
             db.sendBotAll(msg, chan, Config.AwardBot[0], Config.AwardBot[1]);
         },
         
-        allAwards : function(source, chan) {
+        allAwards : function (source, chan, command, commandData, mcmd) {
             sys.sendHtmlMessage(source, "<hr>", chan);
             this.sendMessage(source, "The awards available:", chan);
             var table = "";
@@ -6645,7 +6635,7 @@ init : function (){
             sys.sendHtmlMessage(source, "<hr>", chan);
         },
         
-        myAwards : function(source, chan) {
+        myAwards : function (source, chan, command, commandData, mcmd) {
             sys.sendHtmlMessage(source, "<hr>", chan);
             this.sendMessage(source, "Your record so far:", chan);
             var table = "";
@@ -6665,7 +6655,7 @@ init : function (){
         
         showAwards : function (source, chan, award) {
             var key;
-            for (checkkey in this.hash) {
+            for (checkkey in this.data) {
                 if (checkkey.toLowerCase() == award.toLowerCase()) {
                     key = checkkey;
                     break;
@@ -6723,7 +6713,7 @@ init : function (){
         }
     }
     
-    Pictures = JSON.parse("pictures.json");
+    Pictures = JSON.parse(sys.getFileContent("pictures.json"));
     
     var AssassinFile = "Assassin.json";
     function Assassin() {
@@ -6751,7 +6741,7 @@ init : function (){
         this.save();
     };
     
-    Assassin.prototype.showAll = function(source, chan) {
+    Assassin.prototype.showAll = function (source, chan, command, commandData, mcmd) {
         sys.sendHtmlMessage(source, "<hr>", chan);
         this.sendMessage(source, "All players that started this match are:", chan);
         sys.sendMessage(source, this.data.allplayers.join(", "), chan);
@@ -6780,7 +6770,7 @@ init : function (){
         sys.sendHtmlMessage(source, "<hr>", chan);
     };
     
-    Assassin.prototype.getResults = function(source, chan) {
+    Assassin.prototype.getResults = function (source, chan, command, commandData, mcmd) {
         sys.sendHtmlMessage(source, "<hr>", chan);
         if (this.data.allplayers.length == 0) {
             this.sendMessage(source, "There are no results to display.", chan);
@@ -7067,7 +7057,12 @@ init : function (){
         
         
         //  Shuffle the list
-        for (var j, x, i = this.data.players.length; i; j = Math.floor(Math.random() * i), x = this.data.players[--i], this.data.players[i] = this.data.players[j], this.data.players[j] = x);
+        for (var j, x, i = this.data.players.length;
+            i;
+            j = Math.floor(Math.random() * i),
+            x = this.data.players[--i],
+            this.data.players[i] = this.data.players[j],
+            this.data.players[j] = x);
         
         //  Now tell everyone their targets
         for (var i = 0; i < this.data.players.length; i++) {
@@ -7285,10 +7280,10 @@ afterLogIn : function (source) {
     
     var name = sys.name(source);
     
-    if (-1 < award.hash["The Developers"].value.indexOf(name)) {
+    if (-1 < Award.awards["The Developers"].indexOf(name)) {
         players[source].ppcap += 50;
     }
-    if (-1 < award.hash["Ender's Jeesh"].value.indexOf(name)) {
+    if (-1 < Award.awards["Ender's Jeesh"].indexOf(name)) {
         players[source].ppcap += 50;
     }
     
