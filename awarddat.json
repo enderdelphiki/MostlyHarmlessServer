@@ -108,5 +108,15 @@
         
         "badge" : "endersaward"
     
+    },
+    
+    "Back for More" : {
+        
+        "by" : "not quitting early even when victory is far from sight",
+        
+        "effect" : "gain PP per command",
+        
+        "badge" : "backformoreaward"
+        
     }
 }

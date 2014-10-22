@@ -6722,6 +6722,11 @@ init : function (){
             sys.writeToFile("awards.json", JSON.stringify(this.awards));
         }
     }
+    for (var x in Award.data) {
+        if (Award.awards[x] == undefined) {
+            Award.awards[x] = [];
+        }
+    }
     
     Pictures = JSON.parse(sys.getFileContent("pictures.json"));
     
