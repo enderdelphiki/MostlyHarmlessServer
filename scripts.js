@@ -1286,11 +1286,11 @@ init : function (){
         //  Tracks how long before the next idle chat display
         count : 360,
         
-        display : JSON.parse(sys.getFileContent("tumbleweed.json")),
+        data : JSON.parse(sys.getFileContent("tumbleweed.json")),
         
         //   Formats and displays the idle message of choice
         post : function (i) {
-            sys.sendHtmlAll("<font color=" + this.display[i][0] + "><timestamp/> -&gt; <i><b>" + this.display[i][1] + ":</b></i></font><i> **" + this.display[i][2] + "**</i>", main);
+            sys.sendHtmlAll("<font color=" + this.data.display[i][0] + "><timestamp/> -&gt; <i><b>" + this.data.display[i][1] + ":</b></i></font><i> **" + this.data.display[i][2] + "**</i>", main);
         },
         
         //  This event is called every second by script.stepEvent(). It will display the messages at the appropriate times.
@@ -1317,7 +1317,7 @@ init : function (){
                 
                 //  the odds are equally as likely as any other message;
                 //  this is like appending the display to the list
-                if (r == this.display.length) {
+                if (r == this.data.display.length) {
                     //  Set up the special ThinkFast case
                     this.count = 1250;
                     
@@ -1328,7 +1328,7 @@ init : function (){
                 }
                 
                 //  Otherwise just display one of the random if one is selected
-                else if (r < this.display.length) {
+                else if (r < this.data.display.length) {
                     this.post(r);
                     return;
                 }
