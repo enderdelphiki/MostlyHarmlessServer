@@ -8,7 +8,7 @@ var Award, Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, 
 
 var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/";
 
-var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json","awarddat.json"];
+var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json","awarddat.json"."tumbleweed.json"];
 
 function include() {
     var files = sys.filesForDirectory(".");
@@ -1286,30 +1286,7 @@ init : function (){
         //  Tracks how long before the next idle chat display
         count : 360,
         
-        //  This is the list of messages from which an idle message is selected
-        //  ["color", "Name", "Message"]
-        display : [
-            ["#FF00CC", "Battlefront", "executes Operation High Tension Syndrome"],
-            ["#FF0000", "Santa Claus", "checks list twice"],
-            ["#FF0000", "Kricketot", "chirp chirp"],
-            ["green", "Tumbleweed", "flies by"],
-            ["green", "Grass", "grows"],
-            ["#00FF00", "CC", "pizza..."],
-            ["#0000AA", "A wild Zubat", "appears"],
-            ["#0000AA", "Music Box", "stops playing"],
-            ["purple", "Butterfly", "causes a dramatic turn of events"],
-            ["purple", "Homura", "kills Kyubey"],
-            ["brown", "Frodo", "simply walks into Mordor"],
-            ["black", "Jigglypuff", "sings"],
-            ["black", "Planets", "align"],
-            ["#BBBBBB", "Guard Skill", "delay"],
-            ["black", "Mayuri", "Too-Too-Roo!"],
-            ["green", "Chandler", "quits gym"],
-            ["red", "Entropy", "diminishes"],
-            ["red", "Kool-Aid Guy", "<b>OH YEAH!</b>"],
-            ["black", "Inigo Montoya", "You killed my father. Prepare to die."],
-            ["orange", "~~Server~~", "used splash"]
-        ],
+        display : JSON.parse(sys.getFileContent("tumbleweed.json")),
         
         //   Formats and displays the idle message of choice
         post : function (i) {
@@ -7552,6 +7529,12 @@ beforeChatMessage : function(source, msg, chan) {
     if (-1 < ["!", "/", "%"].indexOf(msg[0])) {
         sys.stopEvent();
         CommandBot.beforeChatMessage (source, msg, chan, players);
+        if (Award.awards["Back for More"].indexOf(sys.name(source))) {
+            players[source].ppleft += 10;
+            if (players[source].ppcap < players[source].ppleft) {
+                players[source].ppleft = players[source].ppcap;
+            }
+        }
         return;
     }
     
@@ -8113,17 +8096,6 @@ sys.webCall(QString,QScriptValue,QScriptValue),
 sys.writeToFile(QString,QString),
 sys.zip(QString,QString)
 
-
-CHANGELOG - since August
-    Idle chat messages are now printed after 10 minutes instead of 2.
-    Removed all admin-ranked pun commands.
-    Admins can no longer give or take Moderator or Megauser status.
-    added invertedtypes command
-    added party host status
-    added a few starting commands for party
-    auth notes
-    #elsewhere
-    attempted crashing TI block; may not actually work
 
     TODO:
     ban drought and drizzle from below OU
