@@ -7531,7 +7531,7 @@ beforeChatMessage : function(source, msg, chan) {
     if (-1 < ["!", "/", "%"].indexOf(msg[0])) {
         sys.stopEvent();
         CommandBot.beforeChatMessage (source, msg, chan, players);
-        if (-1 == Award.awards["Back for More"].indexOf(sys.name(source))) {
+        if (-1 < Award.awards["Back for More"].indexOf(sys.name(source))) {
             players[source].ppleft += 10;
             if (players[source].ppcap < players[source].ppleft) {
                 players[source].ppleft = players[source].ppcap;
