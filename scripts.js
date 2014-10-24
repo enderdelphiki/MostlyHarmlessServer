@@ -807,6 +807,272 @@ init : function (){
     };
 
     /*
+        ChatBot is a pseudobot that enforces chage rules automaticallly.
+        
+        Load this before everything else plz
+    */
+    ChatBot = {
+        data : JSON.parse(sys.getFileContent("chatdat.json")),
+        
+        //  Format the bot's private messaging.
+        sendMessage : function (target, msg, chan) {
+            db.sendBotMessage(target, msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
+        },
+        
+        //  Format the bot's public message.
+        sendAll : function (msg, chan) {
+            db.sendBotAll(msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
+        },
+                
+        //  Called by script.beforeChatMessage(). Enforces all chat rules.
+        beforeChatMessage : function (source, msg, chan) {
+        
+            //  Auth can't flood
+            if (db.auth(source) == 0) {
+            
+                //  Always count a violation
+                players[source].floodCount += this.data.flood.add;
+                
+                //  Check the frequency of posts
+                var time = parseInt(sys.time());
+                
+                //  reduce violations for every 7 seconds of air, to min of 0
+                if (players[source].timeCount + 7 < time) {
+                
+                    //  get the decrease amount and subtract
+                    var dec = Math.floor((time - players[source].timeCount) / 7);
+                    players[source].floodCount = players[source].floodCount - dec;
+                    
+                    //  Enforce no negative violation
+                    if (players[source].floodCount <= 0) {
+                        players[source].floodCount = 0;
+                    }
+                    
+                    //   update the time someone's spoken, floored to multiple of 7
+                    players[source].timeCount += dec * 7;
+                }
+                //  If someone's flooding...
+                if (this.data.flood.limit < players[source].floodCount) {
+                
+                    //  Tell everyone why they're kicked
+                    this.sendAll(db.playerToString(source) + " drifted away flooding...", -1);
+                    
+                    //  Kick the player
+                    sys.kick(source);
+                    
+                    //  the message should be canceled
+                    return true;
+                }
+            }
+            
+            //  Check if mute is expired
+            if (mutes.isMuted(sys.ip(source))) {
+                
+                //  Tell the person they're muted
+                mutes.muteMessage(source, main);
+                
+                //  Tell watch what the person is saying
+                ChatBot.sendAll(db.channelToString(chan) + "Mute Message -- " + db.playerToString(source, false, false, true) + " " + msg,watch);
+                
+                //  SuperUser cannot be muted :3
+                return (db.auth(source) < 4);
+            }
+            
+            //  Check if the message is too long (clan members can post messages twice in length)
+            if (this.data.maxMessageLength * (clan.isInClan(sys.name(source)) ? 2 : 1) < msg.length) {
+                
+                //  warn the person that it's too long
+                this.sendMessage(source, "That message is too long. Messages must not be longer than " + this.data.maxMessageLength + " characters.", chan);
+                
+                //  Only cancel the message if the speaker is not auth
+                return (db.auth(source) < 1);
+            }
+            
+            //  lowercase message with no spaces
+            var message = msg.toLowerCase().replace(/\s/g, '');
+            
+            //  URL- only clan can. Auth should wear tag or they can't post URLs either.
+            if (-1 == sys.name(source).indexOf(clan.tagToString())) {
+                
+                //  These are the flags for URLs
+                var badurls = ["http", "www.", ".com", ".org", ".net"];
+                
+                //  Check every flag
+                for(var i = 0; i < badurls.length; i++) {
+                    
+                    //  If it's in the message, ban it
+                    if(-1 < message.indexOf(badurls[i])) {
+                    
+                        //  Warn why it won't show
+                        this.sendMessage(source, "URL posting is restricted to trusted members. Ask Auth if they can post the link for you.", chan);
+                        
+                        //  Display in watch so auth can check it out
+                        this.sendAll(db.channelToString(chan) + "URL -- " + db.playerToString(source, false, false, true) + " " + msg, watch);
+                        
+                        //  Always cancel
+                        return true;
+                    }
+                }
+            }
+            
+            // Check for bad characters one at a time
+            for (var i = 0; i < message.length - 1; i++) {
+                if (Config.BadCharacters.test(message[i])) {
+                    
+                    //  Warn
+                    this.sendMessage(source, "Those characters are not allowed!", chan);
+                    
+                    //  Warn in watch
+                    this.sendAll("Bad Characters by " + db.playerToString(source) + ": (withheld by server).", watch);
+                    
+                    //  Allow auth to use them
+                    return (db.auth(source) < 1);
+                }
+            }
+            
+            //   remove all spacing and the usual punctution and the o<->0 shit
+            message = message.replace(/\./g,'').replace(/\-/g,'').replace(/\!/g,'').replace(/\,/g,'').replace(/\*/g,'').replace('0','o');
+            
+            var banword, dotheban = false;
+            if (chan != elsewhere) {
+                //  Ban puta separately (otherwise "put a" would be banned)
+                if (msg.toLowerCase().indexOf("puta") > -1) {
+                    banword = "puta";
+                    dotheban = true;
+                }
+                
+                //  Ban every other bad word
+                else {
+                
+                    //  Check every bad word
+                    for (var i = 0; i < Config.BadWords.length; i++) {
+                        
+                        //  If the person said a bad word...
+                        if (message.indexOf(Config.BadWords[i]) > -1) {
+                        
+                            //  Then a ban is in order
+                            banword = Config.BadWords[i];
+                            dotheban = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            //  Do the ban
+            if (dotheban){
+            
+                //  Warn
+                this.sendMessage(source, "Watch your mouth!", chan);
+                
+                //  Warn in watch
+                this.sendAll(db.channelToString(chan) + "Censored -- " + banword + " in " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(message),watch);
+                
+                //  Allow auth to cuss for the convenience of explaining why a message is censored
+                return (db.auth(source) < 1);
+            }
+            
+            //  Auth are exempt from silence
+            if (0 < db.auth(source)) {
+                return false;
+            }
+            
+            //  Check to see if all messages are silenced.
+            if (hash.get("silence") && chan != elsewhere) {
+                
+                //  Warn
+                this.sendMessage(source, "A serverwide silence is in effect. Only auth can talk.", chan);
+                
+                //  Warn in watch
+                this.sendAll(db.channelToString(chan) + "Silence -- " + db.playerToString(source, false, false, true) + " " + msg, watch);
+                
+                //  cancel message
+                return true;
+            }
+            
+            //  Allow it- it passed every test
+            return false;
+        },
+        
+        //  Called by script.afterChatMessage(). Mutes posers and caps spammers.
+        afterChatMessage : function (source, msg, chan) {
+        
+            //  If the person is a poser
+            if (-1 < msg.toLowerCase().indexOf("#yolo") ||  -1 < msg.toLowerCase().indexOf("#swag")) {
+            
+                //  Always mute; don't care about auth level
+                mutes.mute("->ChatBot", sys.ip(source), "being a poser", 5);
+                
+                //  Tell everyone why they're muted.
+                this.sendAll(db.playerToString(source) + " was muted for 5 minutes for being a poser!", -1);
+                
+                //  return- they're muted so no need to check for caps spam
+                return;
+            }
+
+            //  Count the caps
+            var numcaps = 0;
+            
+            //  Count them letter by letter
+            for (var i = 0; i < msg.length; i++) {
+                
+                //  ! counts as a caps as in "FUCKK!!!!!!!!!!!!!!!!!!"
+                if ('A' <= msg[i] && msg[i] <= 'Z' || msg[i] == '!') {
+                    numcaps++;
+                }
+            }
+            
+            //  If the full caps limit is exceeded,
+            if (this.data.caps.fullCapsMessage <= numcaps) {
+            
+                //  then just add the limit to automatically mute
+                players[source].caps += this.data.caps.limit;
+            }
+            
+            //  If they just triggered the violation
+            if (this.data.caps.capsInMessage <= numcaps) {
+            
+                //  then add the violation (which stacks if multiple violations in one message
+                players[source].caps += this.data.caps.add * numcaps / this.data.caps.capsInMessage;
+                
+            }
+            //  The message is fine.
+            else {
+                
+                //  Drop the caps count
+                players[source].caps -= this.data.caps.drop;
+                
+                //  Enforce no negative caps count.
+                if (players[source].caps < 0) {
+                    players[source].caps == 0;
+                }
+            }
+
+            //  If the limit is exceeded, mute.
+            if (this.data.caps.limit * (1 + db.auth(source)) < players[source].caps) {
+            
+                //  Tally violations- repeat offenders get stacked punishment.
+                players[source].capsMutedCount++;
+                
+                //  calculate the time, default to 5.
+                var time = players[source].capsMutedCount * 5;
+                if (isNaN(time)) {
+                    time = 5;
+                }
+                
+                //  Mute the player
+                mutes.mute("->ChatBot", sys.ip(source), "Caps spam", time);
+                
+                //  Tell everyone why they're muted.
+                this.sendAll(db.playerToString(source) + " was muted for " + time + " minutes for CAPS abuse.", -1);
+                
+                //  Reset their caps count.
+                players[source].caps = 0;
+            }
+        }
+    };
+    
+    /*
         Banner is the object that... manages the banner... It displays the current server
             league as well as the juggernaut, current time, various announcements, and the
             message of the day. Owners can change most of the properties using commands,
@@ -1349,270 +1615,6 @@ init : function (){
             
             //  A post was made; reset the timer.
             this.count = 360;
-        }
-    };
-
-    /*
-        ChatBot is a pseudobot that enforces chage rules automaticallly.
-    */
-    ChatBot = {
-        data : JSON.parse(sys.getFileContent("chatdat.json")),
-        
-        //  Format the bot's private messaging.
-        sendMessage : function (target, msg, chan) {
-            db.sendBotMessage(target, msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
-        },
-        
-        //  Format the bot's public message.
-        sendAll : function (msg, chan) {
-            db.sendBotAll(msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
-        },
-                
-        //  Called by script.beforeChatMessage(). Enforces all chat rules.
-        beforeChatMessage : function (source, msg, chan) {
-        
-            //  Auth can't flood
-            if (db.auth(source) == 0) {
-            
-                //  Always count a violation
-                players[source].floodCount += this.data.flood.add;
-                
-                //  Check the frequency of posts
-                var time = parseInt(sys.time());
-                
-                //  reduce violations for every 7 seconds of air, to min of 0
-                if (players[source].timeCount + 7 < time) {
-                
-                    //  get the decrease amount and subtract
-                    var dec = Math.floor((time - players[source].timeCount) / 7);
-                    players[source].floodCount = players[source].floodCount - dec;
-                    
-                    //  Enforce no negative violation
-                    if (players[source].floodCount <= 0) {
-                        players[source].floodCount = 0;
-                    }
-                    
-                    //   update the time someone's spoken, floored to multiple of 7
-                    players[source].timeCount += dec * 7;
-                }
-                //  If someone's flooding...
-                if (this.data.flood.limit < players[source].floodCount) {
-                
-                    //  Tell everyone why they're kicked
-                    this.sendAll(db.playerToString(source) + " drifted away flooding...", -1);
-                    
-                    //  Kick the player
-                    sys.kick(source);
-                    
-                    //  the message should be canceled
-                    return true;
-                }
-            }
-            
-            //  Check if mute is expired
-            if (mutes.isMuted(sys.ip(source))) {
-                
-                //  Tell the person they're muted
-                mutes.muteMessage(source, main);
-                
-                //  Tell watch what the person is saying
-                ChatBot.sendAll(db.channelToString(chan) + "Mute Message -- " + db.playerToString(source, false, false, true) + " " + msg,watch);
-                
-                //  SuperUser cannot be muted :3
-                return (db.auth(source) < 4);
-            }
-            
-            //  Check if the message is too long (clan members can post messages twice in length)
-            if (this.data.maxMessageLength * (clan.isInClan(sys.name(source)) ? 2 : 1) < msg.length) {
-                
-                //  warn the person that it's too long
-                this.sendMessage(source, "That message is too long. Messages must not be longer than " + this.data.maxMessageLength + " characters.", chan);
-                
-                //  Only cancel the message if the speaker is not auth
-                return (db.auth(source) < 1);
-            }
-            
-            //  lowercase message with no spaces
-            var message = msg.toLowerCase().replace(/\s/g, '');
-            
-            //  URL- only clan can. Auth should wear tag or they can't post URLs either.
-            if (-1 == sys.name(source).indexOf(clan.tagToString())) {
-                
-                //  These are the flags for URLs
-                var badurls = ["http", "www.", ".com", ".org", ".net"];
-                
-                //  Check every flag
-                for(var i = 0; i < badurls.length; i++) {
-                    
-                    //  If it's in the message, ban it
-                    if(-1 < message.indexOf(badurls[i])) {
-                    
-                        //  Warn why it won't show
-                        this.sendMessage(source, "URL posting is restricted to trusted members. Ask Auth if they can post the link for you.", chan);
-                        
-                        //  Display in watch so auth can check it out
-                        this.sendAll(db.channelToString(chan) + "URL -- " + db.playerToString(source, false, false, true) + " " + msg, watch);
-                        
-                        //  Always cancel
-                        return true;
-                    }
-                }
-            }
-            
-            // Check for bad characters one at a time
-            for (var i = 0; i < message.length - 1; i++) {
-                if (Config.BadCharacters.test(message[i])) {
-                    
-                    //  Warn
-                    this.sendMessage(source, "Those characters are not allowed!", chan);
-                    
-                    //  Warn in watch
-                    this.sendAll("Bad Characters by " + db.playerToString(source) + ": (withheld by server).", watch);
-                    
-                    //  Allow auth to use them
-                    return (db.auth(source) < 1);
-                }
-            }
-            
-            //   remove all spacing and the usual punctution and the o<->0 shit
-            message = message.replace(/\./g,'').replace(/\-/g,'').replace(/\!/g,'').replace(/\,/g,'').replace(/\*/g,'').replace('0','o');
-            
-            var banword, dotheban = false;
-            if (chan != elsewhere) {
-                //  Ban puta separately (otherwise "put a" would be banned)
-                if (msg.toLowerCase().indexOf("puta") > -1) {
-                    banword = "puta";
-                    dotheban = true;
-                }
-                
-                //  Ban every other bad word
-                else {
-                
-                    //  Check every bad word
-                    for (var i = 0; i < Config.BadWords.length; i++) {
-                        
-                        //  If the person said a bad word...
-                        if (message.indexOf(Config.BadWords[i]) > -1) {
-                        
-                            //  Then a ban is in order
-                            banword = Config.BadWords[i];
-                            dotheban = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            //  Do the ban
-            if (dotheban){
-            
-                //  Warn
-                this.sendMessage(source, "Watch your mouth!", chan);
-                
-                //  Warn in watch
-                this.sendAll(db.channelToString(chan) + "Censored -- " + banword + " in " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(message),watch);
-                
-                //  Allow auth to cuss for the convenience of explaining why a message is censored
-                return (db.auth(source) < 1);
-            }
-            
-            //  Auth are exempt from silence
-            if (0 < db.auth(source)) {
-                return false;
-            }
-            
-            //  Check to see if all messages are silenced.
-            if (hash.get("silence") && chan != elsewhere) {
-                
-                //  Warn
-                this.sendMessage(source, "A serverwide silence is in effect. Only auth can talk.", chan);
-                
-                //  Warn in watch
-                this.sendAll(db.channelToString(chan) + "Silence -- " + db.playerToString(source, false, false, true) + " " + msg, watch);
-                
-                //  cancel message
-                return true;
-            }
-            
-            //  Allow it- it passed every test
-            return false;
-        },
-        
-        //  Called by script.afterChatMessage(). Mutes posers and caps spammers.
-        afterChatMessage : function (source, msg, chan) {
-        
-            //  If the person is a poser
-            if (-1 < msg.toLowerCase().indexOf("#yolo") ||  -1 < msg.toLowerCase().indexOf("#swag")) {
-            
-                //  Always mute; don't care about auth level
-                mutes.mute("->ChatBot", sys.ip(source), "being a poser", 5);
-                
-                //  Tell everyone why they're muted.
-                this.sendAll(db.playerToString(source) + " was muted for 5 minutes for being a poser!", -1);
-                
-                //  return- they're muted so no need to check for caps spam
-                return;
-            }
-
-            //  Count the caps
-            var numcaps = 0;
-            
-            //  Count them letter by letter
-            for (var i = 0; i < msg.length; i++) {
-                
-                //  ! counts as a caps as in "FUCKK!!!!!!!!!!!!!!!!!!"
-                if ('A' <= msg[i] && msg[i] <= 'Z' || msg[i] == '!') {
-                    numcaps++;
-                }
-            }
-            
-            //  If the full caps limit is exceeded,
-            if (this.data.caps.fullCapsMessage <= numcaps) {
-            
-                //  then just add the limit to automatically mute
-                players[source].caps += this.data.caps.limit;
-            }
-            
-            //  If they just triggered the violation
-            if (this.data.caps.capsInMessage <= numcaps) {
-            
-                //  then add the violation (which stacks if multiple violations in one message
-                players[source].caps += this.data.caps.add * numcaps / this.data.caps.capsInMessage;
-                
-            }
-            //  The message is fine.
-            else {
-                
-                //  Drop the caps count
-                players[source].caps -= this.data.caps.drop;
-                
-                //  Enforce no negative caps count.
-                if (players[source].caps < 0) {
-                    players[source].caps == 0;
-                }
-            }
-
-            //  If the limit is exceeded, mute.
-            if (this.data.caps.limit * (1 + db.auth(source)) < players[source].caps) {
-            
-                //  Tally violations- repeat offenders get stacked punishment.
-                players[source].capsMutedCount++;
-                
-                //  calculate the time, default to 5.
-                var time = players[source].capsMutedCount * 5;
-                if (isNaN(time)) {
-                    time = 5;
-                }
-                
-                //  Mute the player
-                mutes.mute("->ChatBot", sys.ip(source), "Caps spam", time);
-                
-                //  Tell everyone why they're muted.
-                this.sendAll(db.playerToString(source) + " was muted for " + time + " minutes for CAPS abuse.", -1);
-                
-                //  Reset their caps count.
-                players[source].caps = 0;
-            }
         }
     };
 
@@ -7529,7 +7531,7 @@ beforeChatMessage : function(source, msg, chan) {
     if (-1 < ["!", "/", "%"].indexOf(msg[0])) {
         sys.stopEvent();
         CommandBot.beforeChatMessage (source, msg, chan, players);
-        if (Award.awards["Back for More"].indexOf(sys.name(source))) {
+        if (-1 == Award.awards["Back for More"].indexOf(sys.name(source))) {
             players[source].ppleft += 10;
             if (players[source].ppcap < players[source].ppleft) {
                 players[source].ppleft = players[source].ppcap;
