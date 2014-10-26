@@ -88,7 +88,9 @@
     "AssassinBot" : ["AssassinBot", "black"],
     
     "League" : [
-    
+        
+        ["[HH]Venom", "Poison"],
+        
         ["[HH]Shadowborg", "Ice"],
         
         ["[HH]Flame", "Psychic"],
@@ -100,8 +102,6 @@
         ["[HH]THIS GUY!", "Flying"],
         
         ["[HH]ChuchuLP0", "Normal"],
-        
-        ["[HH]SilverRain", "Fighting"],
         
         ["[HH]HelloSkitty9", "Grass"],
         
