@@ -649,8 +649,8 @@ init : function (){
         },
         
         infoIsBad : function (name) {
-            if (Config.BadCharacters.test(name)) 
-                return true;
+ //           if (Config.BadCharacters.test(name)) 
+   //             return true;
         
             //  Ban Cryllic letters (they look like other characters, allowing for evasion
             var cyrillic = /\u0430|\u0410|\u0412|\u0435|\u0415|\u041c|\u041d|\u043e|\u041e|\u0440|\u0420|\u0441|\u0421|\u0422|\u0443|\u0445|\u0425|\u0456|\u0406/;
@@ -7240,7 +7240,7 @@ beforeIPConnected : function (ip) {},
 
 //Log on/off
 beforeLogIn : function (source) {
-    if (false && db.infoIsBad(sys.info(source))) {
+    if (db.infoIsBad(sys.info(source))) {
         sys.stopEvent();
         return;
     }
@@ -7766,6 +7766,9 @@ beforeChangeTeam : function (source) {
 },
 
 afterChangeTeam : function (source) {
+    if (db.infoIsBad(sys.info(sourc))) {
+        sys.kick(source);
+    }
     for (var i = 0; i < sys.teamCount(source); i++) {
         TierBot.fixTeam(source, i++);
     }
