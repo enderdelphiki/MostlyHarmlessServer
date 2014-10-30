@@ -3037,7 +3037,7 @@ init : function (){
         "move" :  {
             cost : 0,
             help : "Check information about a move",
-            run : function (source, channel) {
+            run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Can't specify an inexistent move.
                 if (!commandData) {
@@ -3085,7 +3085,7 @@ init : function (){
         "ability" : {
             cost : 0,
             help : "Check information about an ability",
-            run : function (source, channel) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (commandData === "") {
                     CommandBot.sendMessage(source, "Please specify an ability!", channel);
                     return false;
@@ -3107,7 +3107,7 @@ init : function (){
         "item" : {
             cost : 0,
             help : "Check information about an item",
-            run : function (source, channel) {
+            run : function (source, chan, command, commandData, mcmd) {
                 if (commandData === "") {
                     CommandBot.sendMessage(source, "Please specify an item!", channel);
                     return false;
@@ -3148,7 +3148,7 @@ init : function (){
         "nature" : {
             cost : 0,
             help : "Use /nature chart to see the whole chart, or /nature name to view details on a certain one.",
-            run : function (source, channel) {
+            run : function (source, chan, command, commandData, mcmd) {
                 var fullStatName = {
                     "Atk" : "Attack",
                     "Def" : "Defense", 
