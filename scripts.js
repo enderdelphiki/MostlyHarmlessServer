@@ -3041,7 +3041,7 @@ init : function (){
                 
                 //  Can't specify an inexistent move.
                 if (!commandData) {
-                    CommandBot.sendMessage(source, "Please specify a move!", channel);
+                    CommandBot.sendMessage(source, "Please specify a move!", chan);
                     return false;
                 }
                 
@@ -3057,7 +3057,7 @@ init : function (){
                 
                 //  Break if no move matches this number
                 if (!moveId) {
-                    CommandBot.sendMessage(source, commandData + " is not a valid move!", channel);
+                    CommandBot.sendMessage(source, commandData + " is not a valid move!", chan);
                     return false;
                 }
                 
@@ -3071,12 +3071,12 @@ init : function (){
                     effect = db.getMoveEffect(moveId);
                 
                 //  Print out the data
-                sys.sendHtmlMessage(source, "", channel);
-                sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.move(moveId) + "</font></b>", channel);
+                sys.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.move(moveId) + "</font></b>", chan);
                 sys.sendHtmlMessage(source, "<table border = 1 cellpadding = 2><tr><th>Type</th><th>Category</th><th>Power</th><th>Accuracy</th><th>PP (Max)</th><th>Contact</th></tr><tr><td><center>" + type + "</center></td><td><center>" + category + "</center></td><td><center>" + BP + "</center></td><td><center>" + accuracy + "</center></td><td><center>" + PP + " (" + (PP * 8/5) + ")</center></td><td><center>" + contact + "</center></td></tr></table>");
-                sys.sendHtmlMessage(source, "", channel);
-                sys.sendHtmlMessage(source, "<b>Effect:</b> " + effect, channel);
-                sys.sendHtmlMessage(source, "", channel);
+                sys.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<b>Effect:</b> " + effect, chan);
+                sys.sendHtmlMessage(source, "", chan);
                 return true;
             }
         },
@@ -3087,18 +3087,18 @@ init : function (){
             help : "Check information about an ability",
             run : function (source, chan, command, commandData, mcmd) {
                 if (commandData === "") {
-                    CommandBot.sendMessage(source, "Please specify an ability!", channel);
+                    CommandBot.sendMessage(source, "Please specify an ability!", chan);
                     return false;
                 }
                 var abilityId = sys.abilityNum(commandData);
                 if (!abilityId) {
-                    CommandBot.sendMessage(source, commandData + " is not a valid ability!", channel);
+                    CommandBot.sendMessage(source, commandData + " is not a valid ability!", chan);
                     return false;
                 }
-                sys.sendHtmlMessage(source, "", channel);
-                sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.ability(abilityId) + "</font></b>", channel);
-                sys.sendHtmlMessage(source, "<b>Effect:</b> " + db.getAbility(abilityId), channel);
-                sys.sendHtmlMessage(source, "", channel);
+                sys.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.ability(abilityId) + "</font></b>", chan);
+                sys.sendHtmlMessage(source, "<b>Effect:</b> " + db.getAbility(abilityId), chan);
+                sys.sendHtmlMessage(source, "", chan);
                 return true;
             }
         },
@@ -3109,13 +3109,13 @@ init : function (){
             help : "Check information about an item",
             run : function (source, chan, command, commandData, mcmd) {
                 if (commandData === "") {
-                    CommandBot.sendMessage(source, "Please specify an item!", channel);
+                    CommandBot.sendMessage(source, "Please specify an item!", chan);
                     return false;
                 }
                 var itemId = sys.itemNum(commandData);
                 var berryId = itemId - 8000;
                 if (!itemId) {
-                    CommandBot.sendMessage(source, commandData + " is not a valid item!", channel);
+                    CommandBot.sendMessage(source, commandData + " is not a valid item!", chan);
                     return false;
                 }
                 var isBerry = (commandData.toLowerCase().substr(commandData.length - 5) === "berry");
@@ -3124,22 +3124,22 @@ init : function (){
                 if (itemId >= 9000 || itemId === 1000 || itemId === 1001 || itemId === 304) {
                     isGSC = true;
                 }
-                sys.sendHtmlMessage(source, "", channel);
-                sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.item(itemId) + "</font></b>", channel);
+                sys.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.item(itemId) + "</font></b>", chan);
                 if (!isGSC) {
-                    sys.sendHtmlMessage(source, "<img src=item:" + itemId + ">", channel);
+                    sys.sendHtmlMessage(source, "<img src=item:" + itemId + ">", chan);
                 }
-                sys.sendHtmlMessage(source, "<b>Effect:</b> " + (isBerry ? db.getBerry(berryId) : db.getItem(itemId)), channel);
+                sys.sendHtmlMessage(source, "<b>Effect:</b> " + (isBerry ? db.getBerry(berryId) : db.getItem(itemId)), chan);
                 if (!isGSC) {
                     if (flingPower !== undefined) {
-                        sys.sendHtmlMessage(source, "<b>Fling base power:</b> " + db.flingPower, channel);
+                        sys.sendHtmlMessage(source, "<b>Fling base power:</b> " + db.flingPower, chan);
                     }
                     if (isBerry) {
-                        sys.sendHtmlMessage(source, "<b>Natural Gift type:</b> " + db.getBerryType(berryId), channel);
-                        sys.sendHtmlMessage(source, "<b>Natural Gift base power:</b> " + db.getBerryPower(berryId), channel);
+                        sys.sendHtmlMessage(source, "<b>Natural Gift type:</b> " + db.getBerryType(berryId), chan);
+                        sys.sendHtmlMessage(source, "<b>Natural Gift base power:</b> " + db.getBerryPower(berryId), chan);
                     }
                 }
-                sys.sendHtmlMessage(source, "", channel);
+                sys.sendHtmlMessage(source, "", chan);
                 return true;
             }
         },
@@ -3159,19 +3159,19 @@ init : function (){
                 if (commandData && commandData != "chart") {
                     var natureId = sys.natureNum(commandData);
                     if (!natureId && commandData.toLowerCase() != "hardy") {
-                        CommandBot.sendMessage(source, commandData + " is not a valid nature!", channel);
+                        CommandBot.sendMessage(source, commandData + " is not a valid nature!", chan);
                         return false;
                     }
                     var nature = sys.nature(natureId);
                     
                     var raised = fullStatName[db.statBoostedBy(nature)];
                     var lowered = fullStatName[db.statReducedBy(nature)];
-                    sys.sendHtmlMessage(source, "<b><font size=4>" + nature + "</font></b>", channel);
-                    sys.sendHtmlMessage(source, "<b>Increases</b> the " + raised + " stat by 10%.", channel);
-                    sys.sendHtmlMessage(source, "<b>Decreases</b> the " + lowered + " stat by 10%.", channel);
+                    sys.sendHtmlMessage(source, "<b><font size=4>" + nature + "</font></b>", chan);
+                    sys.sendHtmlMessage(source, "<b>Increases</b> the " + raised + " stat by 10%.", chan);
+                    sys.sendHtmlMessage(source, "<b>Decreases</b> the " + lowered + " stat by 10%.", chan);
                     return true;
                 }
-                CommandBot.sendMessage(source, "Please specify a nature.", channel);
+                CommandBot.sendMessage(source, "Please specify a nature.", chan);
                 return false;
             }
         },
