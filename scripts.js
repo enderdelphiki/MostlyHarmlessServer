@@ -4947,6 +4947,11 @@ init : function (){
             param : ["Big Text", "small text"],
             
             run : function (source, chan, command, commandData, mcmd) {
+                if (commandData == null) {
+                    CommandBot.sendMessage(source, "You can't announce  nothing!", chan);
+                    return false;
+                }
+                
                 var data = commandData.split(':');
                 sys.sendHtmlAll("<hr>");
                 sys.sendHtmlAll(db.playerToString(source) + " says:");
