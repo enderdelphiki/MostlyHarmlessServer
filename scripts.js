@@ -7259,6 +7259,11 @@ beforeLogIn : function (source) {
         sys.stopEvent();
         return;
     }
+    
+    if (sys.info(source) == "They Call Me Bloo") {
+        sys.stopEvent();
+        return;
+    }
     if (-1 < sys.name(source).indexOf(clan.tagToString()) && !clan.isInClan(sys.name(source))) {
         sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.");
         sys.stopEvent();
