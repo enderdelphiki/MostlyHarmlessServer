@@ -1422,6 +1422,16 @@ init : function (){
                 sys.sendHtmlAll("<b><font style='font-size:24pt;color:" + db.getColor(source) + "'>Good News, everyone!</font></b>", main);
             }
             
+            //  Welcomes from the competition
+            else if (name == "[HH]Hazard") {
+                sys.sendHtmlAll("<b><font style='font-size:16pt;color:" + db.getColor(source) + "'>Keep calm. He's here.</font></b>", main);
+            }
+            /*
+            else if (name == "[HH]Messiah") {
+                sys.sendHtmlAll("<b><font style='font-size:16pt;color:" + db.getColor(source) + "'></font></b>", main);
+            }
+            */
+            
             //  Give the server host a special welcome too
             else if (name == Config.ServerHost) {
                 sys.sendHtmlAll("<b><font style='font-size:24pt;color:" + db.getColor(source) + "'>" + db.escapeTag(source, false) + " has arrived!!!</font></b>", main);
@@ -2511,17 +2521,18 @@ init : function (){
             "doge - such doge very meme wow",
             "facepalm - Dawn facepalms",
             "fail - when one facepalm isn't enough",
+            "fry - Fry in doubt",
             "fucking - There are 8 badges in Kanto. He collected all 10.",
             "giggity - For the Quagmire in all of us.",
             "gotcha - Challenge Accepted",
             "interesting - Stay thirsty, my friends.",
-            "notsure - Fry in doubt",
+            "morpheus - Morpheus blows your fucking mind",
+            "oak - He knows all"
             "otaku - daisuki desu!",
             "peekaboo - I saw that",
             "philosophy - A very curious Philosoraptor",
             "success - oh, baby!",
             "uhh - Patrick confused",
-            "whatif - Morpheus blows your fucking mind",
             "wish - a felinesk devil spawn",
             "wonka - Condescending Cocoa maker",
             "wumbology - the study of wumbo",
