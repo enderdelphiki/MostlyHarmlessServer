@@ -2527,7 +2527,7 @@ init : function (){
             "gotcha - Challenge Accepted",
             "interesting - Stay thirsty, my friends.",
             "morpheus - Morpheus blows your fucking mind",
-            "oak - He knows all"
+            "oak - He knows all",
             "otaku - daisuki desu!",
             "peekaboo - I saw that",
             "philosophy - A very curious Philosoraptor",
