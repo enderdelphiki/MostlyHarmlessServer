@@ -4152,7 +4152,7 @@ init : function (){
             cost : 15,
             help : "Who knows?",
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + "¯\_(ツ)_/¯", chan);
+                db.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + "¯\\_(ツ)_/¯", chan);
                 return true;
             }
         },
