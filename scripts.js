@@ -4147,6 +4147,16 @@ init : function (){
             }
         },
         
+        //  Shrug it off
+        "idk" : {
+            cost : 15,
+            help : "Who knows?",
+            run : function (source, chan, command, commandData, mcmd) {
+                db.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + "¯\_(ツ)_/¯", chan);
+                return true;
+            }
+        },
+        
         //  One of the most important commands in chatrooms
         "me" : {
             cost : 5 ,
