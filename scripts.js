@@ -61,7 +61,7 @@ init : function (){
             long as the syntax remains unchanged.
     */
     Config = JSON.parse(sys.getFileContent("config.json"));
-    Config["BadCharacters"] = /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/;
+    Config["BadCharacters"] = /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u0374-\u04FF\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/;
     
     /*
         The db object acts as a static "library" of global functions, extending those built-in
@@ -699,12 +699,8 @@ init : function (){
                 }
             }
             
-            //  Ban Cryllic letters (they look like other characters, allowing for evasion
-            var cyrillic = /\u0430|\u0410|\u0412|\u0435|\u0415|\u041c|\u041d|\u043e|\u041e|\u0440|\u0420|\u0441|\u0421|\u0422|\u0443|\u0445|\u0425|\u0456|\u0406/;
-            if (cyrillic.test(name)) return true;
-            
-            //  Ban Greek letters
-            var greek = /[\u0370-\u03ff]/;
+            //  Ban greek and cryllic letters
+            var greek = /[\u0370-\u04FF]/;
             if (greek.test(name)) return true;
 
             //  Ban space-looking names (same reason)
@@ -1424,11 +1420,11 @@ init : function (){
             
             //  Welcomes from the competition
             else if (name == "[HH]Hazard") {
-                sys.sendHtmlAll("<b><font style='font-size:16pt;color:" + db.getColor(source) + "'>Keep calm. He's here.</font></b>", main);
+                sys.sendHtmlAll("<timestamp/><b><font style='color:" + db.getColor(source) + "'>Keep calm. He's here.</font></b>", main);
             }
             /*
             else if (name == "[HH]Messiah") {
-                sys.sendHtmlAll("<b><font style='font-size:16pt;color:" + db.getColor(source) + "'></font></b>", main);
+                sys.sendHtmlAll("<timestamp/><b><font style='color:" + db.getColor(source) + "'></font></b>", main);
             }
             */
             
