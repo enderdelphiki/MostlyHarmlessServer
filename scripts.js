@@ -7272,15 +7272,6 @@ beforeIPConnected : function (ip) {},
 
 //Log on/off
 beforeLogIn : function (source) {
-    if (db.infoIsBad(sys.info(source))) {
-        sys.stopEvent();
-        return;
-    }
-    
-    if (sys.info(source) == "They Call Me Bloo") {
-        sys.stopEvent();
-        return;
-    }
     if (-1 < sys.name(source).indexOf(clan.tagToString()) && !clan.isInClan(sys.name(source))) {
         sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.");
         sys.stopEvent();
@@ -7394,8 +7385,8 @@ afterLogIn : function (source) {
     }
 },
 
-afterLogOut : function (source) {
-    sys.writeToFile("somestuff.txt", "before");
+beforeLogOut : function (source) {
+    sys.writeToFile("somestuff.txt", "before 1");
     if (players[source] == undefined) {
         newPlayer(source);
     }
@@ -7406,6 +7397,11 @@ afterLogOut : function (source) {
     if (sys.ip(source) == "127.0.0.1") {
         hash.set("skittytime", parseInt(sys.time()));
     }
+    sys.writeToFile("somestuff.txt", "before 2");
+},
+
+afterLogOut : function (source) {
+    sys.writeToFile("somestuff.txt", "after");
 },
 
 beforeChannelJoin : function (source, chan){
