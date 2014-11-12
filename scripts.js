@@ -7302,11 +7302,11 @@ beforeLogIn : function (source) {
 
 afterLogIn : function (source) {
     //  No TI until after login
-    if (Config["BadCharacters"].test(sys.info(source))) {
+/*    if (Config["BadCharacters"].test(sys.info(source))) {
 //        sys.ban(sys.ip(source));
         sys.kick(source);
         return;
-    }
+    }*/
     if (players[source] == undefined) {
         try {
             newPlayer(source);
