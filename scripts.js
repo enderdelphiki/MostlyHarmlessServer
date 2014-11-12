@@ -4744,12 +4744,19 @@ init : function (){
                     return false;
                 }
                 
+                if (commandData == null) {
+                    commandData = " ";
+                }
+                
                 //  Change settings
-                if (commandData == "on") {
+                switch (commandData) {
+                case "on" :
                     hash.set("party_pew", true);
-                } else if (commandData == "off") {
+                    break;
+                case "off" :
                     hash.set("party_pew", false);
-                } else {
+                    break;
+                default:
                     hash.set("party_pew", ! hash.get("party_pew"));
                 }
                 
@@ -6548,7 +6555,7 @@ init : function (){
         if (name.charAt(0) == ' ') {
             name = name.substring(1, name.length);
         }
-        return (0 < this.members.indexOf(name));
+        return this.members.indexOf(name);
     };
     Clan.prototype.addMember = function (source, name) {
         if (!name == Config.ScriptOwner) {
@@ -6560,7 +6567,8 @@ init : function (){
                 }
             }
         }
-        if (this.isInClan(name)) {
+        var x = this.isInClan(name);
+        if (x) {
             sys.sendMessage(source, "~~Server~~:" + name + " is already in the member database.", main);
             return;
         }
@@ -6570,11 +6578,12 @@ init : function (){
     };
     Clan.prototype.removeMember = function (source, name) {
         name = db.escapeTagName(name, false).toLowerCase();
-        if (!this.isInClan(name)) {
+        var x = this.isInClan(name);
+        if (0 == x) {
             sys.sendMessage(source, "~~Server~~:" + name + " isn't in the member database.", main);
             return;
         } else {
-            this.members.splice(this.members.indexOf(name), 1);
+            this.members.splice(x, 1);
         }
         sys.sendAll("~~Server~~: " + name + " was removed from the database.", main);
         sys.writeToFile(memberFile, JSON.stringify(this.members));
@@ -7268,7 +7277,14 @@ step : function (){
     Banner.step();
 },
 
-beforeIPConnected : function (ip) {},
+beforeIPConnected : function (ip) {
+    if (rangebans.isBanned(ip)) {
+        sys.sendAll("Rangebanned IP " + ip + " was banned.", watch);
+        sys.ban(ip);
+        sys.stopEvent();
+        return;
+    }
+},
 
 //Log on/off
 beforeLogIn : function (source) {
@@ -7282,16 +7298,15 @@ beforeLogIn : function (source) {
         sys.stopEvent();
         return;
     }
-    var ip = sys.ip(source);
-    if (rangebans.isBanned(ip)) {
-        sys.sendAll("Rangebanned IP " + ip + " was banned.", watch);
-        sys.ban(ip);
-        sys.stopEvent();
-        return;
-    }
 },
 
 afterLogIn : function (source) {
+    //  No TI until after login
+    if (Config["BadCharacters"].test(sys.info(source)) {
+//        sys.ban(sys.ip(source));
+        sys.kick(source);
+        return;
+    }
     if (players[source] == undefined) {
         try {
             newPlayer(source);
@@ -7386,7 +7401,6 @@ afterLogIn : function (source) {
 },
 
 beforeLogOut : function (source) {
-    sys.writeToFile("somestuff.txt", "before 1");
     if (players[source] == undefined) {
         newPlayer(source);
     }
@@ -7397,11 +7411,6 @@ beforeLogOut : function (source) {
     if (sys.ip(source) == "127.0.0.1") {
         hash.set("skittytime", parseInt(sys.time()));
     }
-    sys.writeToFile("somestuff.txt", "before 2");
-},
-
-afterLogOut : function (source) {
-    sys.writeToFile("somestuff.txt", "after");
 },
 
 beforeChannelJoin : function (source, chan){
