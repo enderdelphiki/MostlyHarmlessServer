@@ -2490,7 +2490,7 @@ init : function (){
                 CommandBot.sendMessage(source, "Posting pictures to chat is currently disabled.", chan);
                 return true;
             }
-            
+            /*
             //  Check the cost
             var da_cost = (-1 < Award.awards["ThinkFast"].indexOf(sys.name(source))) ? this.cost / 2 : this.cost;
             
@@ -2502,7 +2502,7 @@ init : function (){
             
             //  Spend the money
             players[source].ppleft -= da_cost;
-            
+            */
             //  Make the display
             sys.sendHtmlAll(db.playerToString(source, true, chan == rpchan) + " " + pic + " " + db.htmlEscape(commandData), chan);
             return true;
@@ -3253,7 +3253,7 @@ init : function (){
                 return true;
             }
         },
-
+        /*
         //  view your pp
         "pp" : {
             cost : 0,
@@ -3264,6 +3264,7 @@ init : function (){
                 return true;
             }
         },
+        */
 
         //  View your rank
         "ranking" : {
@@ -5997,7 +5998,7 @@ init : function (){
             if (target != undefined && players[target] == undefined) {
                 newPlayer(target);
             }
-            
+            /*
             //  Give the server host unlimited PP by reseting to max every time
             if (sys.ip(source) == "127.0.0.1") {
                 players[source].ppleft = players[source].ppcap;
@@ -6018,7 +6019,7 @@ init : function (){
                     }
                 }
             }
-            
+            */
             players[source].lastCommand = parseInt(sys.time());
             
             //  Hide messages from watch... except like super important ones
@@ -6033,7 +6034,7 @@ init : function (){
                 if (players[source].confined) {
                     this.sendAll(0, db.channelToString(chan) + "Confined Command -- " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg),watch);
                 } else {
-                    this.sendAll(0, db.channelToString(chan) + " -- </font>" + db.playerToString(source) + " (" + players[source].ppleft + " pp) -- <b><font color=black>" + msg[0] + command + "</font></b> " + db.htmlEscape(commandData), watch);
+                    this.sendAll(0, db.channelToString(chan) + " -- </font>" + db.playerToString(source) + /*" (" + players[source].ppleft + " pp)*/ + " -- <b><font color=black>" + msg[0] + command + "</font></b> " + db.htmlEscape(commandData), watch);
                 }
     //        }
             }
@@ -6047,14 +6048,15 @@ init : function (){
                 return;
             }
             if (UserCommands[command] != undefined) {
+            /*
                 var cost = UserCommands[command].cost;
                 if (halvecost) cost /= 2;
                 if (players[source].ppleft < cost) {
                     this.sendMessage(source, "You don't have enough PP. Cost: " + cost + ". You have: " + players[source].ppleft + ".", chan);
                     return;
-                }
+                }*/
                 if (UserCommands[command].run(source, chan, command, commandData, mcmd)) {
-                    players[source].ppleft -= cost;
+//                    players[source].ppleft -= cost;
                 } else {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
                 }
@@ -6065,6 +6067,7 @@ init : function (){
                     this.sendMessage(source, "Role-Playing commands are not allowed in the Party channel.", chan);
                     return;
                 }
+                /*
                 var cost = RPCommands[command].cost;
                 if (halvecost) {
                     cost /= 2;
@@ -6073,10 +6076,13 @@ init : function (){
                     this.sendMessage(source, "You don't have enough PP. Cost: " + cost + ". You have: " + players[source].ppleft + ".", chan);
                     return;
                 }
+                */
                 if (RPCommands[command].run(source, chan, command, commandData, mcmd)) {
+                /*
                     if (chan != rpchan) {
                         players[source].ppleft -= cost;
                     }
+                    */
                 } else {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
                 }
@@ -6292,8 +6298,8 @@ init : function (){
         players[source].oldmsg1 = '';
         players[source].oldname = sys.name(source);
         players[source].online = true;
-        players[source].ppleft = 10;
-        players[source].ppcap = 100;
+//        players[source].ppleft = 10;
+  //      players[source].ppcap = 100;
         players[source].rpname = false;
         players[source].seed = 8000;
         players[source].type = 0;
@@ -7574,12 +7580,14 @@ beforeChatMessage : function(source, msg, chan) {
     if (-1 < ["!", "/", "%"].indexOf(msg[0])) {
         sys.stopEvent();
         CommandBot.beforeChatMessage (source, msg, chan, players);
+        /*
         if (-1 < Award.awards["Back for More"].indexOf(sys.name(source))) {
             players[source].ppleft += 10;
             if (players[source].ppcap < players[source].ppleft) {
                 players[source].ppleft = players[source].ppcap;
             }
         }
+        */
         return;
     }
     
@@ -7620,12 +7628,14 @@ afterChatMessage : function (source, msg, chan) {
         mutes.mute("->Cthulhu", sys.ip(source), "summoning the beast", 5);
         sys.sendHtmlAll("<font color=green><timestamp/> -&gt;<i><b>*** Cthulhu</b> returns to its slumber.</i> </font>", main);
     }
+    /*
     if (msg == "!ping") {
         if (10 < players[source].ppleft) {
             players[source].ppleft -= 10;
             sys.sendAll("~~Server~~: Pong!", chan);
         }
     }
+    */
     ChatBot.afterChatMessage(source, msg, chan);
 },
 
