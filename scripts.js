@@ -3820,7 +3820,7 @@ init : function (){
                 return true;
             }
         },
-        
+        /*
         //  Attack someone
         "attack" : {
             cost : 100,
@@ -4034,7 +4034,7 @@ init : function (){
                 return true;
             }
         },
-        
+        */
         //  Burn target player
         "burn" :
         {
