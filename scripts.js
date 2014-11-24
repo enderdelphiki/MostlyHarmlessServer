@@ -6574,7 +6574,7 @@ init : function (){
             }
         }
         var x = this.isInClan(name);
-        if (x) {
+        if (x < 1) {
             sys.sendMessage(source, "~~Server~~:" + name + " is already in the member database.", main);
             return;
         }
