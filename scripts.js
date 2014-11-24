@@ -875,7 +875,7 @@ init : function (){
             }
             
             //  Check if the message is too long (clan members can post messages twice in length)
-            if (this.data.maxMessageLength * (clan.isInClan(sys.name(source)) ? 2 : 1) < msg.length) {
+            if (this.data.maxMessageLength * (clan.isInClan(sys.name(source) == -1) ? 2 : 1) < msg.length) {
                 
                 //  warn the person that it's too long
                 this.sendMessage(source, "That message is too long. Messages must not be longer than " + this.data.maxMessageLength + " characters.", chan);
@@ -6034,7 +6034,7 @@ init : function (){
                 if (players[source].confined) {
                     this.sendAll(0, db.channelToString(chan) + "Confined Command -- " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg),watch);
                 } else {
-                    this.sendAll(0, db.channelToString(chan) + " -- </font>" + db.playerToString(source) + /*" (" + players[source].ppleft + " pp)*/ + " -- <b><font color=black>" + msg[0] + command + "</font></b> " + db.htmlEscape(commandData), watch);
+                    this.sendAll(0, db.channelToString(chan) + " -- </font>" + db.playerToString(source) + /*" (" + players[source].ppleft + " pp) +*/ " -- <b><font color=black>" + msg[0] + command + "</font></b> " + db.htmlEscape(commandData), watch);
                 }
     //        }
             }
@@ -7830,7 +7830,7 @@ afterChangeTeam : function (source) {
             sys.kick(source);
             return;
         }
-        if (-1 < sys.name(source).indexOf(clan.tagToString()) && !clan.isInClan(sys.name(source))) {
+        if (-1 < sys.name(source).indexOf(clan.tagToString()) && -1 == clan.isInClan(sys.name(source))) {
             sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", main);
             sys.kick(source);
             return;
