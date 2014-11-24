@@ -443,7 +443,9 @@ init : function (){
         
         //  Grab the name of the user, ignoring that user's tag
         escapeTagName : function (name, lower) {
-        
+            if (name == undefined) {
+                return "";
+            }
             //  If we're going to lowercase then reformat it first.
             if (lower) {
                 name = name.toLowerCase();
