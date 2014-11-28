@@ -60,7 +60,7 @@ init : function (){
             It should be easy for anyone without programming ability to read and edit these as
             long as the syntax remains unchanged.
     */
-    Config = JSON.parse(sys.getFileContent("config.json"));
+    Config = JSON.parse(db.getFileContent("config.json"));
     Config["BadCharacters"] = /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u0374-\u04FF\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/;
     
     /*
@@ -69,7 +69,18 @@ init : function (){
             future updates.
     */
     db = {
-        data : JSON.parse(sys.getFileContent("dbdat.json")),
+        data : JSON.parse(db.getFileContent("dbdat.json")),
+        
+        getFileContent: function (file) {
+            try {
+                return sys.getFileContent(file);
+            }
+            catch (e) {
+                print("Unable to read file " + file);
+                sys.sendAll("Unable to read file " + file, watch);
+                return "";
+            }
+        },
         
         //  Formats a bot's display message intended for just a user to see.
         sendBotMessage : function (target, message, channel, name, color) {
@@ -133,7 +144,7 @@ init : function (){
             sys.appendToFile(file, "");
             
             //  If the file was empty before, even if it existed as an empty file
-            if (sys.getFileContent(file) == "") {
+            if (db.getFileContent(file) == "") {
             
                 //  then put replacement inside.
                 sys.writeToFile(file, replacement);
@@ -183,7 +194,7 @@ init : function (){
                 weightList = {};
                 
                 //  access the database
-                var data = sys.getFileContent(this.data.pokeDir + 'weight.txt').split('\n');
+                var data = db.getFileContent(this.data.pokeDir + 'weight.txt').split('\n');
                 
                 //  manipulate the data
                 for (var i = 0; i < data.length; i++) {
@@ -220,7 +231,7 @@ init : function (){
         getHeight : function (pokeId) {
             if (heightList === undefined) {
                 heightList = {};
-                var data = sys.getFileContent(this.data.pokeDir + 'height.txt').split('\n');
+                var data = db.getFileContent(this.data.pokeDir + 'height.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var id = data[i].substr(0, index);
@@ -240,7 +251,7 @@ init : function (){
         getMoveBP : function (moveId) {
             if (powerList === undefined) {
                 powerList = {};
-                var data = sys.getFileContent(this.data.moveDir + 'power.txt').split('\n');
+                var data = db.getFileContent(this.data.moveDir + 'power.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -257,7 +268,7 @@ init : function (){
         getMoveCategory : function (moveId) {
             if (categoryList === undefined) {
                 categoryList = {};
-                var data = sys.getFileContent(this.data.moveDir + 'damage_class.txt').split('\n');
+                var data = db.getFileContent(this.data.moveDir + 'damage_class.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -277,7 +288,7 @@ init : function (){
         getMoveAccuracy : function (moveId) {
             if (accList === undefined) {
                 accList = {};
-                var data = sys.getFileContent(this.data.moveDir + 'accuracy.txt').split('\n');
+                var data = db.getFileContent(this.data.moveDir + 'accuracy.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -294,7 +305,7 @@ init : function (){
         getMovePP : function (moveId) {
             if (ppList === undefined) {
                 ppList = {};
-                var data = sys.getFileContent(this.data.moveDir + 'pp.txt').split('\n');
+                var data = db.getFileContent(this.data.moveDir + 'pp.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -308,7 +319,7 @@ init : function (){
         getMoveEffect : function (moveId) {
             if (moveEffList === undefined) {
                 moveEffList = {};
-                var data = sys.getFileContent(this.data.moveDir + 'effect.txt').split('\n');
+                var data = db.getFileContent(this.data.moveDir + 'effect.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -325,7 +336,7 @@ init : function (){
         getMoveContact : function (moveId) {
             if (moveFlagList === undefined) {
                 moveFlagList = {};
-                var data = sys.getFileContent(this.data.moveDir + 'flags.txt').split('\n');
+                var data = db.getFileContent(this.data.moveDir + 'flags.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -339,7 +350,7 @@ init : function (){
         getAbility : function (abilityId) {
             if (abilityList === undefined) {
                 abilityList = {};
-                var data = sys.getFileContent(this.data.abilityDir + 'ability_battledesc.txt').split('\n');
+                var data = db.getFileContent(this.data.abilityDir + 'ability_battledesc.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -353,7 +364,7 @@ init : function (){
         getItem : function (itemId) {
             if (itemList === undefined) {
                 itemList = {};
-                var data = sys.getFileContent(this.data.itemDir + 'items_description.txt').split('\n');
+                var data = db.getFileContent(this.data.itemDir + 'items_description.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -367,7 +378,7 @@ init : function (){
         getBerry : function (berryId) {
             if (berryList === undefined) {
                 berryList = {};
-                var data = sys.getFileContent(this.data.itemDir + 'berries_description.txt').split('\n');
+                var data = db.getFileContent(this.data.itemDir + 'berries_description.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -381,7 +392,7 @@ init : function (){
         getFlingPower : function (itemId) {
             if (flingPowerList === undefined) {
                 flingPowerList = {};
-                var data = sys.getFileContent(this.data.itemDir + 'items_pow.txt').split('\n');
+                var data = db.getFileContent(this.data.itemDir + 'items_pow.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -395,7 +406,7 @@ init : function (){
         getBerryPower : function (berryId) {
             if (berryPowerList === undefined) {
                 berryPowerList = {};
-                var data = sys.getFileContent(this.data.itemDir + 'berry_pow.txt').split('\n');
+                var data = db.getFileContent(this.data.itemDir + 'berry_pow.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -409,7 +420,7 @@ init : function (){
         getBerryType : function (berryId) {
             if (berryTypeList === undefined) {
                 berryTypeList = {};
-                var data = sys.getFileContent(this.data.itemDir + 'berry_type.txt').split('\n');
+                var data = db.getFileContent(this.data.itemDir + 'berry_type.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -443,6 +454,7 @@ init : function (){
         
         //  Grab the name of the user, ignoring that user's tag
         escapeTagName : function (name, lower) {
+        try {
             if (name == undefined) {
                 return "";
             }
@@ -453,7 +465,10 @@ init : function (){
             
             //  Yay for RegEx being readable and all
             return name.replace(/\[[^\]]*\]/gi,'').replace('\'','\\\'');
-        },
+        }
+        catch (e) {return "";
+        
+        }},
         
         //  Grab the tagless name of the user given an ID rather than the name itself
         escapeTag : function (source, lower) {
@@ -810,7 +825,7 @@ init : function (){
         Load this before everything else plz
     */
     ChatBot = {
-        data : JSON.parse(sys.getFileContent("chatdat.json")),
+        data : JSON.parse(db.getFileContent("chatdat.json")),
         
         //  Format the bot's private messaging.
         sendMessage : function (target, msg, chan) {
@@ -1077,7 +1092,7 @@ init : function (){
             but for permanent changes to any of this, it's best to update this in the script.
     */
     Banner =  {
-        data : JSON.parse(sys.getFileContent("bannerdat.json")),
+        data : JSON.parse(db.getFileContent("bannerdat.json")),
                 
         //  every second this ticks the counter
         step : function() {
@@ -1560,7 +1575,7 @@ init : function (){
         //  Tracks how long before the next idle chat display
         count : 360,
         
-        data : JSON.parse(sys.getFileContent("tumbleweed.json")),
+        data : JSON.parse(db.getFileContent("tumbleweed.json")),
         
         //   Formats and displays the idle message of choice
         post : function (i) {
@@ -1630,7 +1645,7 @@ init : function (){
         TierBot is a pseudobot that enforces all script-based tier rules. 
     */
     TierBot = {
-        data : JSON.parse(sys.getFileContent("tierdat.json")),
+        data : JSON.parse(db.getFileContent("tierdat.json")),
         
         //  Format private message
         sendMessage : function (target, msg, chan) {
@@ -2142,7 +2157,7 @@ init : function (){
                     catch (err) {
                     
                         //  Reload the script from file
-                        sys.changeScript(sys.getFileContent('scripts.js'));
+                        sys.changeScript(db.getFileContent('scripts.js'));
                         
                         //  Tell everyone the lag is over
                         sys.sendAll("~~Server~~: Script update failed. Business as usual!", main);
@@ -5928,7 +5943,7 @@ init : function (){
             run : function (source, chan, command, commandData, mcmd) {
 
                 try {
-                    sys.sendMessage(source, sys.getFileContent(commandData), chan);
+                    sys.sendMessage(source, db.getFileContent(commandData), chan);
                     return true;
                 } catch (e) {
                     sys.sendMessage(source, "Couldn't find " + commandData, chan);
@@ -5948,7 +5963,7 @@ init : function (){
                     }
                     try {
                         sys.writeToFile(mcmd[0], resp);
-                        sys.changeScript(sys.getFileContent('scripts.js'));
+                        sys.changeScript(db.getFileContent('scripts.js'));
                     } catch (err) {
                         sys.sendMessage(source, err, chan);
                         sys.sendAll(err, watch);
@@ -6327,13 +6342,13 @@ init : function (){
     var juggerFile = "Juggernaut.json", jug = {};
     function Juggernaut() {
         db.createFile(juggerFile,"{}");
-        if (sys.getFileContent(juggerFile).length < 3) {
+        if (db.getFileContent(juggerFile).length < 3) {
             jug.name = Config.DefaultJuggernaut;
             jug.ips = ["192.168."];
             jug.time = sys.time();
             this.save();
         } else {
-            jug = JSON.parse(sys.getFileContent(juggerFile));
+            jug = JSON.parse(db.getFileContent(juggerFile));
         }
     };
     
@@ -6436,7 +6451,7 @@ init : function (){
     var muteFile = "Mute.json";
     function MuteCache() {
         db.createFile(muteFile, "{}");
-        this.muted = JSON.parse(sys.getFileContent(muteFile));
+        this.muted = JSON.parse(db.getFileContent(muteFile));
     }
     MuteCache.prototype.isMuted = function(ip) {
         if (typeof(this.muted[ip]) != "object") {
@@ -6498,7 +6513,7 @@ init : function (){
     var banFile = "RangeBan.json";
     function RangeCache() {
         db.createFile(banFile, "{}");
-        this.banned = JSON.parse(sys.getFileContent(banFile));
+        this.banned = JSON.parse(db.getFileContent(banFile));
     };
     RangeCache.prototype.isBanned = function(ip) {
         var sep = ip.split('.');
@@ -6550,7 +6565,7 @@ init : function (){
     var memberFile = "Members.json";
     function Clan() {
         db.createFile(memberFile, "[]");
-        this.members = JSON.parse(sys.getFileContent(memberFile));
+        this.members = JSON.parse(db.getFileContent(memberFile));
     }
     Clan.prototype.tagToString = function () {
         return "" + Config.SurroundTag.replace("%%", Config.ClanTag);
@@ -6597,7 +6612,7 @@ init : function (){
         sys.writeToFile(memberFile, JSON.stringify(this.members));
     };
     Clan.prototype.showAll = function (source, chan) {
-        this.members = JSON.parse(sys.getFileContent(memberFile));
+        this.members = JSON.parse(db.getFileContent(memberFile));
         if (this.members[0] == undefined) {
             this.members = [0];
         }
@@ -6624,7 +6639,7 @@ init : function (){
     var hashFile = "hash.json";
     function Hash () {
         db.createFile(hashFile, "{}");
-        this.hash = JSON.parse(sys.getFileContent(hashFile));
+        this.hash = JSON.parse(db.getFileContent(hashFile));
     }
     Hash.prototype.set = function (key, value) {
         this.hash[key] = value;
@@ -6650,9 +6665,9 @@ init : function (){
     
     db.createFile("awards.json", "{}");
     Award = {
-        data : JSON.parse(sys.getFileContent("awarddat.json")),
+        data : JSON.parse(db.getFileContent("awarddat.json")),
         
-        awards : JSON.parse(sys.getFileContent("awards.json")),
+        awards : JSON.parse(db.getFileContent("awards.json")),
         
         sendMessage : function (target, msg, chan) {
             db.sendBotMessage(target, msg, chan, Config.AwardBot[0], Config.AwardBot[1]);
@@ -6757,12 +6772,12 @@ init : function (){
         }
     }
     
-    Pictures = JSON.parse(sys.getFileContent("pictures.json"));
+    Pictures = JSON.parse(db.getFileContent("pictures.json"));
     
     var AssassinFile = "Assassin.json";
     function Assassin() {
         db.createFile(AssassinFile, "{}");
-        this.data = JSON.parse(sys.getFileContent(AssassinFile));
+        this.data = JSON.parse(db.getFileContent(AssassinFile));
         if (this.data.players == undefined) {
             this.clear();
         }
@@ -7538,7 +7553,7 @@ beforeChatMessage : function(source, msg, chan) {
                 sys.changeScript(resp);
                 sys.writeToFile('scripts.js', resp);
             } catch (err) {
-                sys.changeScript(sys.getFileContent('scripts.js'));
+                sys.changeScript(db.getFileContent('scripts.js'));
                 sys.sendAll('Updating failed, loaded old scripts!', watch);
                 sys.sendAll(err, watch);
                 print(err);
@@ -8000,7 +8015,7 @@ sys.getClauses(QString),
 sys.getColor(int),
 sys.getCurrentDir(),
 sys.getDescription(),
-sys.getFileContent(QString),
+db.getFileContent(QString),
 sys.getScript(),
 sys.getServerPlugins(),
 sys.getTierList(),
