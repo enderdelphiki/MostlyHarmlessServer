@@ -71,7 +71,7 @@ init : function (){
                 return "";
             }
         },
-        data : JSON.parse(db.getFileContent("dbdat.json")),
+        data : JSON.parse(sys.getFileContent("dbdat.json")),
         
         
         //  Formats a bot's display message intended for just a user to see.
@@ -136,7 +136,7 @@ init : function (){
             sys.appendToFile(file, "");
             
             //  If the file was empty before, even if it existed as an empty file
-            if (db.getFileContent(file) == "") {
+            if (sys.getFileContent(file) == "") {
             
                 //  then put replacement inside.
                 sys.writeToFile(file, replacement);
@@ -186,7 +186,7 @@ init : function (){
                 weightList = {};
                 
                 //  access the database
-                var data = db.getFileContent(this.data.pokeDir + 'weight.txt').split('\n');
+                var data = sys.getFileContent(this.data.pokeDir + 'weight.txt').split('\n');
                 
                 //  manipulate the data
                 for (var i = 0; i < data.length; i++) {
@@ -223,7 +223,7 @@ init : function (){
         getHeight : function (pokeId) {
             if (heightList === undefined) {
                 heightList = {};
-                var data = db.getFileContent(this.data.pokeDir + 'height.txt').split('\n');
+                var data = sys.getFileContent(this.data.pokeDir + 'height.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var id = data[i].substr(0, index);
@@ -243,7 +243,7 @@ init : function (){
         getMoveBP : function (moveId) {
             if (powerList === undefined) {
                 powerList = {};
-                var data = db.getFileContent(this.data.moveDir + 'power.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'power.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -260,7 +260,7 @@ init : function (){
         getMoveCategory : function (moveId) {
             if (categoryList === undefined) {
                 categoryList = {};
-                var data = db.getFileContent(this.data.moveDir + 'damage_class.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'damage_class.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -280,7 +280,7 @@ init : function (){
         getMoveAccuracy : function (moveId) {
             if (accList === undefined) {
                 accList = {};
-                var data = db.getFileContent(this.data.moveDir + 'accuracy.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'accuracy.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -297,7 +297,7 @@ init : function (){
         getMovePP : function (moveId) {
             if (ppList === undefined) {
                 ppList = {};
-                var data = db.getFileContent(this.data.moveDir + 'pp.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'pp.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -311,7 +311,7 @@ init : function (){
         getMoveEffect : function (moveId) {
             if (moveEffList === undefined) {
                 moveEffList = {};
-                var data = db.getFileContent(this.data.moveDir + 'effect.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'effect.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -328,7 +328,7 @@ init : function (){
         getMoveContact : function (moveId) {
             if (moveFlagList === undefined) {
                 moveFlagList = {};
-                var data = db.getFileContent(this.data.moveDir + 'flags.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'flags.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -342,7 +342,7 @@ init : function (){
         getAbility : function (abilityId) {
             if (abilityList === undefined) {
                 abilityList = {};
-                var data = db.getFileContent(this.data.abilityDir + 'ability_battledesc.txt').split('\n');
+                var data = sys.getFileContent(this.data.abilityDir + 'ability_battledesc.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -356,7 +356,7 @@ init : function (){
         getItem : function (itemId) {
             if (itemList === undefined) {
                 itemList = {};
-                var data = db.getFileContent(this.data.itemDir + 'items_description.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'items_description.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -370,7 +370,7 @@ init : function (){
         getBerry : function (berryId) {
             if (berryList === undefined) {
                 berryList = {};
-                var data = db.getFileContent(this.data.itemDir + 'berries_description.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'berries_description.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -384,7 +384,7 @@ init : function (){
         getFlingPower : function (itemId) {
             if (flingPowerList === undefined) {
                 flingPowerList = {};
-                var data = db.getFileContent(this.data.itemDir + 'items_pow.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'items_pow.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -398,7 +398,7 @@ init : function (){
         getBerryPower : function (berryId) {
             if (berryPowerList === undefined) {
                 berryPowerList = {};
-                var data = db.getFileContent(this.data.itemDir + 'berry_pow.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'berry_pow.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
@@ -412,7 +412,7 @@ init : function (){
         getBerryType : function (berryId) {
             if (berryTypeList === undefined) {
                 berryTypeList = {};
-                var data = db.getFileContent(this.data.itemDir + 'berry_type.txt').split('\n');
+                var data = sys.getFileContent(this.data.itemDir + 'berry_type.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
