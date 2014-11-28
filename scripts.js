@@ -56,14 +56,6 @@ poScript = ({
 init : function (){
     
     /*
-        Config is an object which holds easy-to-find settings for general server functionality.
-            It should be easy for anyone without programming ability to read and edit these as
-            long as the syntax remains unchanged.
-    */
-    Config = JSON.parse(db.getFileContent("config.json"));
-    Config["BadCharacters"] = /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u0374-\u04FF\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/;
-    
-    /*
         The db object acts as a static "library" of global functions, extending those built-in
             ones in the sys object. Context-free functions should be added to this object in
             future updates.
@@ -819,6 +811,14 @@ init : function (){
         usingInverted : function (clauses) { return 512 & clauses; }
     };
 
+    /*
+        Config is an object which holds easy-to-find settings for general server functionality.
+            It should be easy for anyone without programming ability to read and edit these as
+            long as the syntax remains unchanged.
+    */
+    Config = JSON.parse(sys.getFileContent("config.json"));
+    Config["BadCharacters"] = /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u0374-\u04FF\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/;
+    
     /*
         ChatBot is a pseudobot that enforces chage rules automaticallly.
         
