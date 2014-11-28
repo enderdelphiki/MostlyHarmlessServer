@@ -61,8 +61,6 @@ init : function (){
             future updates.
     */
     db = {
-        data : JSON.parse(db.getFileContent("dbdat.json")),
-        
         getFileContent: function (file) {
             try {
                 return sys.getFileContent(file);
@@ -73,6 +71,8 @@ init : function (){
                 return "";
             }
         },
+        data : JSON.parse(db.getFileContent("dbdat.json")),
+        
         
         //  Formats a bot's display message intended for just a user to see.
         sendBotMessage : function (target, message, channel, name, color) {
