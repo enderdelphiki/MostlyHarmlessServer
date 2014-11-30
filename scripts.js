@@ -892,7 +892,7 @@ init : function (){
             }
             
             //  Check if the message is too long (clan members can post messages twice in length)
-            if (this.data.maxMessageLength * (clan.isInClan(sys.name(source) == -1) ? 2 : 1) < msg.length) {
+            if (this.data.maxMessageLength * (clan.indexInClan(sys.name(source) == -1) ? 2 : 1) < msg.length) {
                 
                 //  warn the person that it's too long
                 this.sendMessage(source, "That message is too long. Messages must not be longer than " + this.data.maxMessageLength + " characters.", chan);
@@ -6570,7 +6570,7 @@ init : function (){
     Clan.prototype.tagToString = function () {
         return "" + Config.SurroundTag.replace("%%", Config.ClanTag);
     };
-    Clan.prototype.isInClan = function (name) {
+    Clan.prototype.indexInClan = function (name) {
         if (0 < sys.dbAuth(name) || 0 < db.auth(sys.id(name))) {
             return true;
         }
@@ -6588,8 +6588,8 @@ init : function (){
                 return;
             }
         }
-        var x = this.isInClan(name);
-        if (x < 1) {
+        var x = this.indexInClan(name);
+        if (-1 < x) {
             sys.sendMessage(source, "~~Server~~:" + name + " is already in the member database.", main);
             return;
         }
@@ -6599,8 +6599,8 @@ init : function (){
     };
     Clan.prototype.removeMember = function (source, name) {
         name = db.escapeTagName(name, false).toLowerCase();
-        var x = this.isInClan(name);
-        if (0 == x) {
+        var x = this.indexInClan(name);
+        if (-1 == x) {
             sys.sendMessage(source, "~~Server~~:" + name + " isn't in the member database.", main);
             return;
         } else {
@@ -7300,7 +7300,7 @@ beforeIPConnected : function (ip) {
 
 //Log on/off
 beforeLogIn : function (source) {
-    if (-1 < sys.name(source).indexOf(clan.tagToString()) && !clan.isInClan(sys.name(source))) {
+    if (-1 < sys.name(source).indexOf(clan.tagToString()) && !clan.indexInClan(sys.name(source))) {
         sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.");
         sys.stopEvent();
         return;
@@ -7564,7 +7564,7 @@ beforeChatMessage : function(source, msg, chan) {
     }
 
     if (-1 < sys.name(source).indexOf(clan.tagToString())
-     && !clan.isInClan(sys.name(source))) {
+     && !clan.indexInClan(sys.name(source))) {
         sys.stopEvent();
         sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", chan);
         sys.kick(source);
@@ -7836,7 +7836,7 @@ afterChangeTeam : function (source) {
             sys.kick(source);
             return;
         }
-        if (-1 < sys.name(source).indexOf(clan.tagToString()) && -1 == clan.isInClan(sys.name(source))) {
+        if (-1 < sys.name(source).indexOf(clan.tagToString()) && -1 == clan.indexInClan(sys.name(source))) {
             sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", main);
             sys.kick(source);
             return;
