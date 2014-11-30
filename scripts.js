@@ -6581,13 +6581,11 @@ init : function (){
         return this.members.indexOf(name);
     };
     Clan.prototype.addMember = function (source, name) {
-        if (!name == Config.ScriptOwner) {
-            var badNames = ["'", '"', "/", "\\", "[", "{"];
-            for (var i = 0; i < badNames.length; i++) {
-                if (-1 < name.indexOf(badNames[i])) {
-                    sys.sendMessage(source, "~~Server~~: The characters " + badNames.join(", ") + " are not allowed in names.", main);
-                    return;
-                }
+        var badNames = ["'", '"', "/", "\\", "[", "{"];
+        for (var i = 0; i < badNames.length; i++) {
+            if (-1 < name.indexOf(badNames[i])) {
+                sys.sendMessage(source, "~~Server~~: The characters " + badNames.join(", ") + " are not allowed in names.", main);
+                return;
             }
         }
         var x = this.isInClan(name);
@@ -6614,22 +6612,13 @@ init : function (){
     Clan.prototype.showAll = function (source, chan) {
         this.members = JSON.parse(db.getFileContent(memberFile));
         if (this.members[0] == undefined) {
-            this.members = [0];
-        }
-        if (this.members[0] == 0) {
             sys.sendMessage(source, "~~Server~~: No members!");
             return;
         }
-        var membersSorted = [];
-        for (var i = 1; i < this.members.length; i++) {
-            membersSorted.push(this.members[i]);
-        }
-        membersSorted = membersSorted.sort();
-        for (var i = 0; i < membersSorted.length; i++) {
-            this.members[i + 1] = membersSorted[i];
-        }
+        this.members = this.members.sort();
         sys.sendMessage(source, "~~Server~~: The " + this.members.length + " members are:", chan);
         sys.sendMessage(source, this.members.join(", "), chan);
+        sys.writeToFile(memberFile, JSON.stringify(this.members));
     };
     Clan.prototype.exportMembers = function (source, chan) {
         sys.sendMessage(source, JSON.stringify(this.members), chan);
