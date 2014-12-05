@@ -6581,14 +6581,18 @@ init : function (){
         return this.members.indexOf(name);
     };
     Clan.prototype.addMember = function (source, name) {
-        var badNames = ["'", '"', "/", "\\", "[", "{"];
-        for (var i = 0; i < badNames.length; i++) {
-            if (-1 < name.indexOf(badNames[i])) {
-                sys.sendMessage(source, "~~Server~~: The characters " + badNames.join(", ") + " are not allowed in names.", main);
+        for (var i = 0; i < name.length; i++) {
+            //because too lazy to look up unicode
+            if (name[i] != ' '
+            && (name[i] < 'a' && name[i] < 'A' && name[i] < '0'
+            ||  name[i] > 'z' && name[i] > 'Z' && name[i] > '9')
+            ) {
+                sys.sendMessage(source, "~~Server~~: Only alphanumeric names can be clan members.", main);
                 return;
             }
         }
         var x = this.indexInClan(name);
+        sys.sendMessage(source, "->Debugger: This user is index " + x, main);
         if (-1 < x) {
             sys.sendMessage(source, "~~Server~~:" + name + " is already in the member database.", main);
             return;
@@ -7300,11 +7304,12 @@ beforeIPConnected : function (ip) {
 
 //Log on/off
 beforeLogIn : function (source) {
-    if (-1 < sys.name(source).indexOf(clan.tagToString()) && !clan.indexInClan(sys.name(source))) {
+    /*
+    if (-1 < sys.name(source).indexOf(clan.tagToString()) && clan.indexInClan(sys.name(source)) == -1) {
         sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.");
         sys.stopEvent();
         return;
-    }
+    }*/
     if (hash.get("lockdown") && -1 == sys.name(source).indexOf(clan.tagToString())) {
         sys.sendAll("~~Server~~: " + sys.name(source) + " was rejected for not being in the clan.", watch);
         sys.stopEvent();
