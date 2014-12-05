@@ -7304,12 +7304,12 @@ beforeIPConnected : function (ip) {
 
 //Log on/off
 beforeLogIn : function (source) {
-    /*
-    if (-1 < sys.name(source).indexOf(clan.tagToString()) && clan.indexInClan(sys.name(source)) == -1) {
-        sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.");
+    if (-1 < sys.name(source).indexOf(clan.tagToString())
+    && clan.indexInClan(sys.name(source)) == -1) {
+        sys.sendMessage(source, "~~Server~~: Your name wasn't found on the members list. This could be our error- a reminder will do fine. Otherwise, you must try out to join the clan.");
         sys.stopEvent();
         return;
-    }*/
+    }
     if (hash.get("lockdown") && -1 == sys.name(source).indexOf(clan.tagToString())) {
         sys.sendAll("~~Server~~: " + sys.name(source) + " was rejected for not being in the clan.", watch);
         sys.stopEvent();
@@ -7567,9 +7567,9 @@ beforeChatMessage : function(source, msg, chan) {
     if (players[source] == undefined) {
         newPlayer(source);
     }
-
+    
     if (-1 < sys.name(source).indexOf(clan.tagToString())
-     && !clan.indexInClan(sys.name(source))) {
+    && clan.indexInClan(sys.name(source)) == -1) {
         sys.stopEvent();
         sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", chan);
         sys.kick(source);
