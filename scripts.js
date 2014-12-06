@@ -10,10 +10,12 @@ var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer
 
 var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json","awarddat.json","tumbleweed.json"];
 
+//  this allows json updates that break the script
+var forcereload = ["bannerdat.json"];
 function include() {
     var files = sys.filesForDirectory(".");
     includes.forEach(function(element, index, array) {
-        if (-1 == files.indexOf(element)) {
+        if (-1 < forcereload.indexOf(element) || -1 == files.indexOf(element)) {
             sys.webCall(root + element, function(write) {
                 sys.writeToFile(element, write);
             });
