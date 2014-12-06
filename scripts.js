@@ -15,9 +15,10 @@ var forcereload = ["bannerdat.json"];
 function include() {
     var files = sys.filesForDirectory(".");
     includes.forEach(function(element, index, array) {
-        if (-1 < forcereload.indexOf(element) || -1 == files.indexOf(element)) {
+        if (-1 == files.indexOf(element) || -1 < forcereload.indexOf(element)) {
             sys.webCall(root + element, function(write) {
                 sys.writeToFile(element, write);
+                print("Loaded " + element);
             });
         }
     });
