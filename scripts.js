@@ -1788,13 +1788,13 @@ init : function (){
                 
                 case "Ender's Battle": {
                     for (var i = 0; i < 6; i++) {
-                        if (-1 == this.data.EnderPoke.indexOf(sys.pokeNum(sys.teamPoke(source, tsource, i)))) {
-                            this.sendMessage(source, "You may only use Pokemon capable of Mega Evolution in this tier.", main);
+                        if (-1 == this.data.EnderPoke.indexOf(sys.pokemon(sys.teamPoke(source, tsource, i)))) {
+                            this.sendMessage(source, sys.pokemon(sys.teamPoke(source, tsource, i)) + " is not capable of Mega Evolution.", main);
                             sys.changeTier(source, tsource, "Challenge Cup");
                             return true;
                         }
-                        if (-1 == this.data.EnderItem.indexOf(sys.itemNum(sys.teamPokeItem(source, tsource, i)))) {
-                            this.sendMessage(source, "All Pokemon must be holding their Mega Evolution stones in this tier.", main);
+                        if (-1 == this.data.EnderItem.indexOf(sys.item(sys.teamPokeItem(source, tsource, i)))) {
+                            this.sendMessage(source, sys.item(sys.teamPokeItem(source, tsource, i)) + " is not a mega stone.", main);
                             sys.changeTier(source, tsource, "Challenge Cup");
                             return true;
                         }
