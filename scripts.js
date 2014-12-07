@@ -1788,7 +1788,7 @@ init : function (){
                 
                 case "Ender's Battle": {
                     for (var i = 0; i < 6; i++) {
-                        if (-1 == this.data.EnderPoke.indexOf(sys.pokeNum(sys.teamPoke(source, tsource, i)))
+                        if (-1 == this.data.EnderPoke.indexOf(sys.pokeNum(sys.teamPoke(source, tsource, i)))) {
                             this.sendMessage(source, "You may only use Pokemon capable of Mega Evolution in this tier.", main);
                             return true;
                         }
