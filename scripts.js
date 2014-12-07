@@ -11,7 +11,7 @@ var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer
 var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json","awarddat.json","tumbleweed.json"];
 
 //  this allows json updates that break the script
-var forcereload = ["bannerdat.json"];
+var forcereload = [];
 function include() {
     var files = sys.filesForDirectory(".");
     includes.forEach(function(element, index, array) {
@@ -1787,23 +1787,14 @@ init : function (){
             switch (tier){
                 
                 case "Ender's Battle": {
-                    var types = [];
                     for (var i = 0; i < 6; i++) {
-                        var p =  sys.teamPoke(source, tsource, p);
-                        if (p != 493 && p != 0) {
-                            this.sendMessage(source, "You are only allowed to run Arceus this season.", main);
+                        if (-1 == this.data.EnderPoke.indexOf(sys.pokeNum(sys.teamPoke(source, tsource, i)))
+                            this.sendMessage(source, "You may only use Pokemon capable of Mega Evolution in this tier.", main);
                             return true;
                         }
-                        var item = sys.item(sys.teamPokeItem(source, tsource, p));
-                        if (-1 == item.indexOf("Plate")) {
-                            item = "Normal Plate";
-                        }
-                        if (-1 < types.indexOf(item)) {
-                            this.sendMessage(source, "No two Arceus may share the same type.", main);
+                        if (-1 == this.data.EnderItem.indexOf(sys.itemNum(sys.teamPokeItem(source, tsource, i)))) {
+                            this.sendMessage(source, "All Pokemon must be holding their Mega Evolution stones in this tier.", main);
                             return true;
-                        }
-                        else {
-                            types.push(item);
                         }
                     }
                     break;
