@@ -208,7 +208,9 @@
         
         "Updates finished! Do you want to restart your computer now?",
         
-        "And another thing..."
+        "And another thing...",
+        
+        "Updates ready! Alt+F4 to apply update."
     
     ]
 

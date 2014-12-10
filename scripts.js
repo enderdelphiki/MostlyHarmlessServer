@@ -5593,6 +5593,7 @@ init : function (){
                 ).join("");
                 if (teams) {
                     sys.sendHtmlMessage(source, "<table><tr>" + teams + "</tr></table>", chan);
+                    CommandBot.sendAll(source, db.playerToString(source) + " viewed " + db.playerToString(target) + "'s teams.", chan);
                     return true;
                 } else {
                     CommandBot.sendMessage(source, "That player has no teams with valid pokemon.", chan);
@@ -8163,6 +8164,7 @@ sys.zip(QString,QString)
 
 
     TODO:
+    natures
     ban drought and drizzle from below OU
     change private message format
 

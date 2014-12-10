@@ -9,7 +9,7 @@
     ],
     
     [
-        "#FF0000",
+        "#FF0000", 
         
         "Santa Claus",
         
@@ -97,14 +97,6 @@
     ],
     
     [
-        "black",
-        
-        "Planets",
-        
-        "align"
-    ],
-    
-    [
         "#BBBBBB",
         
         "Guard Skill",
@@ -165,6 +157,14 @@
         
         "Metropolis",
         
-        "thoughtfully smiles"
+        "watches and thoughtfully smiles"
+    ],
+    
+    [
+        "red",
+        
+        "A wise friend",
+        
+        "And then, he killed the dog."    
     ]
 ]}
