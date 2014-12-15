@@ -5525,7 +5525,7 @@ init : function (){
 
                 if (rangebans.ban(mcmd[0])) {
                     Guard.sendAll("IP " + mcmd[0] + " was rangebanned.", -1);
-                    AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason", mcmd[1]);
+                    AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
                     return true;
                 }
                 Guard.sendMessage(source, "Cannot ban IP " + mcmd[0] + ". Maybe it's already banned?", chan);
@@ -5539,7 +5539,7 @@ init : function (){
 
                 if (rangebans.unban(mcmd[0])) {
                     Guard.sendAll("IP " + mcmd[0] + " is no longer rangebanned.", -1);
-                    AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason", mcmd[1]);
+                    AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
                     return true;
                 }
                 Guard.sendMessage(source, "Cannot unban IP " + mcmd[0] + ". Maybe it's not banned?", chan);
@@ -7169,8 +7169,9 @@ init : function (){
 
     AuthLogs.prototype.display = function(source, chan, num) {
         var table = "<br><table><tr><th>User</th><th>Command></th><th>Target></th><th>Reason</th></tr>";
-        for (int i = this.logs.length - 1; -1 < i && -1 < num; i++, num--) {
+        for (var i = this.logs.length - 1; -1 < i && -1 < num; i--) {
             table += "<tr><td>" + this.logs[i][0] + "</td><td>" + this.logs[i][1] + "</td><td>" + this.logs[i][2] + "</td><td>" + this.logs[i][3] + "</td></tr>";
+            num--;
         }
         sys.sendHtmlMessage(table + "</table><br>");
     }
