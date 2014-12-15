@@ -7168,7 +7168,7 @@ init : function (){
     }
 
     AuthLogs.prototype.display = function(source, chan, num) {
-        var table = "<style type='text/css'>th{border:solid black 1px;}td{border:solid black 1px;}</style><br><table><tr><th>User</th><th>Command</th><th>Target</th><th>Reason</th></tr>";
+        var table = "<br><table><tr><th style='padding-left:5px;'>User</th><th style='padding-left:5px;'>Command</th><th style='padding-left:5px;'>Target</th><th style='padding-left:5px;'>Reason</th></tr>";
         for (var i = this.logs.length - 1; -1 < i && -1 < num; i--) {
             table += "<tr><td>" + this.logs[i][0] + "</td><td>" + this.logs[i][1] + "</td><td>" + this.logs[i][2] + "</td><td>" + this.logs[i][3] + "</td></tr>";
             num--;
