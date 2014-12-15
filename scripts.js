@@ -1112,9 +1112,6 @@ init : function (){
         
         //  The [ugly] function that draws the banner
         update : function() {
-            
-            //  Thanks to PO glitch, server gets booted off the registry randomly. Reconnect every banner update.
-            sys.makeServerPublic(false); 
         
             //  If we aren't managing the banner, do nothing
             if (!this.data.Dynamic) {
@@ -1268,10 +1265,6 @@ init : function (){
             
             //  Finish off the banner and add the MOTD on the end
             banner += "</table></td></tr><tr><td colspan='3' style=\"text-align:center;font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + "\"><center>" + hash.get("motd") + "</center></td></tr></table>";
-            
-            
-            //  Thanks to PO glitch, server gets booted off the registry randomly. Reconnect every banner update.
-            sys.makeServerPublic(true); 
             
             //  Post the banner
             sys.changeAnnouncement(banner);
@@ -7337,9 +7330,6 @@ serverStartUp : function(){
 serverShutDown : function (){},
 
 step : function (){
-    //  Thanks to PO glitch, server gets booted off the registry randomly. Reconnect every banner update.
-    sys.makeServerPublic(true);
-
     if (failed) return;
     Tumbleweed.step();
     Banner.step();
