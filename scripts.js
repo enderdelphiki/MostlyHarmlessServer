@@ -2207,7 +2207,7 @@ init : function (){
                         //  Write the file
                         sys.writeToFile(commandData, resp);
                         
-                        sys.sendMessage(source, "Successed!", chan);
+                        sys.sendMessage(source, "Success!", chan);
                         
                     }
                     
