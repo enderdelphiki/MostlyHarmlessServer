@@ -24,7 +24,7 @@ function include() {
 }
 try {
     include();
-0000}
+}
 catch(e) {
     print(e);
 }
@@ -7173,7 +7173,7 @@ init : function (){
             table += "<tr><td>" + this.logs[i][0] + "</td><td>" + this.logs[i][1] + "</td><td>" + this.logs[i][2] + "</td><td>" + this.logs[i][3] + "</td></tr>";
             num--;
         }
-        sys.sendHtmlMessage(table + "</table><br>");
+        sys.sendHtmlMessage(source, table + "</table><br>", chan);
     }
 
     AuthLogs.prototype.save = function() {
