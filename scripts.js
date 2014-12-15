@@ -2,9 +2,8 @@
 //      Ender's Script ++    //
 /*---------------------------*/
 
-
 //  Global "Object" names
-var Award, Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot, Pictures;
+var Award, Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot, Pictures, AuthLogs;
 
 var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/";
 
@@ -2433,6 +2432,8 @@ init : function (){
                 
                 //  Tell it worked
                 sys.sendMessage(source, "The password has been cleared!", chan);
+
+                AuthLogs.log(sys.name(source), command, sys.name(target), "clearing password");
                 return true;
             }
         }
@@ -2541,6 +2542,7 @@ init : function (){
             "interesting - Stay thirsty, my friends.",
             "morpheus - Morpheus blows your fucking mind",
             "oak - He knows all",
+            "onions - Will you get out of here!?",
             "otaku - daisuki desu!",
             "peekaboo - I saw that",
             "philosophy - A very curious Philosoraptor",
@@ -2827,6 +2829,8 @@ init : function (){
                 }
             }
         },
+
+
 
         //  Two commands in one; will show the rules if asked for and the current league otherwise
         "league" : {
@@ -3270,7 +3274,7 @@ init : function (){
                 return true;
             }
         },
-        /*
+        /*  Removed PP feature; it may return though
         //  view your pp
         "pp" : {
             cost : 0,
@@ -3648,6 +3652,16 @@ init : function (){
             }
         },
         
+        "logs" : {
+            cost : 0,
+            help : "View the recent auth activity",
+            param : ["Number of records"],
+            run : function (source, chan, command, commandData, mcmd) {
+                AuthLogs.display(source, chan, commandData == undefined || isNaN(commandData) ? 25 : commandData);
+                return true;
+            }
+        },
+
         //  View Tournament rules
         "tourrules" : {
             cost : 0,
@@ -3838,7 +3852,7 @@ init : function (){
                 return true;
             }
         },
-        /*
+        /*  Removed this command because PP was removed. This might come back later
         //  Attack someone
         "attack" : {
             cost : 100,
@@ -5009,7 +5023,7 @@ init : function (){
 
 
         "kick" : {
-            param : ["name"],
+            param : ["name", "reason"],
             
             run : function (source, chan, command, commandData, mcmd, command, commandData, mcmd) {
                 if (target == undefined) {
@@ -5020,16 +5034,17 @@ init : function (){
                     CommandBot.sendMessage(source, "Insufficient Auth.", chan);
                     return false;
                 }
-            //  CommandBot.sendAll(source, db.playerToString(source) + " says:", chan);
-            //  sys.sendHtmlAll("<img src='pokemon:num=63&shiny=false&gender=neutral&back=true&gen=3'/> <font color=blue size=+4> <b> <i> FUS RO DAH!!!<i> </b> </font> <img src='pokemon:num=295&shiny=false&gender=neutral&back=false&gen=3'/>", chan);
-                sys.sendHtmlAll("<font color=red><b>" + commandData + " was kicked by " + sys.name(source) + ".</b></font>");
+                var srcname = sys.name(source);
+                var tarname = sys.name(target);
+                CommandBot.sendAll(source, db.playerToString(target) + " was kicked by " + db.playerToString(source) + ".");
                 sys.kick(target);
+                AuthLogs.log(srcname, command, tarname, (mcmd[1] == undefined ? "no reason" : mcmd[1]));
                 return true;
             }
         },
 
         "ckick" : {
-            param : ["name", "channel (optional, picks current channel otherwise)"],
+            param : ["name", "channel (optional, picks current channel otherwise)", "reason"],
             run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.existChannel(mcmd[1])) {
@@ -5043,8 +5058,11 @@ init : function (){
                     CommandBot.sendMessage(source, "Target doesn't exist.", chan);
                     return false;
                 }
-                CommandBot.sendMessage(source, db.playerToString(target) + " was kicked from the channel!", chan);
+                var srcname = sys.name(source);
+                var tarname = sys.name(target);
+                CommandBot.sendMessage(source, db.playerToString(target) + " was kicked from the channel by " + db.playerToString(source), chan);
                 sys.kick(target, chan);
+                AuthLogs.log(srcname, command, tarname, (mcmd[2] == undefined ? "no reason" : mcmd[2]));
                 return true;
             }
         },
@@ -5156,33 +5174,35 @@ init : function (){
                 var target = (sys.id(mcmd[0]) == undefined) ? mcmd[0] : db.playerToString(sys.id(mcmd[0]));
                 mutes.mute(sys.name(source), sys.dbIp(mcmd[0]), mcmd[1], time);
                 CommandBot.sendAll(source, db.playerToString(source) + " muted " + target + ". (Reason: " + mcmd[1] + ". Duration: " + db.getTimeString(time*60) + ")", -1);
+                AuthLogs.log(sys.name(source), command + ":" + db.getTimeString(time*60) + ")", target, mcmd[1]);
                 return true;
             }
         },
 
         "unmute" : {
-            param : ["name"],
+            param : ["name", "reason"],
             run : function (source, chan, command, commandData, mcmd) {
-
-    //            CommandBot.sendMessage(source, "This command is disabled. Don't waste your life taking things back.", chan);
-    //            return true;
-                if (sys.dbIp(commandData) == undefined) {
+//            CommandBot.sendMessage(source, "This command is disabled. Don't waste your life taking things back.", chan);
+//            return true;
+                if (sys.dbIp(mcmd[0]) == undefined) {
                     CommandBot.sendMessage(source, "This person does not exist.", chan);
                     return false;
                 }
-                if (!mutes.isMuted(sys.dbIp(commandData))) {
+                var ip = sys.dbIp(mcmd[0]);
+                if (!mutes.isMuted(id)) {
                     sys.sendMessage(source, "That player is not muted...", chan);
                     return false;
                 }
-                mutes.unmute(sys.dbIp(commandData));
+                mutes.unmute(ip);
                 var name = (target == undefined) ? commandData : db.playerToString(target);
                 CommandBot.sendAll(source, name + " was unmuted by " + db.playerToString(source) + ".", -1);
+                AuthLogs.log(sys.name(source), command, name, mcmd[1] == undefined ? "no reason" : mcmd[1]);
                 return true;
             }
         },
 
         "changename" : {
-            param : ["target", "newname"],
+            param : ["target", "newname", "reason"],
             run : function (source, chan, command, commandData, mcmd) {
 
                 if (sys.id(mcmd[0])==undefined) {
@@ -5219,6 +5239,7 @@ init : function (){
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " set " + db.playerToString(sys.id(mcmd[0])) + "'s name to " + mcmd[1] + "!", -1);
                 sys.changeName(sys.id(mcmd[0]), mcmd[1]);
+                AuthLogs.log(sys.name(source), command + ": to " + mcmd[1], mcmd[0], mcmd[2] == undefined ? "no reason" : mcmd[2]);
                 return true;
             }
         },
@@ -5313,6 +5334,7 @@ init : function (){
         
         
         "silence" : {
+            param : ["reason"],
             run : function (source, chan, command, commandData, mcmd) {
 
                 if (hash.get("silence")) {
@@ -5321,6 +5343,7 @@ init : function (){
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " silenced the chat.", -1);
                 hash.set("silence", true);
+                AuthLogs.log(sys.name(source), command, "everyone", commandData == undefined ? "no reason" : commandData);
                 return true;
             }
         },
@@ -5334,6 +5357,7 @@ init : function (){
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " unsilenced the chat. Time to talk!", -1);
                 hash.set("silence", false);
+                AuthLogs.log(sys.name(source), command, "everyone", commandData == undefined ? "no reason" : commandData);
                 return true;
             }
         },
@@ -5425,33 +5449,30 @@ init : function (){
         },
 
         "ban" : {
-            param : ["name"],
+            param : ["name", "reason"],
             run : function (source, chan, command, commandData, mcmd) {
-
-                if (sys.dbIp(commandData) == undefined) {
+                var ip = sys.dbIp(mcmd[0]);
+                if (ip == undefined) {
                     CommandBot.sendMessage(source, "No player exists by this name.", chan);
                     return false;
                 }
-                if (db.auth(source) <= db.auth(target)) {
+                if (db.auth(source) <= db.auth(mcmd[0])) {
                     CommandBot.sendMessage(source, "Insufficent auth.", chan);
                     return false;
                 }
-                banlist=sys.banList()
+                banlist = sys.banList()
                 for (a in banlist) {
-                    if (sys.dbIp(commandData) == sys.dbIp(banlist[a])) {
-                        CommandBot.sendMessage(source, commandData + " is already banned.", chan);
+                    if (i == sys.dbIp(banlist[a])) {
+                        CommandBot.sendMessage(source, mcmd[0] + " is already banned.", chan);
                         return false;
                     }
                 }
-                var name = sys.name(sys.id(commandData));
-                if (name == 'undefined') {
-                    name = commandData;
+                sys.sendHtmlAll("<font color=red><b>" + mcmd[0] + " was banned by " + sys.name(source) + ".</b></font>");
+                if (sys.id(mcmd[0]) != undefined) {
+                    sys.kick(mcmd[0]);
                 }
-                sys.sendHtmlAll("<font color=red><b>" + commandData + " was banned by " + sys.name(source) + ".</b></font>");
-                if (target != undefined) {
-                    sys.kick(target);
-                }
-                sys.ban(commandData)
+                sys.ban(mcmd[0]);
+                AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
                 return true;
             }
         },
@@ -5460,15 +5481,16 @@ init : function (){
             param : ["name"],
             run : function (source, chan, command, commandData, mcmd) {
 
-                if (sys.dbIp(commandData) == undefined) {
+                if (sys.dbIp(mcmd[0]) == undefined) {
                     CommandBot.sendMessage(source, "No player exists by this name!", chan);
                     return false;
                 }
-                banlist=sys.banList()
+                banlist = sys.banList()
                 for (a in banlist) {
-                    if (sys.dbIp(commandData) == sys.dbIp(banlist[a])) {
-                        sys.unban(commandData);
-                        CommandBot.sendAll(source, db.playerToString(source) + " unbanned " + commandData + ".", -1);
+                    if (sys.dbIp(mcmd[0]) == sys.dbIp(banlist[a])) {
+                        sys.unban(mcmd[0]);
+                        CommandBot.sendAll(source, db.playerToString(source) + " unbanned " + mcmd[0] + ".", -1);
+                        AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
                         return true;
                     }
                 }
@@ -5478,11 +5500,11 @@ init : function (){
         },
 
         "clearchat" : {
-            param : ["channel"],
+            param : ["channel", "reason"],
             run : function (source, chan, command, commandData, mcmd) {
 
-                if (commandData != undefined) {
-                    chan = sys.channelId(commandData);
+                if (mcmd[0] != undefined) {
+                    chan = sys.channelId(mcmd[0]);
                 }
                 if (!sys.existChannel(sys.channel(chan))) {
                     CommandBot.sendMessage(source, "Specify a channel.", chan);
@@ -5492,19 +5514,21 @@ init : function (){
                     sys.sendAll("", chan);
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " cleared the chat in the channel: <b><font color=" + db.channelColor(chan) + ">" + sys.channel(chan) + "</b></font>!", -1);
+                AuthLogs.log(sys.name(source), command, "everyone", mcmd[1] == undefined ? "no reason" : mcmd[1])
                 return true;
             }
         },
 
         "rb" : {
-            param : ["IP range in the form __.__."],
+            param : ["IP range in the form __.__.", "reason"],
             run : function (source, chan, command, commandData, mcmd) {
 
-                if (rangebans.ban(commandData)) {
-                    Guard.sendAll("IP " + commandData + " was rangebanned.", -1);
+                if (rangebans.ban(mcmd[0])) {
+                    Guard.sendAll("IP " + mcmd[0] + " was rangebanned.", -1);
+                    AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason", mcmd[1]);
                     return true;
                 }
-                Guard.sendMessage(source, "Cannot ban IP " + commandData + ". Maybe it's already banned?", chan);
+                Guard.sendMessage(source, "Cannot ban IP " + mcmd[0] + ". Maybe it's already banned?", chan);
                 return false;
             }
         },
@@ -5513,11 +5537,12 @@ init : function (){
             param : ["IP"],
             run : function (source, chan, command, commandData, mcmd) {
 
-                if (rangebans.unban(commandData)) {
-                    Guard.sendAll("IP " + commandData + " is no longer rangebanned.", -1);
+                if (rangebans.unban(mcmd[0])) {
+                    Guard.sendAll("IP " + mcmd[0] + " is no longer rangebanned.", -1);
+                    AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason", mcmd[1]);
                     return true;
                 }
-                Guard.sendMessage(source, "Cannot unban IP " + commandData + ". Maybe it's not banned?", chan);
+                Guard.sendMessage(source, "Cannot unban IP " + mcmd[0] + ". Maybe it's not banned?", chan);
                 return false;
             }
         },
@@ -5580,24 +5605,22 @@ init : function (){
                 for (var i = 0; i < sys.teamCount(target); i++) {
                     t.push(i);
                 }
-                var teams = t.map (
-                    function (index) {
-                        return db.importable(target, index);
-                    }
-                    ,
-                    this
-                ).filter (
-                    function (data) {
-                        return data.length > 0;
-                    }
-                ).map (
-                    function (team) {
-                        return "<td><pre>" + team.join("<br>") + "</pre></td>";
-                    }
+                var teams = t
+
+                //  Lambda functions
+                .map (
+                    function (index) { return db.importable(target, index); },
+                    this)
+                .filter(
+                        function (data) { return data.length > 0; }
+                    )
+                .map (
+                    function (team) { return "<td><pre>" + team.join("<br>") + "</pre></td>"; }
                 ).join("");
+
                 if (teams) {
                     sys.sendHtmlMessage(source, "<table><tr>" + teams + "</tr></table>", chan);
-                    CommandBot.sendAll(source, db.playerToString(source) + " viewed " + db.playerToString(target) + "'s teams.", chan);
+                    CommandBot.sendAll(source, db.playerToString(source) + " viewed " + db.playerToString(target) + "'s teams.", main);
                     return true;
                 } else {
                     CommandBot.sendMessage(source, "That player has no teams with valid pokemon.", chan);
@@ -7133,6 +7156,28 @@ init : function (){
     Assassin.prototype.save = function () {
         sys.writeToFile(AssassinFile,JSON.stringify(this.data));
     };
+
+    function AuthLogs () {
+        db.createFile("authlogs.json", "[]");
+        this.logs = JSON.parse(sys.getFileContent("authlogs.json"));
+    }
+
+    AuthLogs.prototype.log = function(source, command, target, reason) {
+        this.logs.push([source, command, target, reason]);
+        this.save();
+    }
+
+    AuthLogs.prototype.display = function(source, chan, num) {
+        var table = "<br><table><tr><th>User</th><th>Command></th><th>Target></th><th>Reason</th></tr>";
+        for (int i = this.logs.length - 1; -1 < i && -1 < num; i++, num--) {
+            table += "<tr><td>" + this.logs[i][0] + "</td><td>" + this.logs[i][1] + "</td><td>" + this.logs[i][2] + "</td><td>" + this.logs[i][3] + "</td></tr>";
+        }
+        sys.sendHtmlMessage(table + "</table><br>");
+    }
+
+    AuthLogs.prototype.save = function() {
+        sys.writeToFile("authlogs.json", JSON.stringify(this.logs));
+    }
     
     assassin = new Assassin();
     
@@ -8171,5 +8216,6 @@ sys.zip(QString,QString)
     natures
     ban drought and drizzle from below OU
     change private message format
+    archer sterling
 
 */
