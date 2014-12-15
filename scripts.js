@@ -7336,7 +7336,10 @@ serverStartUp : function(){
 
 serverShutDown : function (){},
 
-step : function (){ 
+step : function (){
+    //  Thanks to PO glitch, server gets booted off the registry randomly. Reconnect every banner update.
+    sys.makeServerPublic(true);
+
     if (failed) return;
     Tumbleweed.step();
     Banner.step();
