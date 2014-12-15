@@ -1271,7 +1271,7 @@ init : function (){
             
             
             //  Thanks to PO glitch, server gets booted off the registry randomly. Reconnect every banner update.
-            sys.makeServerPublic(false); 
+            sys.makeServerPublic(true); 
             
             //  Post the banner
             sys.changeAnnouncement(banner);
