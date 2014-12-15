@@ -24,13 +24,13 @@ function include() {
 }
 try {
     include();
-}
+0000}
 catch(e) {
     print(e);
 }
 
 //  The object managed by init:Clan.prototype;
-var chan,
+var chan, logs,
 
 /*  The object managed by init:Hash.prototype; stores local variables that are to be saved
         between server sessions in case of crash, disconnection, etc.    */
@@ -2433,7 +2433,7 @@ init : function (){
                 //  Tell it worked
                 sys.sendMessage(source, "The password has been cleared!", chan);
 
-                AuthLogs.log(sys.name(source), command, sys.name(target), "clearing password");
+                logs.log(sys.name(source), command, sys.name(target), "clearing password");
                 return true;
             }
         }
@@ -3657,7 +3657,7 @@ init : function (){
             help : "View the recent auth activity",
             param : ["Number of records"],
             run : function (source, chan, command, commandData, mcmd) {
-                AuthLogs.display(source, chan, commandData == undefined || isNaN(commandData) ? 25 : commandData);
+                logs.display(source, chan, commandData == undefined || isNaN(commandData) ? 25 : commandData);
                 return true;
             }
         },
@@ -5038,7 +5038,7 @@ init : function (){
                 var tarname = sys.name(target);
                 CommandBot.sendAll(source, db.playerToString(target) + " was kicked by " + db.playerToString(source) + ".");
                 sys.kick(target);
-                AuthLogs.log(srcname, command, tarname, (mcmd[1] == undefined ? "no reason" : mcmd[1]));
+                logs.log(srcname, command, tarname, (mcmd[1] == undefined ? "no reason" : mcmd[1]));
                 return true;
             }
         },
@@ -5062,7 +5062,7 @@ init : function (){
                 var tarname = sys.name(target);
                 CommandBot.sendMessage(source, db.playerToString(target) + " was kicked from the channel by " + db.playerToString(source), chan);
                 sys.kick(target, chan);
-                AuthLogs.log(srcname, command, tarname, (mcmd[2] == undefined ? "no reason" : mcmd[2]));
+                logs.log(srcname, command, tarname, (mcmd[2] == undefined ? "no reason" : mcmd[2]));
                 return true;
             }
         },
@@ -5174,7 +5174,7 @@ init : function (){
                 var target = (sys.id(mcmd[0]) == undefined) ? mcmd[0] : db.playerToString(sys.id(mcmd[0]));
                 mutes.mute(sys.name(source), sys.dbIp(mcmd[0]), mcmd[1], time);
                 CommandBot.sendAll(source, db.playerToString(source) + " muted " + target + ". (Reason: " + mcmd[1] + ". Duration: " + db.getTimeString(time*60) + ")", -1);
-                AuthLogs.log(sys.name(source), command + ":" + db.getTimeString(time*60) + ")", target, mcmd[1]);
+                logs.log(sys.name(source), command + ":" + db.getTimeString(time*60) + ")", target, mcmd[1]);
                 return true;
             }
         },
@@ -5196,7 +5196,7 @@ init : function (){
                 mutes.unmute(ip);
                 var name = (target == undefined) ? commandData : db.playerToString(target);
                 CommandBot.sendAll(source, name + " was unmuted by " + db.playerToString(source) + ".", -1);
-                AuthLogs.log(sys.name(source), command, name, mcmd[1] == undefined ? "no reason" : mcmd[1]);
+                logs.log(sys.name(source), command, name, mcmd[1] == undefined ? "no reason" : mcmd[1]);
                 return true;
             }
         },
@@ -5239,7 +5239,7 @@ init : function (){
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " set " + db.playerToString(sys.id(mcmd[0])) + "'s name to " + mcmd[1] + "!", -1);
                 sys.changeName(sys.id(mcmd[0]), mcmd[1]);
-                AuthLogs.log(sys.name(source), command + ": to " + mcmd[1], mcmd[0], mcmd[2] == undefined ? "no reason" : mcmd[2]);
+                logs.log(sys.name(source), command + ": to " + mcmd[1], mcmd[0], mcmd[2] == undefined ? "no reason" : mcmd[2]);
                 return true;
             }
         },
@@ -5343,7 +5343,7 @@ init : function (){
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " silenced the chat.", -1);
                 hash.set("silence", true);
-                AuthLogs.log(sys.name(source), command, "everyone", commandData == undefined ? "no reason" : commandData);
+                logs.log(sys.name(source), command, "everyone", commandData == undefined ? "no reason" : commandData);
                 return true;
             }
         },
@@ -5357,7 +5357,7 @@ init : function (){
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " unsilenced the chat. Time to talk!", -1);
                 hash.set("silence", false);
-                AuthLogs.log(sys.name(source), command, "everyone", commandData == undefined ? "no reason" : commandData);
+                logs.log(sys.name(source), command, "everyone", commandData == undefined ? "no reason" : commandData);
                 return true;
             }
         },
@@ -5472,7 +5472,7 @@ init : function (){
                     sys.kick(mcmd[0]);
                 }
                 sys.ban(mcmd[0]);
-                AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
+                logs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
                 return true;
             }
         },
@@ -5490,7 +5490,7 @@ init : function (){
                     if (sys.dbIp(mcmd[0]) == sys.dbIp(banlist[a])) {
                         sys.unban(mcmd[0]);
                         CommandBot.sendAll(source, db.playerToString(source) + " unbanned " + mcmd[0] + ".", -1);
-                        AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
+                        logs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
                         return true;
                     }
                 }
@@ -5514,7 +5514,7 @@ init : function (){
                     sys.sendAll("", chan);
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " cleared the chat in the channel: <b><font color=" + db.channelColor(chan) + ">" + sys.channel(chan) + "</b></font>!", -1);
-                AuthLogs.log(sys.name(source), command, "everyone", mcmd[1] == undefined ? "no reason" : mcmd[1])
+                logs.log(sys.name(source), command, "everyone", mcmd[1] == undefined ? "no reason" : mcmd[1])
                 return true;
             }
         },
@@ -5525,7 +5525,7 @@ init : function (){
 
                 if (rangebans.ban(mcmd[0])) {
                     Guard.sendAll("IP " + mcmd[0] + " was rangebanned.", -1);
-                    AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
+                    logs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
                     return true;
                 }
                 Guard.sendMessage(source, "Cannot ban IP " + mcmd[0] + ". Maybe it's already banned?", chan);
@@ -5539,7 +5539,7 @@ init : function (){
 
                 if (rangebans.unban(mcmd[0])) {
                     Guard.sendAll("IP " + mcmd[0] + " is no longer rangebanned.", -1);
-                    AuthLogs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
+                    logs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
                     return true;
                 }
                 Guard.sendMessage(source, "Cannot unban IP " + mcmd[0] + ". Maybe it's not banned?", chan);
@@ -7179,6 +7179,8 @@ init : function (){
     AuthLogs.prototype.save = function() {
         sys.writeToFile("authlogs.json", JSON.stringify(this.logs));
     }
+
+    logs = new AuthLogs();
     
     assassin = new Assassin();
     
