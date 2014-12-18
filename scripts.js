@@ -1281,15 +1281,26 @@ init : function (){
     */
     WelcomeBot =  {
 
+        SpecialWelcome : [
+
+            ["[HH]Luca", "<font style='font-size: 18pt'>The Law has enterred the game.</font>"],
+
+            ["[HH]The Professor", "<font style='font-size: 18pt'>Good news, everyone!"],
+
+            ["[HH]Hazard", "Keep calm. He's here."]
+
+        ],
+
+        SpecialGoodBye : [
+
+        ],
+
         //  This list of messages will be displayed privately to the user on login
         WelcomeMessage : [
             
             [Config.Welcome, "The Forum can be found here: <a href=\"http://w11.zetaboards.com/The_Valley/index/\">http://w11.zetaboards.com/The_Valley/index/</a>"],
             
-            [Config.Guard, "If you choose not to read the !rules, I may choose not to warn before acting"],
-            
-            [Config.ChatBot, "HH Members please check !allmembers and get an auth to remove alts you don't use."]
-        
+            [Config.Guard, "If you choose not to read the !rules, I may choose not to warn before acting"]
         ],
         
         //  If you don't like the HallOfFame as autoshiny, you can set your own list of autoshiny
@@ -1351,7 +1362,7 @@ init : function (){
             
             
             if (sys.tier(source, 0) == "Challenge Cup" &&  sys.os(source) == "Android") {
-                    TierBot.sendMessage(source, "You are in Challenge Cup. Either you don't have a team (make one in the main menu before logging in a server) or your team is breaking rules (the server should tell you what).", main);
+                TierBot.sendMessage(source, "You are in Challenge Cup. Either you don't have a team (make one in the main menu before logging in a server) or your team is breaking rules (the server should tell you what).", main);
             }
             
             
@@ -1423,74 +1434,65 @@ init : function (){
             if (-1 < name.toLowerCase().indexOf("ghost") || hash.get("nowelcome")) {
                 return;
             }
-            
-            //  Luca gets a special welcome message
-            if (name == "[HH]Luca") {
-                sys.sendHtmlAll("<b><font style='font-size:18pt;color:" + db.getColor(source) + "'>The Law has entered the game.</font></b>", main);
+
+            var go = true;
+            for (var i = 0; i < this.SpecialWelcome.length; i++) {
+                if (name == this.SpecialWelcome[i][0]) {
+                    this.sendWelcomeAll("<font style='color:" + db.getColor(source) + "'><b>" + this.SpecialWelcome[i][1] + "</b></font>");
+                    go = false;
+                    break;
+                }
             }
+            if (go) {
             
-            //  The Professor gets a special welcome message too
-            else if (name == "[HH]The Professor") {
-                sys.sendHtmlAll("<b><font style='font-size:24pt;color:" + db.getColor(source) + "'>Good News, everyone!</font></b>", main);
-            }
-            
-            //  Welcomes from the competition
-            else if (name == "[HH]Hazard") {
-                sys.sendHtmlAll("<timestamp/><b><font style='color:" + db.getColor(source) + "'>Keep calm. He's here.</font></b>", main);
-            }
-            /*
-            else if (name == "[HH]Messiah") {
-                sys.sendHtmlAll("<timestamp/><b><font style='color:" + db.getColor(source) + "'></font></b>", main);
-            }
-            */
-            
-            //  Give the server host a special welcome too
-            else if (name == Config.ServerHost) {
-                sys.sendHtmlAll("<b><font style='font-size:24pt;color:" + db.getColor(source) + "'>" + db.escapeTag(source, false) + " has arrived!!!</font></b>", main);
-            }
-            
-            //  handle everyone else's now
-            else {    
-                
-                //  start message
-                var welcomemsg = "A wild ";
-                
-                //  Make sure the person registers
-                if (!sys.dbRegistered(name)) {
-                    sys.sendMessage(source, "~~Server~~: Register your name so no one can impersonate you.", main);
+                //  Give the server host a special welcome too
+                if (name == Config.ServerHost) {
+                    sys.sendHtmlAll("<b><font style='font-size:24pt;color:" + db.getColor(source) + "'>" + db.escapeTag(source, false) + " has arrived!!!</font></b>", main);
                 }
                 
-                //  Handle the Shiny case
-                if (rand == 13 || -1 < this.AlwaysShiny.indexOf(name)) {
-                    //  add the keyword
-                    welcomemsg += "shiny ";
+                //  handle everyone else's now
+                else {    
                     
-                    //  make the name all shiny
-                    var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
-                    for (var i = 0; i < sys.name(source).length; i++) {
-                        //  by coloring each letter one by one
-                        welcomemsg += "<font color=" + colors[i%6] + ">" + name.charAt(i)+"</font>";
+                    //  start message
+                    var welcomemsg = "A wild ";
+                    
+                    //  Make sure the person registers
+                    if (!sys.dbRegistered(name)) {
+                        sys.sendMessage(source, "~~Server~~: Register your name so no one can impersonate you.", main);
                     }
-                }
-                
+                    
+                    //  Handle the Shiny case
+                    if (rand == 13 || -1 < this.AlwaysShiny.indexOf(name)) {
+                        //  add the keyword
+                        welcomemsg += "shiny ";
+                        
+                        //  make the name all shiny
+                        var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
+                        for (var i = 0; i < sys.name(source).length; i++) {
+                            //  by coloring each letter one by one
+                            welcomemsg += "<font color=" + colors[i%6] + ">" + name.charAt(i)+"</font>";
+                        }
+                    }
+                    
                     //  handle the Pokerus case
-                else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
-                    welcomemsg += "infected ";
-                    var colors = ["green", "purple"];
-                    for (var i = 0; i < sys.name(source).length; i++) {
-                        welcomemsg += "<font color=" + colors[i % 2] + ">" + name.charAt(i) + "</font>";
+                    else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
+                        welcomemsg += "infected ";
+                        var colors = ["green", "purple"];
+                        for (var i = 0; i < sys.name(source).length; i++) {
+                            welcomemsg += "<font color=" + colors[i % 2] + ">" + name.charAt(i) + "</font>";
+                        }
                     }
+                    
+                    //  This person is not special
+                    else {
+                        welcomemsg += "<font color=" + db.getColor(source) + ">" + name + "</font>";
+                    }
+                    
+                    //  Display the message
+                    this.sendWelcomeAll("<font color=black><b>" + welcomemsg + " appeared!</b></font>", main);
                 }
-                
-                //  This person is not special
-                else {
-                    welcomemsg += "<font color=" + db.getColor(source) + ">" + name + "</font>";
-                }
-                
-                //  Display the message
-                this.sendWelcomeAll("<font color=black><b>" + welcomemsg + " appeared!</b></font>", main);
             }
-            
+
             //  Force all auth into the watch channel 
             if (0 < db.auth(source)) {
                 if (!sys.isInChannel(source, watch)) {
@@ -1526,35 +1528,47 @@ init : function (){
                 return;
             }
             
-            //  Server Host gets a special goodbye message
-            if (name == Config.ServerHost) {
-                sys.sendHtmlAll("<b><font style='font-size:24pt;color:" + db.getColor(source) + "'>" + db.escapeTag(source,false) + " has left!!!</font></b>", main);
+
+            var go = true;
+            for (var i = 0; i < this.SpecialGoodbye.length; i++) {
+                if (name == this.SpecialGoodbye[i][0]) {
+                    this.sendGoodbyeAll("<font style='color:" + db.getColor(source) + "'><b>" + this.SpecialGoodbye[i][1] + "</b></font>");
+                    go = false;
+                    break;
+                }
             }
-            
-            //  no one else is special
-            else {
-                var rand = players[source].seed;
-                
-                //  construct the goodbye exactly like it the welcome is formatted
-                var welcomemsg = "<font color=black>The wild ";
-                if (rand == 13 || -1 < this.AlwaysShiny.indexOf(name)) {
-                    welcomemsg = welcomemsg + "shiny ";
-                    var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
-                    for (var i = 0; i < name.length; i++)
-                        welcomemsg = welcomemsg + "<font color=" + colors[i % 6] + ">" + name.charAt(i) + "</font>";
-                } else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
-                    welcomemsg = welcomemsg + "infected ";
-                    var colors = ["green", "purple"];
-                    for (var i = 0; i < name.length; i++) {
-                        welcomemsg = welcomemsg + "<font color=" + colors[i % 2] + ">" + name.charAt(i) + "</font>";
-                    }
+            if (go) {
+
+                //  Server Host gets a special goodbye message
+                if (name == Config.ServerHost) {
+                    sys.sendHtmlAll("<b><font style='font-size:24pt;color:" + db.getColor(source) + "'>" + db.escapeTag(source,false) + " has left!!!</font></b>", main);
                 }
+                
+                //  no one else is special
                 else {
-                    welcomemsg=welcomemsg+"<font color=" + db.getColor(source) +">" + name + "</font>";
+                    var rand = players[source].seed;
+                    
+                    //  construct the goodbye exactly like it the welcome is formatted
+                    var welcomemsg = "<font color=black>The wild ";
+                    if (rand == 13 || -1 < this.AlwaysShiny.indexOf(name)) {
+                        welcomemsg = welcomemsg + "shiny ";
+                        var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
+                        for (var i = 0; i < name.length; i++)
+                            welcomemsg = welcomemsg + "<font color=" + colors[i % 6] + ">" + name.charAt(i) + "</font>";
+                    } else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
+                        welcomemsg = welcomemsg + "infected ";
+                        var colors = ["green", "purple"];
+                        for (var i = 0; i < name.length; i++) {
+                            welcomemsg = welcomemsg + "<font color=" + colors[i % 2] + ">" + name.charAt(i) + "</font>";
+                        }
+                    }
+                    else {
+                        welcomemsg=welcomemsg+"<font color=" + db.getColor(source) +">" + name + "</font>";
+                    }
+                    
+                    //  print it out through goodbye
+                    this.sendGoodbyeAll("<font color=black><b>" + welcomemsg + " used Teleport!</b></font>", main);
                 }
-                
-                //  print it out through goodbye
-                this.sendGoodbyeAll("<font color=black><b>" + welcomemsg + " used Teleport!</b></font>", main);
             }
             
             //  Only update banner if the person is on the banner
@@ -8209,9 +8223,9 @@ sys.zip(QString,QString)
 
 
     TODO:
-    natures
-    ban drought and drizzle from below OU
+    natures (I forgot what this means anymore)
+    table display prettier for !logs, etc.
+
     change private message format
-    archer sterling
 
 */
