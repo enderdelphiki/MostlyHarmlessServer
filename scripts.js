@@ -1291,7 +1291,7 @@ init : function (){
 
         ],
 
-        SpecialGoodBye : [
+        SpecialGoodbye : [
 
         ],
 
