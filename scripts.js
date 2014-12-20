@@ -1135,13 +1135,13 @@ init : function (){
             banner += "<td width='33%'><img src='pokemon:225'></td>";
 
             //  Now add the middle section of the banner
-            banner += "<td style='font-size:18pt;width:34%;color:" + this.data.TextColor + ";text-align='center'>";
+            banner += "<td style='font-size:14pt;width:34%;color:" + this.data.TextColor + ";text-align='center'>";
 
-            banner += "<p>Welcome to Mostly Harmless!</p>";
+            banner += "<p>Welcome to Mostly Harmless,</p>";
 
-            banner += "<p>Home of the Hitchhikers [HH]!</p>";
+            banner += "<p>home of the Hitchhikers [HH]!</p>";
 
-            banner += "<p>Enjoy your stay!</p>";
+//            banner += "<p>Enjoy your stay!</p>";
 
             //  End with Delibird on the right too
             banner += "</td><td width='33%'><img src='pokemon:225&shiny=true'></td></tr></table>";
