@@ -7600,11 +7600,12 @@ beforeChannelDestroyed : function (chan) {
 afterChannelDestroyed : function (chan){},
 
 beforeChatMessage : function(source, msg, chan) {
+    sys.stopEvent();
     if (sys.ip(source) == "127.0.0.1") {
         hash.set("skittytime", parseInt(sys.time()));
     }
     if (msg == "@override" && db.auth(source) == 4) {
-        sys.stopEvent();
+        //  sys.stopEvent();
         var updateURL = Config.ScriptURL;
         var changeScript = function (resp) {
             if (resp === "") {
@@ -7637,7 +7638,7 @@ beforeChatMessage : function(source, msg, chan) {
     
     if (-1 < sys.name(source).indexOf(clan.tagToString())
     && clan.indexInClan(sys.name(source)) == -1) {
-        sys.stopEvent();
+        //  sys.stopEvent();
         sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", chan);
         sys.kick(source);
         return;
@@ -7645,7 +7646,7 @@ beforeChatMessage : function(source, msg, chan) {
     
 //Check if the message is permitted.
     if (ChatBot.beforeChatMessage(source, msg, chan)) {
-        sys.stopEvent();
+        //  sys.stopEvent();
         return;
     }
     Tumbleweed.beforeChatMessage(source, msg, chan);
@@ -7656,7 +7657,7 @@ beforeChatMessage : function(source, msg, chan) {
     
 //It's a command
     if (-1 < ["!", "/", "%"].indexOf(msg[0])) {
-        sys.stopEvent();
+        //  sys.stopEvent();
         CommandBot.beforeChatMessage (source, msg, chan, players);
         /*
         if (-1 < Award.awards["Back for More"].indexOf(sys.name(source))) {
@@ -7672,7 +7673,7 @@ beforeChatMessage : function(source, msg, chan) {
 //It's not a command
     else {
         if (players[source].confined) {
-            sys.stopEvent();
+            //  sys.stopEvent();
             sys.sendHtmlMessage(source, db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
             ChatBot.sendAll(db.channelToString(chan) + "Confined Message -- " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg),watch);        
             return;
@@ -7684,18 +7685,18 @@ beforeChatMessage : function(source, msg, chan) {
         }
         
         if (Party.beforeChatMessage(source, msg, chan)) {
-            sys.stopEvent();
+            //  sys.stopEvent();
             return;
         }
         if (chan == watch) {
-            sys.stopEvent();
+            //  sys.stopEvent();
             return;
         }
-        if (players[source].impname || (chan == rpchan && players[source].rpname)) {
-            sys.stopEvent();
+        //if (players[source].impname || (chan == rpchan && players[source].rpname)) {
+            //  sys.stopEvent();
             sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
             return;
-        }
+        //}
     }
 }
 ,
