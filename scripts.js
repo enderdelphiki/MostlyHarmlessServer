@@ -518,7 +518,18 @@ init : function (){
             }
 
             //  Because doing all of it in RegEx would have been too easy
-            return m.replace(/\&/g, "&amp;").replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
+            m = m.replace(/\&/g, "&amp;").replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
+
+            //  linkify
+            var words = m.split(" ");
+            for (var i = 0; i < words.length; i++) {
+                if (8 < words[i].length && (0 == words[i].indexOf("http://") ||  0 == words[i].indexOf("https://"))) {
+                    words[i] = "<a href='" + words[i] + "'>" + words[i] + "</a>";
+                }
+            }
+
+            return words.join(" ");
+
         },
         
         //  Identifies which nature is benefitted from the given nature
@@ -1428,7 +1439,7 @@ init : function (){
             
             //  Display the info we've generated so far
             sys.sendMessage(source, "~~Server~~: Your type this session is " + sys.type(players[source].type) + ".", main);
-            TourBot.sendMessage(source, "The Message of the Day is: " + hash.get("motd"), chan);
+            TourBot.sendMessage(source, "</font>The Message of the Day is: " + hash.get("motd"), chan);
             
             //  If we shouldn't show the welcome message for all, break early
             if (-1 < name.toLowerCase().indexOf("ghost") || hash.get("nowelcome")) {
@@ -5181,7 +5192,7 @@ init : function (){
                 var target = (sys.id(mcmd[0]) == undefined) ? mcmd[0] : db.playerToString(sys.id(mcmd[0]));
                 mutes.mute(sys.name(source), sys.dbIp(mcmd[0]), mcmd[1], time);
                 CommandBot.sendAll(source, db.playerToString(source) + " muted " + target + ". (Reason: " + mcmd[1] + ". Duration: " + db.getTimeString(time*60) + ")", -1);
-                logs.log(sys.name(source), command + ":" + db.getTimeString(time*60) + ")", target, mcmd[1]);
+                logs.log(sys.name(source), command + ":" + db.getTimeString(time*60) + "", target, mcmd[1]);
                 return true;
             }
         },
