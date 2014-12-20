@@ -1122,7 +1122,7 @@ init : function (){
         },
 
         setdesc : function() {
-            
+
             //  Begin the banner by setting up the gradient
             var banner="<table style='width:100%;background-color: qlineargradient(";
             
@@ -1133,22 +1133,14 @@ init : function (){
             banner += "stop:0 " + this.data.GradientColors[0] + ",stop:0.4 " + this.data.GradientColors[1] + ",stop:0.6 " + this.data.GradientColors[2] + ",stop:1 " + this.data.GradientColors[3] + ")'><tr>";
             
             //  Begin the Delibird
-            banner += "<td width='33%'>";
-//            banner += "<img src='pokemon:225'>";
-            
-            //  Now add the middle section of the banner
-            banner += "</td><td style='font-size:14pt;width:34%;color:" + this.data.TextColor + ";text-align='center'>";
+            banner += "<td width='20%'></td><td style='font-size:12pt;width:60%;color:" + this.data.TextColor + ";text-align=center;font-family:helvetica'>";
 
             banner += "<p>Welcome to Mostly Harmless,</p>";
 
             banner += "<p>home of the Hitchhikers [HH]!</p>";
 
-//            banner += "<p>Enjoy your stay!</p>";
-            
             //  End with Delibird on the right too
-            banner += "</td><td width='33%'>";
-//            banner += "<img src='pokemon:225&shiny=true'>";
-            banner += "</td></tr></table>";
+            banner += "</td><td width='20%'></td></tr></table>";
 
             sys.changeDescription(banner);
             return banner;
