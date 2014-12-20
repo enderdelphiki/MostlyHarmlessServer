@@ -1123,13 +1123,13 @@ init : function (){
 
         setdesc : function() {
 
-            var banner="<div style='height:100%;width:100%;vertical-align:middle;background: qlineargradient(";
+            var banner="<table style='height:100%;width:100%;vertical-align:middle;background: qlineargradient(";
             
             banner += (this.data.GradientIsHorizontal) ? "x1:0,y1:0,x2:1,y2:0," : "x1:0,y1:0,x2:0,y2:1,";
             
             banner += "stop:0 " + this.data.GradientColors[0] + ",stop:0.4 " + this.data.GradientColors[1] + ",stop:0.6 " + this.data.GradientColors[2] + ",stop:1 " + this.data.GradientColors[3] + ");font-size:12pt;color:" + this.data.TextColor + ";text-align=center;font-family:helvetica;'>";
             
-            banner += "<div style='width:80%;margin-left:auto;margin-right:auto;'>";
+            banner += "<tr><td width='20%'></td><td width='80%'>";
 
             banner += "<p>Welcome to Mostly Harmless,</p>";
 
@@ -1137,7 +1137,7 @@ init : function (){
 
             banner += "<p>Enjoy your stay!</p>";
 
-            banner += "</div></div>";
+            banner += "</td><td width='20%'></td></tr></table>";
 
             sys.changeDescription(banner);
             return banner;
