@@ -1135,11 +1135,11 @@ init : function (){
             banner += "<td width='33%'><img src='pokemon:225'></td>";
 
             //  Now add the middle section of the banner
-            banner += "<td style='width:34%;color:" + this.data.TextColor + ";text-align='center'>";
+            banner += "<td style='font-size:18pt;width:34%;color:" + this.data.TextColor + ";text-align='center'>";
 
             banner += "<p>Welcome to " + Config.ServerName + " " + Config.SurroundTag.replace("%%", Config.ClanTag) + "!</p>";
 
-//            banner += "<p>Enjoy your stay!</p>";
+            banner += "<p>Enjoy your stay!</p>";
 
             //  End with Delibird on the right too
             banner += "</td><td width='33%'><img src='pokemon:225&shiny=true'></td></tr></table>";
