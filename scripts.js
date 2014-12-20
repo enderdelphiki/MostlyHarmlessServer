@@ -1132,21 +1132,17 @@ init : function (){
             banner += "stop:0 " + this.data.GradientColors[0] + ", stop:0.4 " + this.data.GradientColors[1] + ", stop:0.6 " + this.data.GradientColors[2] + ", stop:1 " + this.data.GradientColors[3] + ");'>";
             
             //  Begin the Delibird
-            banner += "<tr><td><table width='33%' style='vertical-align: bottom;border:none;'>";
-            
-            banner += "<tr><td><img src='pokemon:225'></td></tr>";
+            banner += "<tr><td width='33%'><img src='pokemon:225'></td>";
 
             //  Now add the middle section of the banner
-            banner += "</table></td><td><table width='34%' style='font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:11pt'><tr><td width='100%' align='center'>";
+            banner += "<td width='34%' style='font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + ";text-align='center'>";
 
             banner += "<p>Welcome to " + Config.ServerName + " " + Config.SurroundTag.replace("%%", Config.ClanTag) + "!</p>";
 
             banner += "<p>Enjoy your stay!</p>";
 
             //  End with Delibird on the right too
-            banner += "<tr><td><table width='33%' style='vertical-align: bottom;border:none;'>";
-            
-            banner += "<tr><td><img src='pokemon:225&shiny=true'></td></tr></table></table>";
+            banner += "</td><td width='33%'><img src='pokemon:225&shiny=true'></td></tr></table>";
 
             sys.changeDescription(banner);
         },
@@ -7362,7 +7358,7 @@ init : function (){
         return (name in tourplayers);
     };
     
-//just leave this in for later when party comes back
+    //just leave this in for later when party comes back
     var zolarColors = ["blue", "darkblue", "green", "darkgreen", "red", "darkred", "orange", "skyblue", "purple", "violet", "black", "lightsteelblue", "navy", "burlywood", "DarkSlateGrey", "darkviolet", "Gold", "Lawngreen", "silver"];
     
     
