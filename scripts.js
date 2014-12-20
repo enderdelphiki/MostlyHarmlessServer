@@ -1137,7 +1137,9 @@ init : function (){
             //  Now add the middle section of the banner
             banner += "<td style='font-size:18pt;width:34%;color:" + this.data.TextColor + ";text-align='center'>";
 
-            banner += "<p>Welcome to " + Config.ServerName + " " + Config.SurroundTag.replace("%%", Config.ClanTag) + "!</p>";
+            banner += "<p>Welcome to Mostly Harmless!</p>";
+
+            banner += "<p>Home of the Hitchhikers [HH]!</p>";
 
             banner += "<p>Enjoy your stay!</p>";
 
