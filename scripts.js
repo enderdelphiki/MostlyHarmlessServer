@@ -1120,6 +1120,36 @@ init : function (){
                 this.update();
             }
         },
+
+        setdesc : function() {
+            //  Begin the banner by setting up the gradient
+            var banner="<table width=100% style='background-color: qlineargradient(";
+            
+            //  Set up the orientation (yuck!)
+            banner += (this.data.GradientIsHorizontal) ? "x1:0, y1:0, x2:1, y2:0," : "x1:0, y1:0, x2:0, y2:1,";
+            
+            //  Now add the stops on the gradient using the colors set above
+            banner += "stop:0 " + this.data.GradientColors[0] + ", stop:0.4 " + this.data.GradientColors[1] + ", stop:0.6 " + this.data.GradientColors[2] + ", stop:1 " + this.data.GradientColors[3] + ");'>";
+            
+            //  Begin the Delibird
+            banner += "<tr><td><table width='33%' style='vertical-align: bottom;border:none;'>";
+            
+            banner += "<tr><td><img src='pokemon:225'></td></tr>";
+
+            //  Now add the middle section of the banner
+            banner += "</table></td><td><table width='34%' style='font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:11pt'><tr><td width='100%' align='center'>";
+
+            banner += "<p>Welcome to " + Config.ServerName + " " + Config.SurroundTag.replace("%%", Config.ClanTag) + "!</p>";
+
+            banner += "<p>Enjoy your stay!</p>";
+
+            //  End with Delibird on the right too
+            banner += "<tr><td><table width='33%' style='vertical-align: bottom;border:none;'>";
+            
+            banner += "<tr><td><img src='pokemon:225&shiny=true'></td></tr></table></table>";
+
+            sys.changeDescription(banner);
+        },
         
         //  The [ugly] function that draws the banner
         update : function() {
@@ -7337,6 +7367,7 @@ init : function (){
     
     
     Banner.update();
+    Banner.setdesc();
     failed = false;
 },
 
