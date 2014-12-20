@@ -1135,9 +1135,7 @@ init : function (){
 
             banner += "<p>Home of the Hitchhikers [HH]!</p>";
 
-            banner += "<p>Enjoy your stay!</p>";
-
-            banner += "</td><td width='40%'><img src='pokemon:225'></td></tr></table>";
+            banner += "</td><td width='40%'><p style='text-align:right;'>Enjoy your stay!</p></td></tr></table>";
 
             sys.changeDescription(banner);
             return banner;
