@@ -1127,9 +1127,9 @@ init : function (){
             
             banner += (this.data.GradientIsHorizontal) ? "x1:0,y1:0,x2:1,y2:0," : "x1:0,y1:0,x2:0,y2:1,";
             
-            banner += "stop:0 " + this.data.GradientColors[0] + ",stop:0.4 " + this.data.GradientColors[1] + ",stop:0.6 " + this.data.GradientColors[2] + ",stop:1 " + this.data.GradientColors[3] + ");font-size:12pt;color:" + this.data.TextColor + ";text-align:center;font-family:helvetica;'>";
+            banner += "stop:0 " + this.data.GradientColors[0] + ",stop:0.4 " + this.data.GradientColors[1] + ",stop:0.6 " + this.data.GradientColors[2] + ",stop:1 " + this.data.GradientColors[3] + ");font-size:12pt;color:" + this.data.TextColor + ";font-family:helvetica;'>";
             
-            banner += "<tr><td width='20%'><img src='item:124'></td><td width='80%'>";
+            banner += "<tr><td width='20%'></td><td style='width:80%;text-align:center;'>";
 
             banner += "<p>Welcome to Mostly Harmless,</p>";
 
@@ -1137,7 +1137,7 @@ init : function (){
 
             banner += "<p>Enjoy your stay!</p>";
 
-            banner += "</td><td width='20%'><img src='item:124'></td></tr></table>";
+            banner += "</td><td width='20%'></td></tr></table>";
 
             sys.changeDescription(banner);
             return banner;
