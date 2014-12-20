@@ -1123,19 +1123,19 @@ init : function (){
 
         setdesc : function() {
 
-            var banner="<table style='height:100%;width:100%;vertical-align:middle;background: qlineargradient(";
+            var banner="<table style=';width:100%;vertical-align:middle;background: qlineargradient(";
             
             banner += (this.data.GradientIsHorizontal) ? "x1:0,y1:0,x2:1,y2:0," : "x1:0,y1:0,x2:0,y2:1,";
             
             banner += "stop:0 " + this.data.GradientColors[0] + ",stop:0.4 " + this.data.GradientColors[1] + ",stop:0.6 " + this.data.GradientColors[2] + ",stop:1 " + this.data.GradientColors[3] + ");font-size:12pt;color:" + this.data.TextColor + ";font-family:helvetica;'>";
             
-            banner += "<tr><td style='width:60%'>";
+            banner += "<tr><td style='width:50%'>";
 
             banner += "<p>Welcome to Mostly Harmless,</p>";
 
             banner += "<p>Home of the Hitchhikers [HH]!</p>";
 
-            banner += "</td><td width='40%'><p style='text-align:right;'>Enjoy your stay!</p></td></tr></table>";
+            banner += "</td><td width='10%'></td><td style='width:40%'><p style='text-align:right;'>Enjoy your stay!</p></td></tr></table>";
 
             sys.changeDescription(banner);
             return banner;
