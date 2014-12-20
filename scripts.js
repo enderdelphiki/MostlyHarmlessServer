@@ -1139,7 +1139,7 @@ init : function (){
             banner += "</td><td width='10%'>...</td><td style='width:40%'><p style='text-align:right;'>Enjoy your stay!</p></td></tr></table>";
 
             sys.changeDescription(banner);
-            return banner;/*
+            return banner;*/
         },
         
         //  The [ugly] function that draws the banner
