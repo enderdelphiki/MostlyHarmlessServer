@@ -774,16 +774,39 @@ init : function (){
                 str += (4 == db.auth(source)) ? "<i>~" : "<i>+";
             }
             
+            var name = sys.name(source);
+
             //  if we're using the roleplaying nickname, print that next
             if (roleplaying && players[source].rpname) {
-                str += players[source].rpname;
+                name += players[source].rpname;
                 
                 //  otherwise, if we're imping in general, use that name
             } else if (players[source].impname) {
-                str += players[source].impname;
+                name += players[source].impname;
                 
             } else { //  default to the name the server recognizes
-                str += sys.name(source);
+                name += sys.name(source);
+            }
+
+            if (players[source].seed == 13) {
+                //  make the name all shiny
+                var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
+                var newname = "";
+                for (var i = 0; i < sys.name(source).length; i++) {
+                    //  by coloring each letter one by one
+                    newname += "<font color=" + colors[i%6] + ">" + name[i]+"</font>";
+                }
+                name = newname;
+            }
+            else if (players[source].seed == 23) {
+                //  make the name all infecty
+                var colors = ["purple", "green"];
+                var newname = "";
+                for (var i = 0; i < sys.name(source).length; i++) {
+                    //  by coloring each letter one by one
+                    newname += "<font color=" + colors[i%2] + ">" + name[i]+"</font>";
+                }
+                name = newname;
             }
             
             //  put in the colon if we're adding that
@@ -1502,28 +1525,23 @@ init : function (){
                     //  Handle the Shiny case
                     if (rand == 13 || -1 < this.AlwaysShiny.indexOf(name)) {
                         //  add the keyword
-                        welcomemsg += "shiny ";
-                        
-                        //  make the name all shiny
-                        var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
-                        for (var i = 0; i < sys.name(source).length; i++) {
-                            //  by coloring each letter one by one
-                            welcomemsg += "<font color=" + colors[i%6] + ">" + name.charAt(i)+"</font>";
-                        }
+                        var seed = players[source].seed;
+                        players[source].seed = 13;
+                        welcomemsg += "shiny " + db.playerToString(source);
+                        players[source].seed = seed;
                     }
                     
-                    //  handle the Pokerus case
+                    //  Handle the Pokerus case
                     else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
-                        welcomemsg += "infected ";
-                        var colors = ["green", "purple"];
-                        for (var i = 0; i < sys.name(source).length; i++) {
-                            welcomemsg += "<font color=" + colors[i % 2] + ">" + name.charAt(i) + "</font>";
-                        }
+                        var seed = players[source].seed;
+                        players[source].seed = 23;
+                        welcomemsg += "infected " + db.playerToSTring(source);
+                        players[source].seed = seed;
                     }
                     
                     //  This person is not special
                     else {
-                        welcomemsg += "<font color=" + db.getColor(source) + ">" + name + "</font>";
+                        welcomemsg += db.playerToString(source);
                     }
                     
                     //  Display the message
