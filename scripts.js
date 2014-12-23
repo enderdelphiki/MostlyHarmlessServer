@@ -808,6 +808,7 @@ init : function (){
                 }
                 name = newname;
             }
+            str += name;
             
             //  put in the colon if we're adding that
             if (timestamp || colon) {
