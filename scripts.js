@@ -524,7 +524,7 @@ init : function (){
             var words = m.split(" ");
             for (var i = 0; i < words.length; i++) {
                 if (8 < words[i].length && (0 == words[i].indexOf("http://") ||  0 == words[i].indexOf("https://"))) {
-                    words[i] = "<a href='" + words[i] + "'>" + words[i] + "</a>";
+                    words[i] = "<a href='" + words[i].replace("&amp;","&") + "'>" + words[i] + "</a>";
                 }
             }
 
@@ -807,7 +807,6 @@ init : function (){
             }
 
             //  Why is this commented out?
-            sys.sendMessage(source, name, main);
             str += name;
 
             //  put in the colon if we're adding that
