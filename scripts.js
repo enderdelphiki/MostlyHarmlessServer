@@ -808,8 +808,9 @@ init : function (){
                 }
                 name = newname;
             }
-            str += name;
-            
+            //  Why is this commented out?
+//            str += name;
+
             //  put in the colon if we're adding that
             if (timestamp || colon) {
                 str += ":";
