@@ -1541,7 +1541,7 @@ init : function (){
                         players[source].seed = 23;
                         welcomemsg += "infected " + db.playerToString(source);
                         players[source].seed = seed;
-                    }
+                    } 
                     
                     //  This person is not special
                     else {
