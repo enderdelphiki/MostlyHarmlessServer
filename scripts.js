@@ -782,10 +782,9 @@ init : function (){
                 
                 //  otherwise, if we're imping in general, use that name
             } else if (players[source].impname) {
-                name = players[source].impname;
-                
+                name = players[source].impname; 
             }
-            
+
             if (players[source].seed == 13) {
                 //  make the name all shiny
                 var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
@@ -806,7 +805,9 @@ init : function (){
                 }
                 name = newname;
             }
+
             //  Why is this commented out?
+            sys.sendMessage(source, name, main);
             str += name;
 
             //  put in the colon if we're adding that
