@@ -807,7 +807,7 @@ init : function (){
             }
             else if (name == "[HH]Magnus") {
                 //  make the name all infecty
-                name = "<font color=black>[HH]</font>Magnus";
+                name = "</font><font color='black'>[HH]</font><font color='" + this.getColor(source) + "'>Magnus";
             }
 
             //  Why is this commented out?
@@ -1539,7 +1539,7 @@ init : function (){
                     else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
                         var seed = players[source].seed;
                         players[source].seed = 23;
-                        welcomemsg += "infected " + db.playerToSTring(source);
+                        welcomemsg += "infected " + db.playerToString(source);
                         players[source].seed = seed;
                     }
                     
