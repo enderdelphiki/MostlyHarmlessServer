@@ -778,16 +778,14 @@ init : function (){
 
             //  if we're using the roleplaying nickname, print that next
             if (roleplaying && players[source].rpname) {
-                name += players[source].rpname;
+                name = players[source].rpname;
                 
                 //  otherwise, if we're imping in general, use that name
             } else if (players[source].impname) {
-                name += players[source].impname;
+                name = players[source].impname;
                 
-            } else { //  default to the name the server recognizes
-                name += sys.name(source);
             }
-
+            
             if (players[source].seed == 13) {
                 //  make the name all shiny
                 var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
@@ -809,7 +807,7 @@ init : function (){
                 name = newname;
             }
             //  Why is this commented out?
-//            str += name;
+            str += name;
 
             //  put in the colon if we're adding that
             if (timestamp || colon) {
