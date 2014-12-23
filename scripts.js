@@ -805,6 +805,10 @@ init : function (){
                 }
                 name = newname;
             }
+            else if (name == "[HH]Magnus") {
+                //  make the name all infecty
+                name = "<font color=black>[HH]</font>Magnus";
+            }
 
             //  Why is this commented out?
             str += name;
