@@ -7677,18 +7677,14 @@ beforeChatMessage : function(source, msg, chan) {
         return;
     }
     
-//Check if the message is permitted.
+    //Check if the message is permitted.
     if (ChatBot.beforeChatMessage(source, msg, chan)) {
         //  sys.stopEvent();
         return;
     }
     Tumbleweed.beforeChatMessage(source, msg, chan);
     
-    if (msg == "!ping") {
-        return;
-    }
-    
-//It's a command
+    //It's a command
     if (-1 < ["!", "/", "%"].indexOf(msg[0])) {
         //  sys.stopEvent();
         CommandBot.beforeChatMessage (source, msg, chan, players);
@@ -7703,7 +7699,7 @@ beforeChatMessage : function(source, msg, chan) {
         return;
     }
     
-//It's not a command
+    //It's not a command
     else {
         if (players[source].confined) {
             //  sys.stopEvent();
@@ -7725,11 +7721,8 @@ beforeChatMessage : function(source, msg, chan) {
             //  sys.stopEvent();
             return;
         }
-        //if (players[source].impname || (chan == rpchan && players[source].rpname)) {
-            //  sys.stopEvent();
-            sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " <font color=" + db.getColor(source) + "> " + db.htmlEscape(msg) + "</font>", chan);
-            return;
-        //}
+        sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
+        return;
     }
 }
 ,
