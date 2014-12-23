@@ -693,6 +693,9 @@ init : function (){
             // special marks
             if (/[\ufff0-\uffff]/.test(name)) return true;
 
+            //  Swastika
+            if (/\u5350/.test(name)) return true;
+
             // COMBINING OVERLINE
             if (/\u0305|\u0336/.test(name)) return true;
             if (/\u0CBF/gi.test(name)) return true;
@@ -730,11 +733,14 @@ init : function (){
             if (space.test(name)) return true;
 
             // \u002D = -
-            var dash = /\u058A|\u05BE|\u1400|\u1806|\u2010-\u2015|\u2053|\u207B|\u208B|\u2212|\u2E17|\u2E1A|\u301C|\u3030|\u30A0|[\uFE31-\uFE32]|\uFE58|\uFE63|\uFF0D/;
+            var dash = /1
             if (dash.test(name)) return true;
 
             // special marks
             if (/[\ufff0-\uffff]/.test(name)) return true;
+            
+            //  Swastika
+            if (/\u5350/.test(name)) return true;
 
             // COMBINING OVERLINE
             if (/\u0305|\u0336/.test(name)) return true;
@@ -6393,7 +6399,6 @@ init : function (){
     (sys.existChannel(Config.WatchChannelName)) ? watch = sys.channelId(Config.WatchChannelName) : watch = sys.createChannel(Config.WatchChannelName);
     (sys.existChannel(Config.PartyChannelName)) ? party = sys.channelId(Config.PartyChannelName) : party = sys.createChannel(Config.PartyChannelName);
     (sys.existChannel(Config.Elsewhere)) ? elsewhere = sys.channelId(Config.Elsewhere) : elsewhere = sys.createChannel(Config.Elsewhere);
-    (sys.existChannel("League")) ? league = sys.channelId("League") : league = sys.createChannel("League");
     (sys.existChannel("The Mosh Pit")) ? clanchan = sys.channelId("The Mosh Pit") : clanchan = sys.createChannel("The Mosh Pit");
     (sys.existChannel("Role Playing")) ? rpchan = sys.channelId("Role Playing") : rpchan = sys.createChannel("Role Playing");
     for (var i = 0; i < Config.UserChannels.length; i++) {
@@ -7534,18 +7539,6 @@ beforeChannelJoin : function (source, chan){
             }
             break;
         }
-        case league: {
-            var canEnter = (0 < db.auth(source) || db.auth(source) == 4[0]);
-            for (var i = 0; i < Config.League.length; i++) {
-                if (canEnter || Config.League[i][0].toLowerCase() == sys.name(source).toLowerCase()) {
-                    return;
-                }
-            }
-            sys.sendMessage(source, "~~Server~~: Only league members can go there.", main);
-            sys.stopEvent();
-            sys.sendAll(sys.name(source) + " attempted to join channel " + sys.channel(league) + ".",watch);
-            break;
-        }
         case clanchan: {
             if (-1 == sys.name(source).indexOf(clan.tagToString())) {
                 sys.sendMessage(source, "~~Server~~: This channel only permits " + clan.tagToString() + " members.", main);
@@ -7609,7 +7602,7 @@ afterChannelCreated : function (id, name, source){},
 
 beforeChannelDestroyed : function (chan) {
     switch (chan) {
-    case main: case watch: case staffchan: case league: case clanchan: case rpchan: case party: case elsewhere:
+    case main: case watch: case staffchan: case clanchan: case rpchan: case party: case elsewhere:
         sys.stopEvent();
         return;
     }
@@ -7716,7 +7709,7 @@ beforeChatMessage : function(source, msg, chan) {
         }
         //if (players[source].impname || (chan == rpchan && players[source].rpname)) {
             //  sys.stopEvent();
-            sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
+            sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " <font color=" + db.getColor(source) + "> " + db.htmlEscape(msg) + "</font>", chan);
             return;
         //}
     }
