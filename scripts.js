@@ -1239,14 +1239,14 @@ init : function (){
                     }
                 }
                 
-                //  Luca has a special ball
+                //  special ball
                 else if (name == "[HH]Luca") {
                     banner += Pictures["gsonline"];
                 }
-                
-                //  Rain also gets a special ball
                 else if (name == "[HH]SilverRain") {
                     banner += Pictures["gbonline"];
+                } else if (name == "[HH]HelloSkitty9") {
+                    banner += Pictures["skitty"];
                 }
                 
                 //  The defeault ball
