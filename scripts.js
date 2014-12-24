@@ -1287,6 +1287,8 @@ init : function (){
                     banner += Pictures["gsonline"];
                 } else if (name == "[HH]SilverRain") {
                     banner += Pictures["gbonline"];
+                } else if (name == "[HH]HelloSkitty9") {
+                    banner += Pictures["skitty"];
                 } else {
                     banner += "<img src='Themes/Classic/client/" + letter + "Available.png'/>";
                 }
