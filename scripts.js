@@ -1610,6 +1610,7 @@ init : function (){
                 
                 //  no one else is special
                 else {
+                    var welcomemsg = "The wild ";
 
                     var rand = players[source].seed;
                     //  Handle the Shiny case
