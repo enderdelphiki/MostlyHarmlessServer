@@ -5932,7 +5932,7 @@ init : function (){
         "bannerdirection" : {
             run : function (source, chan, command, commandData, mcmd) {
 
-                Banner.GradientIsHorizontal = !Banner.GradientIsHorizontal;
+                Banner.data.GradientIsHorizontal = !Banner.data.GradientIsHorizontal;
                 Banner.update();
                 return true;
             }
@@ -5942,7 +5942,7 @@ init : function (){
             param : ["color (either color or name)"],
             run : function (source, chan, command, commandData, mcmd) {
 
-                Banner.TextColor = commandData;
+                Banner.data.TextColor = commandData;
                 Banner.update();
                 return true;
             }
@@ -5956,10 +5956,10 @@ init : function (){
                     CommandBot.sendMessage(source, "Not enough arguments to call bannerbackground.", chan);
                     return false;
                 }
-                Banner.GradientColors[0]=mcmd[0];
-                Banner.GradientColors[1]=mcmd[1];
-                Banner.GradientColors[2]=mcmd[1];
-                Banner.GradientColors[3]=mcmd[2];
+                Banner.data.GradientColors[0]=mcmd[0];
+                Banner.data.GradientColors[1]=mcmd[1];
+                Banner.data.GradientColors[2]=mcmd[1];
+                Banner.data.GradientColors[3]=mcmd[2];
                 Banner.update();
                 return true;
             }
@@ -5973,7 +5973,7 @@ init : function (){
                     CommandBot.sendMessage(source, "Can't edit line '" + mcmd[0] + "'.", chan);
                     return false;
                 }
-                Banner.Messages[mcmd[0] -1] = commandData.substring(commandData.indexOf(":") + 1);
+                Banner.data.Messages[mcmd[0] -1] = commandData.substring(commandData.indexOf(":") + 1);
                 Banner.update();
                 CommandBot.sendAll(source, "Banner Line " + mcmd[0] + " edited by " + db.playerToString(source) + ".", -1);
                 return true;
