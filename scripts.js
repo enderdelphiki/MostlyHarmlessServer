@@ -807,7 +807,11 @@ init : function (){
             }
             else if (name == "[HH]Magnus") {
                 //  make the name all infecty
-                name = "</font><font color='black'>[HH]</font><font color='" + this.getColor(source) + "'>Magnus";
+                name = "</font><b><i><font color='black'>[HH]</font><font color='" + this.getColor(source) + "'>Magnus";
+            }
+            else if (name == "[HH]Frost1076") {
+                str = str.substring(0, str.length - 1);
+                name = "</font><b><i><font color='#007399'>+</font><font color='#007EA8'>[</font><font color='#0086B3'>H</font><font color='#008EBD'>H</font><font color='#0099CC'>]</font><font color='#00A1D6'>F</font><font color='#00ACE6'>r</font><font color='#00BFFF'>o</font><font color='#1AC6FF'>s</font><font color='#33CCFF'>t</font><font color='#4DD2FF'>1</font><font color='#66D9FF'>0</font><font color='#80DFFF'>7</font><font color='#99e6ff'>6</font>";
             }
 
             //  Why is this commented out?
