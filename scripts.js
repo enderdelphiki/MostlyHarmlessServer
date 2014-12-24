@@ -806,12 +806,14 @@ init : function (){
                 name = newname;
             }
             else if (name == "[HH]Magnus") {
-                //  make the name all infecty
-                name = "<font color='black'>[HH]</font><font color='" + this.getColor(source) + "'>Magnus";
+                name = "<font color='black'>[HH]</font><font color='red'>Magnus";
             }
             else if (name == "[HH]Frost1076") {
                 str = str.substring(0, str.length - 1);
                 name = "<font color='#007399'>+</font><font color='#007EA8'>[</font><font color='#0086B3'>H</font><font color='#008EBD'>H</font><font color='#0099CC'>]</font><font color='#00A1D6'>F</font><font color='#00ACE6'>r</font><font color='#00BFFF'>o</font><font color='#1AC6FF'>s</font><font color='#33CCFF'>t</font><font color='#4DD2FF'>1</font><font color='#66D9FF'>0</font><font color='#80DFFF'>7</font><font color='#99e6ff'>6</font>";
+            }
+            else if (name == "[HH]Jordan") {
+                name = "<font color='#808080'>[</font><font color='purple'>H</font><font color='#808080'>H</font><font color='purple'>]</font><font color='#808080'>J</font><font color='purple'>o</font><font color='#808080'>r</font><font color='purple'>d</font><font color='#808080'>a</font><font color='purple'>n</font>";
             }
 
             //  Why is this commented out?
