@@ -1578,7 +1578,7 @@ init : function (){
         
         //  Event triggered by script.afterLogOut(). Just tells people when someone leaves
         afterLogOut : function (source) {
-        
+            
             //  Always tell watch.
             this.sendGoodbyeAll("#" + source + ": " + sys.name(source) + " (" + sys.ip(source) + ") logged out.", watch);
             
@@ -1610,24 +1610,28 @@ init : function (){
                 
                 //  no one else is special
                 else {
+
                     var rand = players[source].seed;
-                    
-                    //  construct the goodbye exactly like it the welcome is formatted
-                    var welcomemsg = "<font color=black>The wild ";
+                    //  Handle the Shiny case
                     if (rand == 13 || -1 < this.AlwaysShiny.indexOf(name)) {
-                        welcomemsg = welcomemsg + "shiny ";
-                        var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
-                        for (var i = 0; i < name.length; i++)
-                            welcomemsg = welcomemsg + "<font color=" + colors[i % 6] + ">" + name.charAt(i) + "</font>";
-                    } else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
-                        welcomemsg = welcomemsg + "infected ";
-                        var colors = ["green", "purple"];
-                        for (var i = 0; i < name.length; i++) {
-                            welcomemsg = welcomemsg + "<font color=" + colors[i % 2] + ">" + name.charAt(i) + "</font>";
-                        }
+                        //  add the keyword
+                        var seed = players[source].seed;
+                        players[source].seed = 13;
+                        welcomemsg += "shiny " + db.playerToString(source);
+                        players[source].seed = seed;
                     }
+                    
+                    //  Handle the Pokerus case
+                    else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
+                        var seed = players[source].seed;
+                        players[source].seed = 23;
+                        welcomemsg += "infected " + db.playerToString(source);
+                        players[source].seed = seed;
+                    } 
+                    
+                    //  This person is not special
                     else {
-                        welcomemsg=welcomemsg+"<font color=" + db.getColor(source) +">" + name + "</font>";
+                        welcomemsg += db.playerToString(source);
                     }
                     
                     //  print it out through goodbye
