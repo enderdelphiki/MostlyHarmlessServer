@@ -524,7 +524,7 @@ init : function (){
             var words = m.split(" ");
             for (var i = 0; i < words.length; i++) {
                 if (8 < words[i].length && (0 == words[i].indexOf("http://") ||  0 == words[i].indexOf("https://"))) {
-                    words[i] = "<a href='" + words[i].replace(new RegExp(escapeRegExp('&amp;'), 'g'), '&') + "'>" + words[i] + "</a>";
+                    words[i] = "<a href='" + words[i].replace('&amp;', '&').replace('&amp;', '&').replace('&amp;', '&') + "'>" + words[i] + "</a>";
                 }
             }
 
