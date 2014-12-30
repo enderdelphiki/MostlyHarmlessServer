@@ -5551,8 +5551,8 @@ init : function (){
                     }
                 }
                 sys.sendHtmlAll("<font color=red><b>" + mcmd[0] + " was banned by " + sys.name(source) + ".</b></font>");
-                if (sys.id(mcmd[0]) != undefined) {
-                    sys.kick(mcmd[0]);
+                if (var id = sys.id(mcmd[0]) != undefined) {
+                    sys.kick(id);
                 }
                 sys.ban(mcmd[0]);
                 logs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
@@ -7451,6 +7451,10 @@ beforeLogIn : function (source) {
 
 afterLogIn : function (source) {
     //  No TI until after login
+    if (sys.info(source) == "Death to all who face me") {
+        sys.kick(source);
+        return;
+    }
 /*    if (Config["BadCharacters"].test(sys.info(source))) {
 //        sys.ban(sys.ip(source));
         sys.kick(source);
