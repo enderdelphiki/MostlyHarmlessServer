@@ -5551,8 +5551,8 @@ init : function (){
                     }
                 }
                 sys.sendHtmlAll("<font color=red><b>" + mcmd[0] + " was banned by " + sys.name(source) + ".</b></font>");
-                if (var id = sys.id(mcmd[0]) != undefined) {
-                    sys.kick(id);
+                if (sys.id(mcmd[0]) != undefined) {
+                    sys.kick(sys.id(mcmd[0]));
                 }
                 sys.ban(mcmd[0]);
                 logs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
