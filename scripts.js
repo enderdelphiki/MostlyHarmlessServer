@@ -1874,15 +1874,32 @@ init : function (){
                 
                 case "Ender's Battle": {
                     for (var i = 0; i < 6; i++) {
-                        if (-1 == this.data.EnderPoke.indexOf(sys.pokemon(sys.teamPoke(source, tsource, i)))) {
-                            this.sendMessage(source, sys.pokemon(sys.teamPoke(source, tsource, i)) + " is not capable of Mega Evolution.", main);
+                        var poke = sys.pokemon(sys.teamPoke(source, tsource, i));
+                        if (-1 == this.data.EnderPoke.indexOf(poke)) {
+                            this.sendMessage(source, poke + " is not strong enough for this competition.", main);
                             sys.changeTier(source, tsource, "Challenge Cup");
                             return true;
                         }
-                        if (-1 == this.data.EnderItem.indexOf(sys.item(sys.teamPokeItem(source, tsource, i)))) {
-                            this.sendMessage(source, sys.item(sys.teamPokeItem(source, tsource, i)) + " is not a mega stone.", main);
+                        var item = sys.item(sys.teamPokeItem(source, tsource, i));
+                        if (-1 < this.data.EnderItem.indexOf(item)) {
+                            this.sendMessage(source, item + " is not allowed due to recoil or banlists.", main);
                             sys.changeTier(source, tsource, "Challenge Cup");
                             return true;
+                        }
+                        var ability = sys.ability(sys.teamPokeAbility(source, tsource, i));
+                        if (-1 < this.data.EnderAbility.indexOf(ability)) {
+                            this.sendMessage(source, ability + " is not allowed due self-harm or banlists.", main);
+                            sys.changeTier(source, tsource, "Challenge Cup");
+                            return true;
+                        }
+                        for (var j = 0; j < 4; j++) {
+                            var move = sys.move(sys.teamPokeMove(source, tsource, i, j)) {
+                                if (-1 < this.data.EnderMove.indexOf(move)) {
+                                    this.sendMessage(source, move + " is not allowed due to the potential to recoil or banlists.", main);
+                                    sys.changeTier(source, tsource, "Challenge Cup");
+                                    return true;
+                                }
+                            }
                         }
                     }
                     break;
