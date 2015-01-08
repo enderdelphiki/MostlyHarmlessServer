@@ -1891,11 +1891,12 @@ init : function (){
                             ban = true;
                         }
                         for (var j = 0; j < 4; j++) {
-                            var move = sys.move(sys.teamPokeMove(source, tsource, i, j));
+                            var move = sys.teamPokeMove(source, tsource, i, j);
                             if ("Other" == db.getMoveCategory(move)) {
-                                this.sendMessage(source, move + " is a status move, so it is banned.", main);
+                                this.sendMessage(source, sys.move(move) + " is a status move, so it is banned.", main);
                                 ban = true;
                             }
+                            move = sys.move(move);
                             if (-1 < this.data.EnderMove.indexOf(move)) {
                                 this.sendMessage(source, move + " is not allowed due to the potential for self-harm or banlists.", main);
                                 ban = true;
