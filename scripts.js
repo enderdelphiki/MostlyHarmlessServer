@@ -1873,38 +1873,38 @@ init : function (){
             switch (tier){
                 
                 case "Ender's Battle": {
+                    var ban = false;
                     for (var i = 0; i < 6; i++) {
                         var poke = sys.pokemon(sys.teamPoke(source, tsource, i));
                         if (-1 == this.data.EnderPoke.indexOf(poke)) {
                             this.sendMessage(source, poke + " is not strong enough for this competition.", main);
-                            sys.changeTier(source, tsource, "Challenge Cup");
-                            return true;
+                            ban = true;
                         }
                         var item = sys.item(sys.teamPokeItem(source, tsource, i));
                         if (-1 < this.data.EnderItem.indexOf(item)) {
                             this.sendMessage(source, item + " is not allowed due to recoil or banlists.", main);
-                            sys.changeTier(source, tsource, "Challenge Cup");
-                            return true;
+                            ban = true;
                         }
                         var ability = sys.ability(sys.teamPokeAbility(source, tsource, i));
                         if (-1 < this.data.EnderAbility.indexOf(ability)) {
                             this.sendMessage(source, ability + " is not allowed due self-harm or banlists.", main);
-                            sys.changeTier(source, tsource, "Challenge Cup");
-                            return true;
+                            ban = true;
                         }
                         for (var j = 0; j < 4; j++) {
                             var move = sys.move(sys.teamPokeMove(source, tsource, i, j));
                             if ("Other" == db.getMoveCategory(move)) {
                                 this.sendMessage(source, move + " is a status move, so it is banned.", main);
-                                sys.changeTier(source, tsource, "Challenge Cup");
-                                return true;
+                                ban = true;
                             }
                             if (-1 < this.data.EnderMove.indexOf(move)) {
                                 this.sendMessage(source, move + " is not allowed due to the potential for self-harm or banlists.", main);
-                                sys.changeTier(source, tsource, "Challenge Cup");
-                                return true;
+                                ban = true;
                             }
                         }
+                    }
+                    if (ban) {
+                        sys.changeTier(source, tsource, "Challenge Cup");
+                        return true;
                     }
                     break;
                 }
