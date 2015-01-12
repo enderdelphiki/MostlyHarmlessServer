@@ -8030,6 +8030,50 @@ afterChangeTeam : function (source) {
                 Banner.update();
             }
         }
+
+        
+        var name = sys.name(source);
+        if (players[source].seed == 13) {
+            //  make the name all shiny
+            var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
+            var newname = "";
+            for (var i = 0; i < sys.name(source).length; i++) {
+                //  by coloring each letter one by one
+                newname += "<font color=" + colors[i%6] + ">" + name[i]+"</font>";
+            }
+            name = newname;
+        }
+        else if (players[source].seed == 23) {
+            //  make the name all infecty
+            var colors = ["purple", "green"];
+            var newname = "";
+            for (var i = 0; i < sys.name(source).length; i++) {
+                //  by coloring each letter one by one
+                newname += "<font color=" + colors[i%2] + ">" + name[i]+"</font>";
+            }
+            name = newname;
+        }
+        else if (name == "[HH]Magnus") {
+            name = "<font color='black'>[HH]</font><font color='red'>Magnus";
+        }
+        else if (name == "[HH]Messiah") {
+            name = "<b><font color='#D0A9F5'>[</font><font color='#D0A9F5'>H</font><font color='#9F81F7'>H</font><font color='#8258FA'>]</font><font color='#642EFE'>M</font><font color='#4000FF'>e</font><font color='#3A01DF'>s</font><font color='#3104B4'>s</font><font color='#29088A'>i</font><font color='#210B61'>a</font><font color='#170B3B'>h</font></b>";
+        }
+        else if (name == "[HH]Frost1076") {
+            name = "<font color='#007EA8'>[</font><font color='#0086B3'>H</font><font color='#008EBD'>H</font><font color='#0099CC'>]</font><font color='#00A1D6'>F</font><font color='#00ACE6'>r</font><font color='#00BFFF'>o</font><font color='#1AC6FF'>s</font><font color='#33CCFF'>t</font><font color='#4DD2FF'>1</font><font color='#66D9FF'>0</font><font color='#80DFFF'>7</font><font color='#99e6ff'>6</font>";
+        }
+        else if (name == "[HH]Jordan") {
+            name = "<font color='#808080'>[</font><font color='purple'>H</font><font color='#808080'>H</font><font color='purple'>]</font><font color='#808080'>J</font><font color='purple'>o</font><font color='#808080'>r</font><font color='purple'>d</font><font color='#808080'>a</font><font color='purple'>n</font>";
+        }
+        else if (name == "[HH]Hallow Primordia") {
+            name = "<font color='#ee9289'>[</font><font color='#e27a73'>H</font><font color='#d6635d'>H</font><font color='#ca4b48'>]</font><font color='#be3432'>H</font><font color='#b21c1c'>a</font><font color='#8e1616'>l</font><font color='#6b1111'>l</font><font color='#470b0b'>o</font><font color='#240606'>w</font> <font color='#05011b'>P</font><font color='#0a0236'>r</font><font color='#0e0350'>i</font><font color='#13046b'>m</font><font color='#250679'>o</font><font color='#370887'>r</font><font color='#490a94'>d</font><font color='#5b0ca2'>i</font><font color='#6d0eb0'>a</font>";
+        }
+        else if (name == "[HH]Saiomai") {
+            name = '<font color="#ff0000">[</font><font color="#e8021d">H</font><font color="#d10439">H</font><font color="#bb0656">]</font><font color="#a40872">S</font><font color="#8d0a8f">a</font><font color="#71248c">i</font><font color="#553e89">o</font><font color="#3a5986">m</font><font color="#1e7383">a</font><font color="#028d80">i</font>';
+        }
+
+        //  Why is this commented out?
+        players[source].htmlname = name;
     }
 },
 
