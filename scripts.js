@@ -1327,7 +1327,7 @@ init : function (){
         ],
 
         SpecialGoodbye : [
-
+            ["[HH]Hallow Primordia", "<font color=black>***<i>Hallow falls back into the darkness...</i>***</font>"]
         ],
 
         //  This list of messages will be displayed privately to the user on login
