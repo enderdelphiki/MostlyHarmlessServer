@@ -270,10 +270,10 @@ init : function (){
                     categoryList[key] = category;
                 }
             }
-            if (categoryList[moveId] === "1") {
+            if (categoryList[moveId] == 1) {
                 return "Physical";
             }
-            if (categoryList[moveId] === "2") {
+            if (categoryList[moveId] == 2) {
                 return "Special";
             }
             return "Other";
@@ -1168,8 +1168,8 @@ init : function (){
             //  Track the first letter as used in the filename for the autballs
                 authletter = ['u', 'm', 'a', 'o'];
                 
-            //  Now go through the first 8 league members
-            for (var x = 0; x < 8; x++) {
+            //  Now go through the first 6 league members
+            for (var x = 0; x < 6; x++) {
                 //  grab the person's name
                 var name = Config.League[x][0],
                 
@@ -1221,6 +1221,35 @@ init : function (){
                 //  add the type
                 banner += "</td><td>" + db.escapeTagName(name, false) + "</td><td><img src='Themes/Classic/types/type" + sys.typeNum(Config.League[x][1]) + ".png'/></td></tr>";
             }
+
+            //  Add the server clock
+            //  set up the vars
+            var currentTime = new Date(),
+                hours = currentTime.getHours(),
+                minutes = currentTime.getMinutes();
+                
+            //  force 0X for single digit minutes
+            if (minutes < 10) minutes = "0" + minutes;
+            
+            //  check if it's AM or PM
+            var isPM = (hours > 11);
+            
+            //  Format the clock to normal-people time
+            if (isPM) {
+                //  Reset PM to 1-12 as opposed to 13-24
+                if (12 < hours) {
+                    hours -= 12;
+                }
+            }
+            
+            //  Make sure there is no 0 o'clock
+            else if (hours == 0) {
+                hours = 12;
+            }
+            
+            //  Print the time
+            banner += "<tr><td></td><td></td><td></td></tr><tr><td></td><td>Server Clock:</td><td>" + hours + ":" + minutes + (isPM?"PM":"AM") + "</td></tr>";
+
             
             //  Now add the middle section of the banner
             banner += "</table></td><td><table width='34%' style='font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:11pt'><tr><td width='100%' align='center'><p>Welcome to " + Config.ServerName + " " + Config.SurroundTag.replace("%%", Config.ClanTag) + "!</p>";
@@ -1232,7 +1261,7 @@ init : function (){
             banner += "</td></tr></table></td><td><table width=33% style='vertical-align: bottom; font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:8pt'>";
             
             //  Print the E4 (same as gyms, just different range on Config.League
-            for (var x = 8; x < 12; x++) {
+            for (var x = 6; x < 10; x++) {
                 var name = Config.League[x][0],
                     letter = authletter[sys.dbAuth(name)];
                 banner += "<tr><td style='margin:4px'>";
@@ -1260,7 +1289,7 @@ init : function (){
             }
             
             //  Hard-code the champion spot (same as the other spots with a few formatting changes)
-            var name = Config.League[12][0], letter = authletter[sys.dbAuth(name)];
+            var name = Config.League[10][0], letter = authletter[sys.dbAuth(name)];
             if (letter == undefined) {
                 letter = 'u';
             }
@@ -1270,33 +1299,6 @@ init : function (){
             var score = juggernaut.getScore();
             banner += "<tr><td></td><td></td><td></td></tr><tr><td></td><td>Juggernaut:</td><td>Score:</td></tr><tr style='text-align:center'><td>" + Pictures["juggernaut"] + "</td><td>" + juggernaut.getName() + "</td><td>" + score + "</td></tr>";
             
-            //  Add the server clock
-            //  set up the vars
-            var currentTime = new Date(),
-                hours = currentTime.getHours(),
-                minutes = currentTime.getMinutes();
-                
-            //  force 0X for single digit minutes
-            if (minutes < 10) minutes = "0" + minutes;
-            
-            //  check if it's AM or PM
-            var isPM = (hours > 11);
-            
-            //  Format the clock to normal-people time
-            if (isPM) {
-                //  Reset PM to 1-12 as opposed to 13-24
-                if (12 < hours) {
-                    hours -= 12;
-                }
-            }
-            
-            //  Make sure there is no 0 o'clock
-            else if (hours == 0) {
-                hours = 12;
-            }
-            
-            //  Print the time
-            banner += "<tr><td></td><td>Server Clock:</td><td>" + hours + ":" + minutes + (isPM?"PM":"AM") + "</td></tr>";
             
             //  Finish off the banner and add the MOTD on the end
             banner += "</table></td></tr><tr><td colspan='3' style=\"text-align:center;font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + "\"><center>" + hash.get("motd") + "</center></td></tr></table>";
@@ -1408,61 +1410,23 @@ init : function (){
             var rand, name = sys.name(source);
             
             //  Autoshiny award
-            if (name == "[HH]PinkBlaze" || name == "[HH]Prism") {
-            
-                //  First give them the other awards; otherwise it'd be impossible for them to get these
-                if (-1 == Award.awards["Pokerus"].indexOf(sys.name(source))) {
-                    rand = 23;
-                }
-                else if (-1 == Award.awards["Inverted"].indexOf(sys.name(source))) {
-                    rand = 0;
-                }
-                
-                //  Now guarantee shiny
-                else {
-                    rand = 13;
-                }
+            if (name == "[HH]PinkBlaze" || name == "[HH]Prism") {            
+                rand = 13;
             }
             
             //  Everyone else, including people who get auto-shiny, gets random ID
             else {    
             
                 //  Generate Secret ID
-                var cap = 4096; //shiny odds in gen 6
-                
-                //  Double odds if they have the pokerus award
-                if (-1 < Award.awards["Pokerus"].indexOf(sys.name(source))) {
-                    cap /= 2;   //  2048
-                }
-                
-                //  Higher odds for successive shininess
-                if (-1 < Award.awards["Shiny"].indexOf(sys.name(source))) {
-                    cap /= 4;   //  512
-                }
-                //  Further double odds per juggernaut award; doubling stacks
-                if (-1 < Award.awards["Juggernaut"].indexOf(sys.name(source))) {
-                    cap /= 2;   //  256
-                    if (-1 < Award.awards["Elite JN"].indexOf(sys.name(source))) {
-                        cap /= 4;   //  64
-                        if (-1 < -1 < Award.awards["Master JN"].indexOf(sys.name(source))) {
-                            cap /= 2;   //  32
-                        }
-                    }
-                }
-                
-                //  Finally, grab the actual secret ID
-                rand = sys.rand(0, cap);
+                //  shiny odds in gen 6
+                rand = sys.rand(0, 4096);
             }
             
             //  Store the secret ID
             players[source].seed = rand;
-            
-            //  Decide the starting type
-            players[source].type = rand % 18;
-            
+                        
             
             //  Display the info we've generated so far
-            sys.sendMessage(source, "~~Server~~: Your type this session is " + sys.type(players[source].type) + ".", main);
             TourBot.sendMessage(source, "</font>The Message of the Day is: " + hash.get("motd"), chan);
             
             //  If we shouldn't show the welcome message for all, break early
@@ -1497,7 +1461,7 @@ init : function (){
                     }
                     
                     //  Handle the Shiny case
-                    if (rand == 13 || -1 < this.AlwaysShiny.indexOf(name)) {
+                    if (rand == 13) {
                         //  add the keyword
                         var seed = players[source].seed;
                         players[source].seed = 13;
@@ -1506,7 +1470,7 @@ init : function (){
                     }
                     
                     //  Handle the Pokerus case
-                    else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
+                    else if (rand == 23) {
                         var seed = players[source].seed;
                         players[source].seed = 23;
                         welcomemsg += "infected " + db.playerToString(source);
@@ -1528,17 +1492,6 @@ init : function (){
                 if (!sys.isInChannel(source, watch)) {
                     sys.putInChannel(source, watch);
                 }
-            }
-            
-            //  Give awards where they're due
-            if (players[source].seed == 13) {
-                Award.won("Shiny", sys.name(source));
-            }
-            else if (players[source].seed == 23) {
-                Award.won("Pokerus", sys.name(source));
-            }
-            else if (players[source].seed == 0){
-                Award.won("Inverted", sys.name(source));
             }
         },
         
@@ -1580,7 +1533,7 @@ init : function (){
 
                     var rand = players[source].seed;
                     //  Handle the Shiny case
-                    if (rand == 13 || -1 < this.AlwaysShiny.indexOf(name)) {
+                    if (rand == 13) {
                         //  add the keyword
                         var seed = players[source].seed;
                         players[source].seed = 13;
@@ -1589,7 +1542,7 @@ init : function (){
                     }
                     
                     //  Handle the Pokerus case
-                    else if (rand == 23 || -1 < this.AlwaysPokerus.indexOf(name)) {
+                    else if (rand == 23) {
                         var seed = players[source].seed;
                         players[source].seed = 23;
                         welcomemsg += "infected " + db.playerToString(source);
@@ -1617,7 +1570,6 @@ init : function (){
 
     /*
         Tumbleweed is a pseudobot that will display a comedic message in response to idle chat.
-            It is also responsible for the ThinkFast award.
     */
     Tumbleweed =  {
         //  Tracks how long before the next idle chat display
@@ -1636,36 +1588,13 @@ init : function (){
             //  Time has passed.
             this.count--;
             
-            //  1249 is the special case for the ThinkFast ending.
-            if (this.count == 1249) {
-            
-                //  If this is reached, no one caught the ThinkFast.
-                Award.sendAll("Time's up!", main);
-                
-                //  We're done printing idle messages
-                this.count = 0;
-                return;
-            }
-            
             //  If the time has come to display a message...    
             if (0 == this.count) {
                 //  Pick which message to display, out of 50
                 var r = sys.rand(0, 50);
-                
-                //  the odds are equally as likely as any other message;
-                //  this is like appending the display to the list
-                if (r == this.data.display.length) {
-                    //  Set up the special ThinkFast case
-                    this.count = 1250;
-                    
-                    //  Alert that the time has come
-                    Award.sendAll("**Think fast!**", main);
-                    return;
-                    
-                }
-                
+
                 //  Otherwise just display one of the random if one is selected
-                else if (r < this.data.display.length) {
+                if (r < this.data.display.length) {
                     this.post(r);
                     return;
                 }
@@ -1677,13 +1606,6 @@ init : function (){
         
         //  Called by script.beforeChatMessage(). Claim ThinkFast or just reset timer
         beforeChatMessage : function(source, msg, chan) {
-            //  Allow 1 second of air
-            if (1248 < this.count) {
-            
-                //  If the player won the award, give it.
-                Award.won("ThinkFast", sys.name(source));
-            }
-            
             //  A post was made; reset the timer.
             this.count = 360;
         }
@@ -1962,7 +1884,7 @@ init : function (){
             }
             
             // if it's not gen 6, stop
-            if (-1 == ["XY No Items", "XY LC", "Pre-PokeBank OU", "XY NU", "XY UU", "XY OU", "XY Ubers", "Monotype", "Monogen", "Inverted Battle", "Sky Battle", "XY 1v1"].indexOf(tier)){
+            if (-1 == ["ORAS NU", "ORAS LU", "ORAS UU", "ORAS OU", "ORAS Uber", "XY No Items", "XY LC", "Pre-PokeBank OU", "XY NU", "XY UU", "XY OU", "XY Ubers", "Monotype", "Monogen", "Inverted Battle", "Sky Battle", "XY 1v1"].indexOf(tier)){
                 return false;
             }
             
@@ -2572,19 +2494,7 @@ init : function (){
                 CommandBot.sendMessage(source, "Posting pictures to chat is currently disabled.", chan);
                 return true;
             }
-            /*
-            //  Check the cost
-            var da_cost = (-1 < Award.awards["ThinkFast"].indexOf(sys.name(source))) ? this.cost / 2 : this.cost;
-            
-            //  Don't let someone use it if they can't afford it
-            if (players[source].ppleft < da_cost) {
-                CommandBot.sendMessage(source, "You don't have enough PP. Cost: " + da_cost + ". You have: " + players[source].ppleft + ".", chan);
-                return true;
-            }
-            
-            //  Spend the money
-            players[source].ppleft -= da_cost;
-            */
+
             //  Make the display
             sys.sendHtmlAll(db.playerToString(source, true, chan == rpchan) + " " + pic + " " + db.htmlEscape(commandData), chan);
             return true;
@@ -2690,35 +2600,6 @@ init : function (){
                 
                 //  Finish formatting
                 sys.sendHtmlMessage(source, "<hr>", chan);
-                return true;
-            }
-        },
-
-        //  View your own earned awards.
-        "myawards" : {
-            cost : 0,
-            help : "View your earned awards",
-            run : function (source, chan, command, commandData, mcmd) {
-                Award.myAwards(source, chan);
-                return true;
-            }
-        },
-        
-        //  View all awards or view details of a certain one
-        "awards" : {
-            cost : 0,
-            param : ["award name (optional)"],
-            help : "View all awards that have been handed out or details on a certain one",
-            run : function (source, chan, command, commandData, mcmd) {
-                //  Make sure the award it exists
-                if (commandData == undefined)
-                {
-                    Award.allAwards(source, chan);
-                    return true;
-                }
-            
-                //  Just use award's function
-                Award.showAwards(source, chan, commandData);
                 return true;
             }
         },
@@ -3338,18 +3219,6 @@ init : function (){
                 return true;
             }
         },
-        /*  Removed PP feature; it may return though
-        //  view your pp
-        "pp" : {
-            cost : 0,
-            help : "View how much PP you have",
-            run : function (source, chan, command, commandData, mcmd) {
-
-                CommandBot.sendMessage(source, "You have " + players[source].ppleft + " PP remaining.", chan);
-                return true;
-            }
-        },
-        */
 
         //  View your rank
         "ranking" : {
@@ -3902,221 +3771,7 @@ init : function (){
                 return true;
             }
         },
-        /*  Removed this command because PP was removed. This might come back later
-        //  Attack someone
-        "attack" : {
-            cost : 100,
-            param : ["name"],
-            help : "Use a random attack on someone. Effects of certain moves may also apply. PP may be earned back if a critical hit lands. Your odds of a critical hit increase if you have the Shiny award.",
-            run : function (source, chan, command, commandData, mcmd) {
-                
-                //  Target must exist
-                if (commandData == undefined) {
-                    CommandBot.sendMessage(source, "You must target someone with the attack.", chan);
-                    return false;
-                }
-                target = sys.id(mcmd[0]);
-                if (target == undefined) {
-                    CommandBot.sendMessage(source, "This person doesn't exist.", chan);
-                    return false;
-                }
-                
-                //  Command must be enabled
-                if (!hash.get("cmd_attack")) {
-                    CommandBot.sendMessage(source, "Attack is disabled right now.", chan);
-                    return false;
-                }
-                
-                var typecolors = ["#a8a878", "#c03028", "#a890f0", "#a040a0", "#e0c068", "#b8a038", "#a8b820", "#705898", "#b8b8d0", "#f08030", "#6890f0", "#78c850", "#f8d030", "#f85888", "#98d8d8", "#7038f8", "#705848", "#FF88BB"],                    
-                var move, type, repeat;
-                
-                //  Do everything in a loop! (some moves may cause repeats)
-                do {
-                    
-                    //  pick a move
-                    move = sys.rand(1, 607);
-                    type = sys.moveType(move);                
-                    
-                    //  Hidden Power is any type
-                    if (move == 237) {
-                        type = sys.rand(0, 18);
-                    }
-                    
-                    //  Judgment is the type of the user
-                    else if (move == 449) {
-                        type = players[source].type;
-                    }
-                    
-                    
-                    //  Repeating/Recursive moves
-                    if (-1 < [118, 227, 274, 383].indexOf(move)) {
-                        CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " used <b><font color=" + typecolors[type] + ">" + sys.move(move) + "</font></b> on " + db.playerToString(target, false, (chan==rpchan)) + "</font>", chan);
-                        repeat = true;
-                    } else {
-                    
-                        //  Give certain players Protean
-                        if (players[source].seed != 0 && players[source].seed % 8 == 0) {
-                            CommandBot.sendAll(source, db.playerToString(source, false, (chan==rpchan)) + " acquired <b><font color=" + typecolors[type] + ">" + sys.type(type) + "</font></b>-type!", chan);
-                            players[source].type = type;
-                        }
-                        
-                        //  Show the attack
-                        CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " used <b><font color=" + typecolors[type] + ">" + sys.move(move) + "</font></b> on " + db.playerToString(target, false, (chan==rpchan)) + "</font>", chan);
-                        repeat = false;
-                        
-                        //  Soak
-                        if (move == 487) {
-                            CommandBot.sendAll(source, "<font color=black>" + db.playerToString(target, false, (chan==rpchan)) + " acquired Water-type!</font>", chan);
-                            players[target].type = 0;
-                        }
-                        
-                        //  Forest's Curse
-                        else if (move == 567) {
-                            CommandBot.sendAll(source, "<font color=black>" + db.playerToString(target, false, (chan==rpchan)) + " acquired Grass-type!</font>", chan);
-                            players[target].type = 11;
-                        }
-                        
-                        //  Trick-or-Treat
-                        else if (move == 581) {
-                            CommandBot.sendAll(source, "<font color=black>" + db.playerToString(target, false, (chan==rpchan)) + " acquired Ghost-type!</font>", chan);
-                            players[target].type = 7;
-                        }
-                        
-                        //  Entrainment
-                        else if (move == 494) {
-                            CommandBot.sendAll(source, "<font color=black>" + db.playerToString(target, false, (chan==rpchan)) + " acquired " + db.playerToString(source, false, (chan==rpchan)) + "'s " + sys.type(players[source].type) + "-type!", chan);
-                            players[target].type = players[source].type;                
-                        }
-                        
-                        //  Copy type
-                        else if (-1 < [144, 160, 166, 244, 293, 513].indexOf(move)) {
-                            CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " acquired " + db.playerToString(target, false, (chan==rpchan)) + "'s " + sys.type(players[target].type) + "-type!", chan);
-                            players[source].type = players[target].type;
-                        }
-                        
-                        //  Conversion 2
-                        else if (move == 176) {
-                            players[source].type = sys.rand(0, 18);
-                            CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " acquired " + sys.type(players[source].type) + "-type!", chan);
-                        }
-                        
-                        //  Swap types
-                        else if (-1 < [271, 272, 415, 433, 606, 609].indexOf(move)) {
-                            CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan==rpchan)) + " and " + db.playerToString(target, false, (chan==rpchan)) + " swapped types!", chan);
-                            var temp = players[source].type;
-                            players[source].type = players[target].type;
-                            players[target].type = temp;
-                        }
-                        
-                        //  Splash
-                        else if (move == 150) {
-                            var odds = 0;
-                            CommandBot.sendAll(source, "<font color=black><b>But nothing happened!</b></font>", chan);
-                        }
-                        
-                        //  Struggle is never critical; neither are status moves
-                        else if (move == 0 || db.getMoveCategory(move) == "Other") {
-                            var odds = 0;
-                        }
-                        
-                        //  Get the effectiveness
-                        var eff = db.data.typeeff[type][players[target].type];
-                        
-                        
-                        var supereff = false;
-                        if (players[source].seed == 0 || players[target].seed == 0) {
-                            switch (eff) {
-                            case 0: case 1:
-                                CommandBot.sendAll(source, "<font color=black><b>It's super effective!</b></font>", chan);
-                                supereff = true;
-                                break;
-                            case 4:
-                                CommandBot.sendAll(source, "<font color=black><b>It's not very effective!</b></font>", chan);
-                                break;
-                            }
-                        }
-                        else {
-                            switch (eff) {
-                            case 0:
-                                CommandBot.sendAll(source, "<font color=black><b>It doesn't affect!</b></font>", chan);
-                                break;
-                            case 1:
-                                CommandBot.sendAll(source, "<font color=black><b>It's not very effective!</b></font>", chan);
-                                break;
-                            case 4:
-                                CommandBot.sendAll(source, "<font color=black><b>It's super effective!</b></font>", chan);
-                                supereff = true;
-                                break;   
-                            }
-                        }
-                        
-                        //  max % chance without boosts
-                        var odds = 5;
-                        
-                        //  increase shiny's odds
-                        if (13 == players[source].seed) {
-                            odds *= 4;
-                        }
-                        
-                        //  Double award's odds
-                        if (-1 < Award.awards["Who's Your Daddy"].indexOf(sys.name(source))) {
-                            odds *= 2;
-                        }
-                        
-                        //  high crit ratio
-                        if (0 < [2, 13, 75, 143, 152, 163, 177, 238, 299, 314, 342, 348, 400, 421, 427, 440, 444, 454, 460, 529].indexOf(move)) {
-                            odds *= 2;
-                        }
-                        
-                        //  always crit
-                        else if (move == 480 || move == 524) {
-                            odds = 101;
-                        }
-                        
-                        //  A crit landed!
-                        if (0 < eff && sys.rand(0, 100) < odds) {
-                            
-                            //  Display
-                            CommandBot.sendAll(source, "<font color=black><b>A critical hit!</b></font>", chan);
-                            
-                            //  Preserve PP
-                            if (chan != rpchan) {
-                                players[source].ppleft += 50;
-                                CommandBot.sendMessage(source, "<font color=black>PP was preserved!</font>", chan);
-                            }
-                            
-                            //  Supereffective crit
-                            if (supereff && chan != rpchan) {
-                                Award.won("Who's Your Daddy", sys.name(source));
-                            }
-                        }
-                        
-                        //  self-healing moves preserve PP
-                        if (-1 < [105, 135, 208, 234, 235, 236, 256, 303, 355, 456, 505].indexOf(move)) {
-                            if (chan != rpchan) {
-                                players[source].ppleft += 50;
-                                CommandBot.sendMessage(source, "<font color=black>PP was preserved!</font>", chan);
-                            }
-                        }
-                        
-                        //  Moves that give target pp
-                        else if (-1 < [6, 217, 505, 516].indexOf(move)){
-                            if (chan != rpchan) {
-                                players[target].ppleft += this.cost / 2;
-                                if (players[target].ppcap < players[target].ppleft) {
-                                    players[target].ppleft = players[target].ppcap;
-                                }
-                                CommandBot.sendAll(source,"<font color=black>" + db.playerToString(source, false, false) + " restored " + db.playerToString(target, false, false) + "'s PP!</font>", chan);
-                            }
-                        }
-                    }
-                }
-                while (repeat);
-                
-                return true;
-            }
-        },
-        */
+
         //  Burn target player
         "burn" :
         {
@@ -5293,7 +4948,7 @@ init : function (){
                 mutes.unmute(ip);
                 var name = (target == undefined) ? commandData : db.playerToString(target);
                 CommandBot.sendAll(source, name + " was unmuted by " + db.playerToString(source) + ".", -1);
-                logs.log(sys.name(source), command, name, mcmd[1] == undefined ? "no reason" : mcmd[1]);
+                logs.log(sys.name(source), command, commandData, "no reason");
                 return true;
             }
         },
@@ -6102,15 +5757,6 @@ init : function (){
                 this.init();
                 return true;
             }
-        },
-
-        "giveaward" : {
-            param : ["award (can ruin awards if not on the list)", "name"],
-            run : function (source, chan, command, commandData, mcmd) {
-                Award.won(mcmd[0], mcmd[1]);
-                Award.sendAll("A " + mcmd[0] + " award was given to " + mcmd[1] + " by " + db.playerToString(source) + ".", -1);
-                return true;
-            }
         }
     };
     
@@ -6136,48 +5782,17 @@ init : function (){
             if (target != undefined && players[target] == undefined) {
                 newPlayer(target);
             }
-            /*
-            //  Give the server host unlimited PP by reseting to max every time
-            if (sys.ip(source) == "127.0.0.1") {
-                players[source].ppleft = players[source].ppcap;
-            } else {
-                var t = parseInt(sys.time());
-                var time = t - players[source].lastCommand;
-                if (time > 10) {
-                    var multiplier = 1 + 0.1 * db.auth(source);
-                    if (players[source].seed == 13) {
-                        multiplier *= 4;
-                    }
-                    if (-1 < Award.awards["Bug Catcher"].indexOf(sys.name(source))) {
-                        multiplier *= 2;
-                    }
-                    players[source].ppleft = Math.floor(players[source].ppleft + (time / 10) * multiplier);
-                    if (players[source].ppcap < players[source].ppleft || sys.ip(source) == "127.0.0.1") {
-                        players[source].ppleft = players[source].ppcap;
-                    }
-                }
-            }
-            */
+            
             players[source].lastCommand = parseInt(sys.time());
             
             //  Hide messages from watch... except like super important ones
             if (chan != elsewhere || -1 == ["kick", "ban", "rb", "mute", "delmember", "user"].indexOf(command)) {
-    /*        if (msg[0] == "%"){
-                if (players[source].confined) {
-                    this.sendAll(0, db.channelToString(chan) + "Confined Command -- " + db.playerToString(source, false, false, true) + " <i>Command Hidden</i>",watch);
-                } else {
-                    this.sendAll(0, db.channelToString(chan) + " -- </font>" + db.playerToString(source) + " (" + players[source].ppleft + " pp) -- <b><font color=black> <i>Command Hidden</i>", watch);
-                }
-            } else {*/
                 if (players[source].confined) {
                     this.sendAll(0, db.channelToString(chan) + "Confined Command -- " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg),watch);
                 } else {
-                    this.sendAll(0, db.channelToString(chan) + " -- </font>" + db.playerToString(source) + /*" (" + players[source].ppleft + " pp) +*/ " -- <b><font color=black>" + msg[0] + command + "</font></b> " + db.htmlEscape(commandData), watch);
+                    this.sendAll(0, db.channelToString(chan) + " -- </font>" + db.playerToString(source) + " -- <b><font color=black>" + msg[0] + command + "</font></b> " + db.htmlEscape(commandData), watch);
                 }
-    //        }
             }
-            
-            var halvecost = (-1 < Award.awards["ThinkFast"].indexOf(sys.name(source)));
             
             if (HiddenCommands[command] != undefined) {
                 if (!HiddenCommands[command].run(source, chan, command, commandData, mcmd)) {
@@ -6186,15 +5801,7 @@ init : function (){
                 return;
             }
             if (UserCommands[command] != undefined) {
-            /*
-                var cost = UserCommands[command].cost;
-                if (halvecost) cost /= 2;
-                if (players[source].ppleft < cost) {
-                    this.sendMessage(source, "You don't have enough PP. Cost: " + cost + ". You have: " + players[source].ppleft + ".", chan);
-                    return;
-                }*/
                 if (UserCommands[command].run(source, chan, command, commandData, mcmd)) {
-//                    players[source].ppleft -= cost;
                 } else {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
                 }
@@ -6205,22 +5812,7 @@ init : function (){
                     this.sendMessage(source, "Role-Playing commands are not allowed in the Party channel.", chan);
                     return;
                 }
-                /*
-                var cost = RPCommands[command].cost;
-                if (halvecost) {
-                    cost /= 2;
-                }
-                if (chan != rpchan && players[source].ppleft < cost) {
-                    this.sendMessage(source, "You don't have enough PP. Cost: " + cost + ". You have: " + players[source].ppleft + ".", chan);
-                    return;
-                }
-                */
                 if (RPCommands[command].run(source, chan, command, commandData, mcmd)) {
-                /*
-                    if (chan != rpchan) {
-                        players[source].ppleft -= cost;
-                    }
-                    */
                 } else {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
                 }
@@ -6436,11 +6028,8 @@ init : function (){
         players[source].oldmsg1 = '';
         players[source].oldname = sys.name(source);
         players[source].online = true;
-//        players[source].ppleft = 10;
-  //      players[source].ppcap = 100;
         players[source].rpname = false;
         players[source].seed = 8000;
-        players[source].type = 0;
         players[source].showgoodbye = true;
         players[source].timeCount = time;
         players[source].timeLogged = time;
@@ -6542,17 +6131,6 @@ init : function (){
         }
         jug.ips.push(ip);
         var score = this.getScore();
-        
-        
-        if (9 < score) {
-            Award.won("Juggernaut", jug.name);
-            if (19 < score) {
-                Award.won("Elite JN", jug.name);
-                if (29 < score) {
-                    Award.won("Master JN", jug.name);
-                }
-            }
-        }
         
         switch (score) {
             case 5: {
@@ -6819,114 +6397,7 @@ init : function (){
     };
     hash = new Hash();
     
-    db.createFile("awards.json", "{}");
-    Award = {
-        data : JSON.parse(db.getFileContent("awarddat.json")),
-        
-        awards : JSON.parse(db.getFileContent("awards.json")),
-        
-        sendMessage : function (target, msg, chan) {
-            db.sendBotMessage(target, msg, chan, Config.AwardBot[0], Config.AwardBot[1]);
-        },
-        
-        sendAll : function (msg, chan) {
-            db.sendBotAll(msg, chan, Config.AwardBot[0], Config.AwardBot[1]);
-        },
-        
-        allAwards : function (source, chan, command, commandData, mcmd) {
-            sys.sendHtmlMessage(source, "<hr>", chan);
-            this.sendMessage(source, "The awards available:", chan);
-            var table = "";
-            for (key in this.data) {
-                table += "<td><table><tr><td>" + Pictures[this.data[key].badge] + "</td><tr><td>" + key + "</td></tr></table></td>";
-            }
-            sys.sendHtmlMessage(source, "<table><tr>" + table + "</tr></table", chan);
-            sys.sendMessage(source, "Use !awards [award name] for more information", chan);
-            sys.sendHtmlMessage(source, "<hr>", chan);
-        },
-        
-        myAwards : function (source, chan, command, commandData, mcmd) {
-            sys.sendHtmlMessage(source, "<hr>", chan);
-            this.sendMessage(source, "Your record so far:", chan);
-            var table = "";
-            for (key in this.awards) {
-                if (-1 < this.awards[key].indexOf(sys.name(source))) {
-                    table += "<td><table><tr><td>" + Pictures[this.data[key].badge] + "</td><tr><td>" + key + "</td></tr></table></td>";
-                }
-            }
-            if (table.length == 0) {
-                sys.sendMessage(source, "(None yet)", chan);
-            }
-            else {
-                sys.sendHtmlMessage(source, "<table><tr>" + table + "</tr></table", chan);
-            }
-            sys.sendHtmlMessage(source, "<hr>", chan);
-        },
-        
-        showAwards : function (source, chan, award) {
-            var key;
-            for (checkkey in this.data) {
-                if (checkkey.toLowerCase() == award.toLowerCase()) {
-                    key = checkkey;
-                    break;
-                }
-            }
-            if (key == undefined || this.data[key] == undefined) {
-                this.sendMessage(source, "(No data for this award)", chan);
-                return;
-            }
-            sys.sendHtmlMessage(source, "<hr>", chan);
-            this.sendMessage(source, "<h1>" + Pictures[this.data[key].badge] + " " + key + "</h1>" , chan);
-            sys.sendHtmlMessage(source, "<timestamp /><b>Earned by " + this.data[key].by + "</b>", chan);
-            sys.sendHtmlMessage(source, "<timestamp /><b>Having it will " + this.data[key].effect + "</b>", chan);
-            if (this.awards[key].length == 0)
-            {
-                sys.sendHtmlMessage(source, "<timestamp /><b>No one has earned this award yet.</b>", chan);
-            }
-            else
-            {
-                sys.sendHtmlMessage(source, "<timestamp /><b>This was earned by:</b>", chan);
-                sys.sendHtmlMessage(source, "<timestamp />" + this.awards[key].join(", "), chan);
-            }
-            sys.sendHtmlMessage(source, "<hr>", chan);
-        },
-        
-        won : function (key, name) {
-            if (name == undefined || name.length < 1) {
-                return;
-            }
-            
-            if (-1 == this.awards[key].indexOf(name)) {
-                this.awards[key].push(name);
-                this.sendAll(name + " " + this.data[key].by.replace("getting", "got").replace("identifying", "identified").replace("posting", "posted").replace("landing", "landed").replace("placing", "placed").replace("winning", "won") + " and won the " + key + " award: " + Pictures[this.data[key].badge], main);
-                if (sys.id(name) != undefined) {
-                    this.sendMessage(sys.id(name), "Ask an auth for the appropriate forum medal.", main);
-                }
-                this.save();
-            }
-        },
-        
-        take : function (key, name) {
-            if (name == undefined || name.length < 1) {
-                return;
-            }
-            var i = this.awards[key].indexOf(name)
-            if (-1 < i) {
-                this.awards[key].splice(i, 1);
-                this.sendAll(name + " lost the " + key + " award.", main);
-                this.save();
-            }
-        },
-        
-        save : function () {
-            sys.writeToFile("awards.json", JSON.stringify(this.awards));
-        }
-    }
-    for (var x in Award.data) {
-        if (Award.awards[x] == undefined) {
-            Award.awards[x] = [];
-        }
-    }
+    //db.createFile("awards.json", "{}");
     
     Pictures = JSON.parse(db.getFileContent("pictures.json"));
     
@@ -7523,12 +6994,6 @@ afterLogIn : function (source) {
     
     var name = sys.name(source);
     
-    if (-1 < Award.awards["The Developers"].indexOf(name)) {
-        players[source].ppcap += 50;
-    }
-    if (-1 < Award.awards["Ender's Jeesh"].indexOf(name)) {
-        players[source].ppcap += 50;
-    }
     
     players[source].showgoodbye = false;
     if (db.auth(source) < 1 && db.nameIsInappropriate(name)) {
@@ -7764,14 +7229,6 @@ beforeChatMessage : function(source, msg, chan) {
     if (-1 < ["!", "/", "%"].indexOf(msg[0])) {
         //  sys.stopEvent();
         CommandBot.beforeChatMessage (source, msg, chan, players);
-        /*
-        if (-1 < Award.awards["Back for More"].indexOf(sys.name(source))) {
-            players[source].ppleft += 10;
-            if (players[source].ppcap < players[source].ppleft) {
-                players[source].ppleft = players[source].ppcap;
-            }
-        }
-        */
         return;
     }
     
@@ -7809,14 +7266,7 @@ afterChatMessage : function (source, msg, chan) {
         mutes.mute("->Cthulhu", sys.ip(source), "summoning the beast", 5);
         sys.sendHtmlAll("<font color=green><timestamp/> -&gt;<i><b>*** Cthulhu</b> returns to its slumber.</i> </font>", main);
     }
-    /*
-    if (msg == "!ping") {
-        if (10 < players[source].ppleft) {
-            players[source].ppleft -= 10;
-            sys.sendAll("~~Server~~: Pong!", chan);
-        }
-    }
-    */
+
     ChatBot.afterChatMessage(source, msg, chan);
 },
 

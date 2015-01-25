@@ -84,18 +84,13 @@
     "AssassinBot" : ["AssassinBot", "black"],
     
     "League" : [
-        
+        ["Open", "???"],
+
         ["[HH]Saiomai", "Fighting"],
         
         ["[HH]Shadowborg", "Ice"],
         
         ["[HH]Eris", "Psychic"],
-        
-        ["[HH]Hazard", "Ground"],
-        
-        ["[HH]Magnus", "Electric"],
-        
-        ["[HH]THIS GUY", "Flying"],
         
         ["[HH]ChuchuLP0", "Normal"],
         
