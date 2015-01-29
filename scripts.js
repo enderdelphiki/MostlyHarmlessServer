@@ -262,12 +262,9 @@ init : function (){
         getMoveCategory : function (moveId) {
             if (categoryList === undefined) {
                 categoryList = {};
-                var data = sys.getFileContent(this.data.moveDir + 'damage_class.txt').split('\n');
+                var data = sys.getFileContent(this.data.moveDir + 'damage_class.txt').split('\n').split(' ');
                 for (var i = 0; i < data.length; i++) {
-                    var index = data[i].indexOf(" ");
-                    var key = data[i].substr(0, index);
-                    var category = data[i].substr(index + 1);
-                    categoryList[key] = category;
+                    categoryList[data[i][0]] = data[i][1];
                 }
             }
             if (categoryList[moveId] == 1) {
@@ -1763,23 +1760,27 @@ init : function (){
                         }
                         var item = sys.item(sys.teamPokeItem(source, tsource, i));
                         if (-1 < this.data.EnderItem.indexOf(item)) {
-                            this.sendMessage(source, item + " is not allowed due to recoil or banlists.", main);
+                            this.sendMessage(source,
+                                item + " is not allowed due to recoil or banlists.", main);
                             ban = true;
                         }
                         var ability = sys.ability(sys.teamPokeAbility(source, tsource, i));
                         if (-1 < this.data.EnderAbility.indexOf(ability)) {
-                            this.sendMessage(source, ability + " is not allowed due self-harm or banlists.", main);
+                            this.sendMessage(source,
+                                ability + " is not allowed due self-harm or banlists.", main);
                             ban = true;
                         }
                         for (var j = 0; j < 4; j++) {
                             var move = sys.teamPokeMove(source, tsource, i, j);
                             if ("Other" == db.getMoveCategory(move)) {
-                                this.sendMessage(source, sys.move(move) + " is a status move, so it is banned.", main);
+                                this.sendMessage(source,
+                                    sys.move(move) + " is a status move, so it is banned.", main);
                                 ban = true;
                             }
                             move = sys.move(move);
                             if (-1 < this.data.EnderMove.indexOf(move)) {
-                                this.sendMessage(source, move + " is not allowed due to the potential for self-harm or banlists.", main);
+                                this.sendMessage(source,
+                                    move + " is not allowed due to the potential for self-harm or banlists.",main);
                                 ban = true;
                             }
                         }
@@ -7059,9 +7060,15 @@ afterLogIn : function (source) {
     }
     
     if (0 < db.auth(source)) {
-        var msg = hash.get("authnote");
-        if (msg.length != 0) {
-            sys.sendMessage(source, "~~Server~~: Auth note: " + msg, chan);
+        try {
+            var msg = hash.get("authnote");
+            if (msg.length != 0) {
+                sys.sendMessage(source, "~~Server~~: Auth note: " + msg, chan);
+            }
+        }
+        catch (e) {
+            hash.set("authnote", "Invalid auth note registered. Please place a new one.");
+            sys.sendMessage(source, "~~Server~~: Auth note: " + hash.get("authnote"));
         }
     }
     
