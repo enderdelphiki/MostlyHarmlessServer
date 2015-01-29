@@ -5,7 +5,7 @@
 //  Global "Object" names
 var Award, Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot, Pictures, AuthLogs;
 
-var root = "https://raw.githubusercontent.com/enderdelphiki/MostlyHarmlessServer/master/";
+var root = "https://raw.githubusercontent.com/todd-beckman/MostlyHarmlessServer/master/";
 
 var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json","awarddat.json","tumbleweed.json"];
 
