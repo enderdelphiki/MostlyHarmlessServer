@@ -5324,7 +5324,7 @@ init : function (){
         "rblist" : {
             run : function (source, chan, command, commandData, mcmd) {
 
-                rangebans.display(source, chan);
+                rangebans.display(source);
                 return true;
             }
         },
@@ -5348,6 +5348,12 @@ init : function (){
                 }
                 Guard.sendAll(source, "IP " + mcmd[0] + " is no longer ipbanned.", main);
                 return true;
+            }
+        },
+
+        "iplist" : {
+            run : function (source, chan, command, commandData, mcmd) {
+                ipbans.display(source);
             }
         },
 
@@ -6331,22 +6337,22 @@ init : function (){
     };
     RangeCache.prototype.display = function (source, chan, command, commandData, mcmd){
         if(this.banned.length == 0) {
-          sys.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", chan);
+          sys.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", main);
           return;
         }
-        sys.sendHtmlMessage(source, "<hr>", chan);
-        Guard.sendMessage(source,"Range Ban List:", chan);
+        sys.sendHtmlMessage(source, "<hr>", main);
+        Guard.sendMessage(source,"Range Ban List:", main);
         var str = "";
         for (var i = 0; i < this.banned.length; i++) {
             str += db.inttoip(this.banned[i] * 65536) + ", ";
         }
-        sys.sendMessage(source, str, chan);
-        sys.sendHtmlMessage(source, "<hr>", chan);
+        sys.sendMessage(source, str, main);
+        sys.sendHtmlMessage(source, "<hr>", main);
     };
     rangebans = new RangeCache();
 
     function IPBans() {
-        db.createFile("ipbans.json", []);
+        db.createFile("ipbans.json", "[]");
         this.list = JSON.parse(db.getFileContent("ipbans.json"));
     }
     IPBans.prototype.save = function () {
@@ -6375,14 +6381,14 @@ init : function (){
         return true;
     }
     IPBans.prototype.display = function (source) {
-        sys.sendHtmlMesssage(source, "<hr>", main);
+        sys.sendHtmlMessage(source, "<hr>", main);
         Guard.sendMessage(source, "The following IPs are banned:", main);
         var str = "";
         for (var i = 0; i < this.list.length; i++) {
             str += db.inttoip(this.list[i]) + " ";
         }
         sys.sendHtmlMessage(source, str, main);
-        sys.sendHtmlMesssage(source, "<hr>", main);
+        sys.sendHtmlMessage(source, "<hr>", main);
     }
     ipbans = new IPBans();
 
