@@ -5296,7 +5296,6 @@ init : function (){
         "rb" : {
             param : ["IP range in the form __.__.__.__ (last two can just be 0)", "reason"],
             run : function (source, chan, command, commandData, mcmd) {
-
                 if (rangebans.ban(mcmd[0])) {
                     Guard.sendAll("IP " + mcmd[0] + " was rangebanned.", -1);
                     logs.log(sys.name(source), command, mcmd[0], mcmd[1] == undefined ? "no reason" : mcmd[1]);
@@ -6142,6 +6141,7 @@ init : function (){
     }
     
     var jug = {};
+    var juggerFile = "Juggernaut.json";
     function Juggernaut() {
         db.createFile(juggerFile,"{}");
         if (db.getFileContent(juggerFile).length < 3) {
@@ -6240,7 +6240,7 @@ init : function (){
     juggernaut = new Juggernaut();
 
     function MuteCache() {
-        db.createFile(muteFile, "{}");
+        db.createFile("Mute.json", "{}");
         this.muted = JSON.parse(db.getFileContent("Mute.json"));
     }
     MuteCache.prototype.isMuted = function(ip) {
@@ -6336,10 +6336,6 @@ init : function (){
         sys.writeToFile(banFile, JSON.stringify(this.banned));
     };
     RangeCache.prototype.display = function (source, chan, command, commandData, mcmd){
-        if(this.banned.length == 0) {
-          sys.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", main);
-          return;
-        }
         sys.sendHtmlMessage(source, "<hr>", main);
         if(this.banned.length == 0) {
           sys.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", main);
@@ -7054,9 +7050,14 @@ step : function (){
 },
 
 beforeIPConnected : function (ip) {
+    if (ipbans.isBanned(ip)) {
+        sys.sendAll("IP-banned IP " + ip + " was rejected.", watch);
+        sys.stopEvent();
+        return;
+    }
     if (rangebans.isBanned(db.iptoint(ip))) {
         sys.sendAll("Rangebanned IP " + ip + " was banned.", watch);
-        sys.ban(ip);
+        ipbans.ban(ip);
         sys.stopEvent();
         return;
     }
