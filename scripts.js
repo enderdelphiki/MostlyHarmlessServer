@@ -6317,7 +6317,7 @@ init : function (){
         if (-1 < this.banned.indexOf(val % 65536)) {
             return false; 
         }
-        this.banned.push(val / 65536);
+        this.banned.push(val % 65536);
         this.banned.sort();
         this.save();
         return true;
