@@ -3579,7 +3579,7 @@ init : function (){
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
-        }
+        },
         
         
         //  Notify someone
