@@ -5338,7 +5338,7 @@ init : function (){
                 Guard.sendAll(source, "IP " + mcmd[0] + " was ipbanned.", main);
                 return true;
             }
-        }
+        },
 
         "ipunban" : {
             run : function (source, chan, command, commandData, mcmd) {
@@ -5349,7 +5349,7 @@ init : function (){
                 Guard.sendAll(source, "IP " + mcmd[0] + " is no longer ipbanned.", main);
                 return true;
             }
-        }
+        },
 
         "nowelcome" : {
             run : function (source, chan, command, commandData, mcmd) {
