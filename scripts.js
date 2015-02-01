@@ -3571,10 +3571,19 @@ init : function (){
             help : "Check the list of trainers that can be posted in the chat",
             run : function (source, chan, command, commandData, mcmd) {
                 sys.sendHtmlMessage(source, "<hr>", chan);
-                var str = "";
+                var str = "<table><tr>", i = 0;
                 for (key in MemeCommands.trainers) {
-                    str += key + "<br>";
+                    i++;
+                    if (i % 4 == 0) {
+                        str += "</tr><tr>";
+                    }
+                    str += "<td>" + key + "</td>";
                 }
+                while (i % 4 != 0) {
+                    i++;
+                    str += "<td></td>";
+                }
+                str += "</tr></table>";
                 CommandBot.sendMessage(source, "The following labels will display a trainer in chat:<br>" + str, chan);
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
