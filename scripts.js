@@ -6274,33 +6274,33 @@ init : function (){
     //Rangeban Code
     var banFile = "RangeBan.json";
     function RangeCache() {
-        db.createFile(banFile, "{}");
+        db.createFile(banFile, "[]");
         this.banned = JSON.parse(db.getFileContent(banFile));
     };
 
-    RangeCache.prototype.isBanned = function(ip) {
-        var sep = ip.split('.');
-        var str = sep[0] + '.' + sep[1] + '.';
-        return this.banned[str];
+    RangeCache.prototype.isBanned = function(integer) {
+        return -1 < this.banned.indexOf(integer / 65536);
     };
     RangeCache.prototype.ban = function(ip) {
-        var sep = ip.split('.');
-        if (sep.length < 2) {
+        var val = db.iptoint(ip);
+        if (val < 65536) {
             return false;
         }
-        var str = sep[0] + '.' + sep[1] + '.';
-        if (this.banned[str]) {
-            return false;
+        if (-1 < this.banned.indexOf(val/ 65536)) {
+            return false; 
         }
-        this.banned[str] = true;
+        this.banned.push(val / 65536);
+        this.banned.sort();
         this.save();
         return true;
     };
-    RangeCache.prototype.unban = function(str) {
-        if (!this.banned[str]) {
+    RangeCache.prototype.unban = function(ip) {
+        var val = db.iptoint(ip);
+        var i = this.banned.indexOf(val);
+        if (i == -1) {
             return false;
         }
-        this.banned[str] = false;
+        this.banned.splice(i, 1);
         this.save();
         return true;
     };
@@ -6315,10 +6315,8 @@ init : function (){
         sys.sendHtmlMessage(source, "<hr>", chan);
         Guard.sendMessage(source,"Range Ban List:", chan);
         var str = "";
-        for (var ban in this.banned) {
-            if (this.banned[ban]) {
-                str += ban + ", ";
-            }
+        for (var i = 0; i < this.banned.length; i++) {
+            str += db.inttoip(this.banned[i] * 65536) + ", ";
         }
         sys.sendMessage(source, str, chan);
         sys.sendHtmlMessage(source, "<hr>", chan);
@@ -6976,7 +6974,7 @@ step : function (){
 },
 
 beforeIPConnected : function (ip) {
-    if (rangebans.isBanned(ip)) {
+    if (rangebans.isBanned(db.iptoint(ip))) {
         sys.sendAll("Rangebanned IP " + ip + " was banned.", watch);
         sys.ban(ip);
         sys.stopEvent();
