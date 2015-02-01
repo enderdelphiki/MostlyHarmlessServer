@@ -3,7 +3,7 @@
 /*---------------------------*/
 
 //  Global "Object" names
-var Award, Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot, Pictures, AuthLogs;
+var Award, Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot, Pictures, AuthLogs, ipbans;
 
 var root = "https://raw.githubusercontent.com/todd-beckman/MostlyHarmlessServer/master/";
 
@@ -5294,7 +5294,7 @@ init : function (){
         },
 
         "rb" : {
-            param : ["IP range in the form __.__.", "reason"],
+            param : ["IP range in the form __.__.__.__ (last two can just be 0)", "reason"],
             run : function (source, chan, command, commandData, mcmd) {
 
                 if (rangebans.ban(mcmd[0])) {
@@ -5328,6 +5328,28 @@ init : function (){
                 return true;
             }
         },
+
+        "ipban" : {
+            run : function (source, chan, commmand, commandData, mcmd) {
+                if (!ipbans.ban(mcmd[0])) {
+                    Guard.sendMessage(source, "Cannot ban IP " + mcmd[0], chan);
+                    return false;
+                }
+                Guard.sendAll(source, "IP " + mcmd[0] + " was ipbanned.", main);
+                return true;
+            }
+        }
+
+        "ipunban" : {
+            run : function (source, chan, command, commandData, mcmd) {
+                if (!ipbans.unban(mcmd[0])) {
+                    Guard.sendMessage(source, "Cannot unban IP " + mcmd[0], chan);
+                    return false;
+                }
+                Guard.sendAll(source, "IP " + mcmd[0] + " is no longer ipbanned.", main);
+                return true;
+            }
+        }
 
         "nowelcome" : {
             run : function (source, chan, command, commandData, mcmd) {
@@ -6279,14 +6301,14 @@ init : function (){
     };
 
     RangeCache.prototype.isBanned = function(integer) {
-        return -1 < this.banned.indexOf(integer / 65536);
+        return -1 < this.banned.indexOf(integer % 65536);
     };
     RangeCache.prototype.ban = function(ip) {
         var val = db.iptoint(ip);
         if (val < 65536) {
             return false;
         }
-        if (-1 < this.banned.indexOf(val/ 65536)) {
+        if (-1 < this.banned.indexOf(val % 65536)) {
             return false; 
         }
         this.banned.push(val / 65536);
@@ -6296,7 +6318,7 @@ init : function (){
     };
     RangeCache.prototype.unban = function(ip) {
         var val = db.iptoint(ip);
-        var i = this.banned.indexOf(val);
+        var i = this.banned.indexOf(val % 65536);
         if (i == -1) {
             return false;
         }
@@ -6322,6 +6344,47 @@ init : function (){
         sys.sendHtmlMessage(source, "<hr>", chan);
     };
     rangebans = new RangeCache();
+
+    function IPBans() {
+        db.createFile("ipbans.json", []);
+        this.list = JSON.parse(db.getFileContent("ipbans.json"));
+    }
+    IPBans.prototype.save = function () {
+        sys.writeToFile("ipbans.json", JSON.stringify(this.list));
+    }
+    IPBans.prototype.isBanned = function (ip) {
+        return -1 < this.list.indexOf(db.iptoint(ip));
+    }
+    IPBans.prototype.ban = function (ip) {
+        var val = db.iptoint(ip), i = this.list.indexOf(val);
+        if (i == -1) {
+            this.list.push(val);
+            this.list.sort();
+            this.save();
+            return true;
+        }
+        return false;
+    }
+    IPBans.prototype.unban = function (ip) {
+        var val = db.iptoint(ip), i = this.list.indexOf(val);
+        if (i == -1) {
+            return false;
+        }
+        this.list.splice(i, 1);
+        this.save();
+        return true;
+    }
+    IPBans.prototype.display = function (source) {
+        sys.sendHtmlMesssage(source, "<hr>", main);
+        Guard.sendMessage(source, "The following IPs are banned:", main);
+        var str = "";
+        for (var i = 0; i < this.list.length; i++) {
+            str += db.inttoip(this.list[i]) + " ";
+        }
+        sys.sendHtmlMessage(source, str, main);
+        sys.sendHtmlMesssage(source, "<hr>", main);
+    }
+    ipbans = new IPBans();
 
     var memberFile = "Members.json";
     function Clan() {
@@ -7862,5 +7925,5 @@ sys.zip(QString,QString)
     name change bug
 
     change private message format
-
+ 162.210., 70.194., 58.146., 186.89., 1.22., 123.237., 14.96., 82.74., 116.202., 114.130., 151.47., 151.46., 151.18., 71.75., 173.209., 98.249., 75.189., 49.254., 5.9., 66.87., 85.195., 62.4., 146.185., 37.235., 79.143., 92.40., 89.243., 172.56., 149.254., 180.234., 174.164., 178.221., 92.18., 41.131., 174.141., 67.215., 173.234., 37.123., 50.31., 46.23., 31.48., 188.29., 67.161., 46.16., 50.27., 24.160., 85.241., 108.213., 81.193., 27.0., 116.203., 109.158., 93.35., 93.37., 208.54., 85.244., 91.17., 88.214., 70.208., 204.14., 173.245., 99.252., 74.115., 79.52., 79.46., 82.132., 98.70., 180.252., 125.39., 92.29., 92.22., 92.21., 92.20., 86.51., 174.238., 174.153., 174.151., 78.151., 78.149., 50.167., 90.209., 124.248., 98.14., 109.208., 70.197., 173.255., 98.217., 67.237., 87.81., 92.11., 71.173., 86.20., 174.241., 174.244., 174.233., 174.254., 174.252., 174.243., 174.237., 174.239., 104.56., 88.132., 85.159., 100.40., 216.172., 211.162., 69.125., 79.40., 176.58., 212.111., 149.255., 64.231., 46.21., 96.44., 198.55., 178.79., 222.126., 95.130., 94.242., 188.93., 212.71., 68.40., 165.120., 
 */
