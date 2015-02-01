@@ -3573,15 +3573,15 @@ init : function (){
                 sys.sendHtmlMessage(source, "<hr>", chan);
                 var str = "<table><tr>", i = 0;
                 for (key in MemeCommands.trainers) {
-                    i++;
-                    if (i % 4 == 0) {
+                    if (i % 8 == 0) {
                         str += "</tr><tr>";
                     }
                     str += "<td>" + key + "</td>";
-                }
-                while (i % 4 != 0) {
                     i++;
+                }
+                while (i % 8 != 0) {
                     str += "<td></td>";
+                    i++;
                 }
                 str += "</tr></table>";
                 CommandBot.sendMessage(source, "The following labels will display a trainer in chat:<br>" + str, chan);
