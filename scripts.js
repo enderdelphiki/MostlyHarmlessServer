@@ -2579,9 +2579,9 @@ init : function (){
             var i = Pictures[command], pic;
 
             if (i == undefined) {
-                i = this.trainers[command];
+                i = this.trainers[command.toLowerCase()];
                 if (i != undefined) {
-                    i = "<img src='trainer:" + this.trainers[i] + "'>";
+                    i = "<img src='trainer:" + i + "'>";
                 }
             }
             
