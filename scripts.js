@@ -6333,7 +6333,7 @@ init : function (){
         return true;
     };
     RangeCache.prototype.save = function() {
-        sys.writeToFile(banFile,JSON.stringify(this.banned));
+        sys.writeToFile(banFile, JSON.stringify(this.banned));
     };
     RangeCache.prototype.display = function (source, chan, command, commandData, mcmd){
         if(this.banned.length == 0) {
@@ -6341,12 +6341,18 @@ init : function (){
           return;
         }
         sys.sendHtmlMessage(source, "<hr>", main);
-        Guard.sendMessage(source,"Range Ban List:", main);
-        var str = "";
-        for (var i = 0; i < this.banned.length; i++) {
-            str += db.inttoip(this.banned[i] * 65536) + ", ";
+        if(this.banned.length == 0) {
+          sys.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", main);
+          return;
         }
-        sys.sendMessage(source, str, main);
+        else {
+            Guard.sendMessage(source,"Range Ban List:", main);
+            var str = "";
+            for (var i = 0; i < this.banned.length; i++) {
+                str += db.inttoip(this.banned[i]) + ", ";
+            }
+            sys.sendMessage(source, str, main);
+        }
         sys.sendHtmlMessage(source, "<hr>", main);
     };
     rangebans = new RangeCache();
@@ -6382,12 +6388,17 @@ init : function (){
     }
     IPBans.prototype.display = function (source) {
         sys.sendHtmlMessage(source, "<hr>", main);
-        Guard.sendMessage(source, "The following IPs are banned:", main);
-        var str = "";
-        for (var i = 0; i < this.list.length; i++) {
-            str += db.inttoip(this.list[i]) + " ";
+        if (this.list.length == 0) {
+            Guard.sendMessage(source, "No IP bans yet!", main);
         }
-        sys.sendHtmlMessage(source, str, main);
+        else {
+            Guard.sendMessage(source, "IP Ban list:", main);
+            var str = "";
+            for (var i = 0; i < this.list.length; i++) {
+                str += db.inttoip(this.list[i]) + " ";
+            }
+            sys.sendHtmlMessage(source, str, main);
+        }
         sys.sendHtmlMessage(source, "<hr>", main);
     }
     ipbans = new IPBans();
