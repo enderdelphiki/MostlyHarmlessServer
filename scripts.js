@@ -3565,6 +3565,21 @@ init : function (){
                 return false
             }
         },
+
+        "trainers" : {
+            cost : 0,
+            help : "Check the list of trainers that can be posted in the chat",
+            run : function (source, chan, command, commandData, mcmd) {
+                sys.sendHtmlMessage(source, "<hr>", chan);
+                var str = "";
+                for (key in MemeCommands.trainers) {
+                    str += key + "<br>";
+                }
+                CommandBot.sendMessage(source, "The following labels will display a trainer in chat:<br>" + str, chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
+                return true;
+            }
+        }
         
         
         //  Notify someone
