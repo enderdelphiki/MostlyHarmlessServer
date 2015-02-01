@@ -7,7 +7,7 @@ var Award, Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, 
 
 var root = "https://raw.githubusercontent.com/todd-beckman/MostlyHarmlessServer/master/";
 
-var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json","awarddat.json","tumbleweed.json"];
+var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json","awarddat.json","tumbleweed.json","trainers.json"];
 
 //  this allows json updates that break the script
 var forcereload = [];
@@ -2430,148 +2430,7 @@ init : function (){
     MemeCommands = {
         cost : 40,
 
-        trainers : {
-            "roxanne":301,
-            "brawly":302,
-            "wattson":303,
-            "norman":304,
-            "flannery":305,
-            "winona":306,
-            "liztate":307,"liz":307,"tate":307,
-            "wallace":308,
-            "sidney":309,
-            "phoebe":310,
-            "glacia":311,
-            "drake":312,
-            "steven":313,
-            "wally":314,
-            "lisia":315,
-            "aarune":316,
-            "brandon":317,
-            "may":318,
-            "tabitha":319,
-            "courtney":320,
-            "magmagrunt":321,"magmagrunt-m":322,
-            "magmagrunt-f":322,
-            "matt":323,
-            "shelly":324,
-            "aquagrunt":325,"aquagrunt-m":325,
-            "aquagrunt-f":326,
-            "viola":327,
-            "grant":328,
-            "korrina":329,
-            "ramos":330,
-            "clemont":331,
-            "valerie":332,
-            "olympia":333,
-            "wulfric":334,
-            "wilkstrom":335,
-            "malva":336,
-            "drasna":337,
-            "siebold":338,
-            "diantha":339,
-            "nita":340,
-            "evelyn":341,
-            "dana":342,
-            "morgan":343,
-            "rangerm":347,"ranger":347,
-            "rangerf":349,
-            "skytrainer":350,"skytrainer-m":350,
-            "skytrainer-f":351,
-            "diver":352,"diver-m":352,
-            "diver-f":353,
-            "tuber":354,"tuber-m":354,
-            "tuber-f":355,
-            "swimmer":356,"swimmer-m":356,
-            "swimmer-f":357,
-            "fisherman":359,
-            "runner":360,
-            "cyclist":361,
-            "triathlete":362,
-            "skater":364,"skater-m":364,
-            "skater-f":363,
-            "bugcatcher":365,
-            "hiker":367,
-            "sailor":368,
-            "worker":370,
-            "dragontamer":371,
-            "backpacker":372,
-            "ruinmaniac":373,
-            "pokemaniac":374,
-            "pokefan":375,
-            "birdcatcher":376,
-            "breeder":377,"breeder-m":377,
-            "breeder-f":378,
-            "roughneck":381,
-            "delinquent":382,
-            "blackbelt":385,
-            "psychic":387,
-            "youngster":388,
-            "lass":389,
-            "schoolboy":390,
-            "schoolgirl":391,
-            "camper":392,"camper-m":392,
-            "camper-f":393,
-            "richboy":394,
-            "ladyb":395,
-            "gentleman":396,
-            "aromalady":397,
-            "pokefanb":398,
-            "pokefanf":399,
-            "youngsterb":400,
-            "preschooler":401,"preschooler-m":401,
-            "preschooler-f":402,
-            "lady":404,
-            "fabulous":407,
-            "acetrainer-f":408,
-            "acetrainer":411,"acetrainer-m":411,
-            "beauty":412,
-            "owner":416,
-            "parasollady":419,
-            "kindler":420,
-            "waiter":421,"waiterm":421,
-            "waiterf":422,
-            "chef":423,
-            "tourist":424,"tourist-m":424,
-            "tourist-f":425,
-            "painter":426,"painter-m":426,
-            "painter-f":427,
-            "guitarist":428,
-            "scientist-f":430,
-            "scientist":431,"scientist-m":431,
-            "punkguy":432,"punk-m":432,
-            "punkgirl":433,"punk-f":433,
-            "ninja":434,"ninjaboy":434,
-            "battlegirl":435,
-            "veteran":436,"veteran-m":436,
-            "veteran-f":384,
-            "furisodegirl-yellow":437,
-            "furisodegirl-black":438,
-            "furisodegirl-purple":439,
-            "furisodegirl-blue":440,
-            "furisodegirl-a":437,
-            "furisodegirl-b":438,
-            "furisodegirl-c":439,
-            "furisodegirl-d":440,
-            "furisodegirl":439,
-            "maid":442,
-            "gardener":443,
-            "risingstar":444,"risingstar-m":446,
-            "risingstar-f":445,
-            "fairytalegirl":446,
-            "hexmaniac":447,
-            "twins":448,
-            "srandjr":449,"teammates":449,
-            "youngcouple":450,
-            "reporters":451,
-            "mysterioussisters":452,
-            "broandsis":453,
-            "verterans":454,
-            "acetrainers":455,
-            "swimmers":456,
-            "tourists":457,"honeymooners":457,
-            "punks":458,"punkcouple":458
-        },
+        trainers : JSON.parse(db.getFileContent("trainers.json")),
         
         run : function (source, chan, isshiny, command, commandData, mcmd) {
         
@@ -6240,7 +6099,7 @@ init : function (){
         }
     }
     
-    var juggerFile = "Juggernaut.json", jug = {};
+    var jug = {};
     function Juggernaut() {
         db.createFile(juggerFile,"{}");
         if (db.getFileContent(juggerFile).length < 3) {
@@ -6249,7 +6108,7 @@ init : function (){
             jug.time = sys.time();
             this.save();
         } else {
-            jug = JSON.parse(db.getFileContent(juggerFile));
+            jug = JSON.parse(db.getFileContent("Juggernaut.json"));
         }
     };
     
@@ -6334,14 +6193,13 @@ init : function (){
         Banner.update();
     };
     Juggernaut.prototype.save = function () {
-        sys.writeToFile(juggerFile, JSON.stringify(jug));
+        sys.writeToFile("Juggernaut.json", JSON.stringify(jug));
     };
     juggernaut = new Juggernaut();
 
-    var muteFile = "Mute.json";
     function MuteCache() {
         db.createFile(muteFile, "{}");
-        this.muted = JSON.parse(db.getFileContent(muteFile));
+        this.muted = JSON.parse(db.getFileContent("Mute.json"));
     }
     MuteCache.prototype.isMuted = function(ip) {
         if (typeof(this.muted[ip]) != "object") {
@@ -6375,7 +6233,7 @@ init : function (){
         return true;
     };
     MuteCache.prototype.save = function() {
-        sys.writeToFile(muteFile,JSON.stringify(this.muted));
+        sys.writeToFile("Mute.json", JSON.stringify(this.muted));
     };
     MuteCache.prototype.muteMessage = function (source, chan) {
         var ip = sys.ip(source);
