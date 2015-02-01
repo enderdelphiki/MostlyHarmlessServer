@@ -112,14 +112,14 @@ init : function (){
                 d = num%256 + '.' + d;
             }
             return d;
-        }
+        },
         iptoint = function(ip) {
             var parts = ip.split("."), val = 0;
             for (var i = 0; i < 4; i++) {
                 val += parseInt(parts[i]);
 
             }
-        }
+        },
         
         //  Overrides the sys.auth to give SuperUser status higher auth.
         auth : function (source) {
