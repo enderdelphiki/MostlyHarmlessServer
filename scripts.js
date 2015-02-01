@@ -2437,7 +2437,7 @@ init : function (){
             "norman":304,
             "flannery":305,
             "winona":306,
-            "liztate":307,"liz":307:"tate":307,
+            "liztate":307,"liz":307,"tate":307,
             "wallace":308,
             "sidney":309,
             "phoebe":310,
