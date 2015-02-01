@@ -99,6 +99,27 @@ init : function (){
         debugsay : function (source, channel, varname, vardata) {
             sys.sendMessage(source, "->Debug: " + varname + "=" + vardata + ";", channel);
         },
+
+        iptoint : function (ip) {
+            var d = ip.split('.');
+            return ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
+        },
+
+        inttoip : function (num) {
+            var d = num%256;
+            for (var i = 3; i > 0; i--) {
+                num = Math.floor(num/256);
+                d = num%256 + '.' + d;
+            }
+            return d;
+        }
+        iptoint = function(ip) {
+            var parts = ip.split("."), val = 0;
+            for (var i = 0; i < 4; i++) {
+                val += parseInt(parts[i]);
+
+            }
+        }
         
         //  Overrides the sys.auth to give SuperUser status higher auth.
         auth : function (source) {
@@ -6263,6 +6284,7 @@ init : function (){
         db.createFile(banFile, "{}");
         this.banned = JSON.parse(db.getFileContent(banFile));
     };
+
     RangeCache.prototype.isBanned = function(ip) {
         var sep = ip.split('.');
         var str = sep[0] + '.' + sep[1] + '.';
