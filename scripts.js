@@ -6368,7 +6368,8 @@ init : function (){
             Guard.sendMessage(source,"Range Ban List:", main);
             var str = "";
             for (var i = 0; i < this.banned.length; i++) {
-                str += db.inttoip(this.banned[i]) + ", ";
+                var bans = db.inttoip(this.banned[i]).split(".");
+                str += bans[2] + "." + bans[3] + ", ";
             }
             sys.sendMessage(source, str, main);
         }
