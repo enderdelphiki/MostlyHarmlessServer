@@ -6331,24 +6331,24 @@ init : function (){
     };
 
     RangeCache.prototype.isBanned = function(integer) {
-        return -1 < this.banned.indexOf(integer % 65536);
+        return -1 < this.banned.indexOf(integer / 65536);
     };
     RangeCache.prototype.ban = function(ip) {
         var val = db.iptoint(ip);
         if (val < 65536) {
             return false;
         }
-        if (-1 < this.banned.indexOf(val % 65536)) {
+        if (-1 < this.banned.indexOf(val / 65536)) {
             return false; 
         }
-        this.banned.push(val % 65536);
+        this.banned.push(val / 65536);
         this.banned.sort();
         this.save();
         return true;
     };
     RangeCache.prototype.unban = function(ip) {
         var val = db.iptoint(ip);
-        var i = this.banned.indexOf(val % 65536);
+        var i = this.banned.indexOf(val / 65536);
         if (i == -1) {
             return false;
         }
@@ -6363,7 +6363,6 @@ init : function (){
         sys.sendHtmlMessage(source, "<hr>", main);
         if(this.banned.length == 0) {
           sys.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", main);
-          return;
         }
         else {
             Guard.sendMessage(source,"Range Ban List:", main);
