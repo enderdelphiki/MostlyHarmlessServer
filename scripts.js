@@ -56,7 +56,6 @@ var failed = true;
 poScript = ({
 
 init : function (){
-    
     /*
         The db object acts as a static "library" of global functions, extending those built-in
             ones in the sys object. Context-free functions should be added to this object in
@@ -842,8 +841,67 @@ init : function (){
             long as the syntax remains unchanged.
     */
     Config = JSON.parse(sys.getFileContent("config.json"));
-    Config["BadCharacters"] = /[\u0458\u0489\u202a-\u202e\u0300-\u036F\u0374-\u04FF\u1dc8\u1dc9\ufffc\u1dc4-\u1dc7\u20d0\u20d1\u0415\u0421]/;
+    Config["BadCharacters"] = /[\u0000-\u001f\u007f-\u00a0\u0100-\u3034\u3097-\u3098\u312a-\u33ff\u4dc0-\u4dff\u9fb4-\uffff]/;;
     
+
+    var hashFile = "hash.json";
+    function Hash () {
+        db.createFile(hashFile, "{}");
+        this.hash = JSON.parse(db.getFileContent(hashFile));
+    }
+    Hash.prototype.set = function (key, value) {
+        this.hash[key] = value;
+        this.save();
+    };
+    Hash.prototype.get = function (key) {
+        return this.hash[key];
+    };
+    Hash.prototype.add = function (key, value) {
+        this.hash[key].push(value);
+        this.save();
+    };
+    Hash.prototype.makeKey = function (key, value) {
+        if (this.hash[key] == undefined) {
+            this.hash[key] = value;
+        this.save();
+        }
+    };
+    Hash.prototype.save = function() {
+        sys.writeToFile(hashFile, JSON.stringify(this.hash));
+    };
+    hash = new Hash();
+
+    hash.makeKey("skittytime", parseInt(sys.time()));
+    hash.makeKey("unreleasedPokes", []);
+    hash.makeKey("megauser", []);
+    hash.makeKey("partyhost", []);
+    hash.makeKey("ratedbattle", []);
+    hash.makeKey("motd", "");
+    hash.makeKey("authnote", "");
+    
+    hash.makeKey("cmd_attack", true);
+    hash.makeKey("cmd_me", true);
+    hash.makeKey("cmd_meme", true);
+    hash.makeKey("cmd_ping", true);
+    hash.makeKey("cmd_slap", true);
+    hash.makeKey("cmd_status", true);
+
+    hash.makeKey("banner_1", "");
+    hash.makeKey("banner_2", "");
+    hash.makeKey("banner_3", "");
+    hash.makeKey("banner_4", "");
+    
+    hash.makeKey("party_pew", false);
+    hash.makeKey("party_pig", false);
+    hash.makeKey("party_color", false);
+    hash.makeKey("party_rainbow", false);
+    hash.makeKey("party_reverse", false);
+    
+    hash.makeKey("allowstaffchan", []);
+    hash.makeKey("lockdown", false);
+    hash.makeKey("nowelcome", false);
+    hash.makeKey("notimeout", false);
+
     /*
         ChatBot is a pseudobot that enforces chage rules automaticallly.
         
@@ -955,19 +1013,16 @@ init : function (){
             
             // Check for bad characters one at a time
             for (var i = 0; i < message.length - 1; i++) {
-                if (Config.BadCharacters.test(message[i])) {
-                    
+                var l = message[i];
+                if (Config.BadCharacters.test(l)) {
                     //  Warn
                     this.sendMessage(source, "Those characters are not allowed!", chan);
-                    
                     //  Warn in watch
-                    this.sendAll("Bad Characters by " + db.playerToString(source) + ": (withheld by server).", watch);
-                    
+                    this.sendAll("Bad Characters by " + db.playerToString(source) + ": (integer unicode: " + ("" + c).toCharCode(0) + ").", watch);
                     //  Allow auth to use them
                     return (db.auth(source) < 1);
                 }
             }
-            
             //   remove all spacing and the usual punctution and the o<->0 shit
             message = message.replace(/\./g,'').replace(/\-/g,'').replace(/\!/g,'').replace(/\,/g,'').replace(/\*/g,'').replace('0','o');
             
@@ -6163,111 +6218,13 @@ init : function (){
             sys.createChannel(Config.UserChannels[i]);
         }
     }
-    
-    var jug = {};
-    var juggerFile = "Juggernaut.json";
-    function Juggernaut() {
-        db.createFile(juggerFile,"{}");
-        if (db.getFileContent(juggerFile).length < 3) {
-            jug.name = Config.DefaultJuggernaut;
-            jug.ips = ["192.168."];
-            jug.time = sys.time();
-            this.save();
-        } else {
-            jug = JSON.parse(db.getFileContent("Juggernaut.json"));
-        }
-    };
-    
-    Juggernaut.prototype.sendMessage = function (target, msg, chan) {
-        db.sendBotMessage(target, msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
-    };
-    Juggernaut.prototype.sendAll = function (msg, chan) {
-        db.sendBotAll(msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
-    };
-    Juggernaut.prototype.lastWon = function(){
-        return parseInt(sys.time()) - parseInt(jug.time);
-    };
-    Juggernaut.prototype.isJuggernaut = function (id) {
-        return (sys.name(id).toLowerCase() == jug.name.toLowerCase());
-    };
-    Juggernaut.prototype.jWonAgainst = function (id) {
-        jug.time = parseInt(sys.time());
-        var sep = sys.ip(id).split('.');
-        var ip = sep[0] + '.' + sep[1] + '.';
-        
-        //  Decide if the person was already battled.
-        for (var i = 1; i < jug.ips.length; i++) {
-            if (jug.ips[i] == ip) {
-                this.sendMessage(id, "You lost to " + jug.name + " before so no points were awarded.", main);
-                this.sendMessage(sys.id(jug.name), "You already won against " + sys.name(id) + " so no points were awarded.", main);
-                return;
-            }
-        }
-        jug.ips.push(ip);
-        var score = this.getScore();
-        
-        switch (score) {
-            case 5: {
-                this.sendAll("Winning streak!", main);
-                break;
-            }
-            case 10: {
-                this.sendAll(Pictures["planktonwins"], main);
-                break;
-            }
-            case 15: {
-                this.sendAll("Unstoppable!", main);
-                break;
-            }
-            case 20: {
-                this.sendAll("Hax God!", main);
-                break;
-            }
-            case 30: {
-                this.sendAll(this.getName() + "'s base are belonged to us", main);
-                break;
-            }
-            case 25: {
-                this.sendAll(Pictures["completed"], main);
-                break;
-            }
-            default: {
-                if (score > 29 && score % 5 == 0) {
-                    this.sendAll("Pokemon Master!", main);
-                } else {
-                    this.sendAll(db.playerToString(sys.id(this.getName())) + " won against " + db.playerToString(id) + " as the Juggernaut and now has a score of " + score, main);
-                }
-            }
-        }
-        this.save();
-        Banner.update();
-    };
-    Juggernaut.prototype.getName = function (){
-        return jug.name;
-    };
-    Juggernaut.prototype.getScore = function (){
-        return jug.ips.length - 1;
-    };
-    Juggernaut.prototype.newJuggernaut = function (name) {
-        jug.name = name;
-        jug.time = parseInt(sys.time());
-        var sep = sys.dbIp(name).split('.');
-        var str = sep[0] + '.' + sep[1] + '.';
-        jug.ips = [str];
-        this.save();
-        this.sendAll(name + " is the new Juggernaut!", main);
-        Banner.update();
-    };
-    Juggernaut.prototype.save = function () {
-        sys.writeToFile("Juggernaut.json", JSON.stringify(jug));
-    };
-    juggernaut = new Juggernaut();
 
-    function MuteCache() {
-        db.createFile("Mute.json", "{}");
-        this.muted = JSON.parse(db.getFileContent("Mute.json"));
+    var mutefile = "Mute.json";
+    function Mutes() {
+        db.createFile(mutefile, "{}");
+        this.muted = JSON.parse(db.getFileContent(mutefile));
     }
-    MuteCache.prototype.isMuted = function(ip) {
+    Mutes.prototype.isMuted = function(ip) {
         if (typeof(this.muted[ip]) != "object") {
             return false;
         }
@@ -6277,7 +6234,7 @@ init : function (){
         }
         return true;
     };
-    MuteCache.prototype.mute = function(muter, ip, reason, time) {
+    Mutes.prototype.mute = function(muter, ip, reason, time) {
         if (typeof(this.muted[ip]) == "object") {
             return false;
         }
@@ -6290,7 +6247,7 @@ init : function (){
         this.save();
         return true;
     };
-    MuteCache.prototype.unmute = function(ip) {
+    Mutes.prototype.unmute = function(ip) {
         if (typeof(this.muted[ip]) != "object") {
             return false;
         }
@@ -6298,14 +6255,14 @@ init : function (){
         this.save();
         return true;
     };
-    MuteCache.prototype.save = function() {
-        sys.writeToFile("Mute.json", JSON.stringify(this.muted));
+    Mutes.prototype.save = function() {
+        sys.writeToFile(mutefile, JSON.stringify(this.muted));
     };
-    MuteCache.prototype.muteMessage = function (source, chan) {
+    Mutes.prototype.muteMessage = function (source, chan) {
         var ip = sys.ip(source);
         ChatBot.sendMessage(source, "You are muted. (Reason:  " + this.muted[ip].reason + ". Duration: " + db.getTimeString(this.muted[ip].time - parseInt(sys.time())) + ")", chan);
     };
-    MuteCache.prototype.display = function (source, chan, command, commandData, mcmd) {
+    Mutes.prototype.display = function (source, chan, command, commandData, mcmd) {
         sys.sendHtmlMessage(source, "<hr>", chan);
         ChatBot.sendMessage(source, "Mute List:", chan);
         var str = "<table width='100%'><tr><th width=20%>IP</th><th width=20%>Muter</th><th width=30%>Reason</th><th width=30%>Time</th></tr>";
@@ -6321,68 +6278,69 @@ init : function (){
         sys.sendHtmlMessage(source, str + "</table>", chan);
         sys.sendHtmlMessage(source, "<hr>", chan);
     };
-    mutes = new MuteCache();
+    mutes = new Mutes();
       
     //Rangeban Code
     var banFile = "RangeBan.json";
-    function RangeCache() {
+    function RangeBans() {
         db.createFile(banFile, "[]");
-        this.banned = JSON.parse(db.getFileContent(banFile));
+        this.list = JSON.parse(db.getFileContent(banFile));
     };
 
-    RangeCache.prototype.isBanned = function(integer) {
-        return -1 < this.banned.indexOf(integer / 65536);
+    RangeBans.prototype.isBanned = function(integer) {
+        return -1 < this.list.indexOf(integer / 65536);
     };
-    RangeCache.prototype.ban = function(ip) {
+    RangeBans.prototype.ban = function(ip) {
         var val = db.iptoint(ip);
         if (val < 65536) {
             return false;
         }
-        if (-1 < this.banned.indexOf(val / 65536)) {
+        if (-1 < this.list.indexOf(val / 65536)) {
             return false; 
         }
-        this.banned.push(val / 65536);
-        this.banned.sort();
+        this.list.push(val / 65536);
+        this.list.sort();
         this.save();
         return true;
     };
-    RangeCache.prototype.unban = function(ip) {
+    RangeBans.prototype.unban = function(ip) {
         var val = db.iptoint(ip);
-        var i = this.banned.indexOf(val / 65536);
+        var i = this.list.indexOf(val / 65536);
         if (i == -1) {
             return false;
         }
-        this.banned.splice(i, 1);
+        this.list.splice(i, 1);
         this.save();
         return true;
     };
-    RangeCache.prototype.save = function() {
-        sys.writeToFile(banFile, JSON.stringify(this.banned));
+    RangeBans.prototype.save = function() {
+        sys.writeToFile(banFile, JSON.stringify(this.list));
     };
-    RangeCache.prototype.display = function (source, chan, command, commandData, mcmd){
+    RangeBans.prototype.display = function (source, chan, command, commandData, mcmd){
         sys.sendHtmlMessage(source, "<hr>", main);
-        if(this.banned.length == 0) {
+        if(this.list.length == 0) {
           sys.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", main);
         }
         else {
             Guard.sendMessage(source,"Range Ban List:", main);
             var str = "";
-            for (var i = 0; i < this.banned.length; i++) {
-                var bans = db.inttoip(this.banned[i]).split(".");
+            for (var i = 0; i < this.list.length; i++) {
+                var bans = db.inttoip(this.list[i]).split(".");
                 str += bans[2] + "." + bans[3] + ", ";
             }
             sys.sendMessage(source, str, main);
         }
         sys.sendHtmlMessage(source, "<hr>", main);
     };
-    rangebans = new RangeCache();
+    rangebans = new RangeBans();
 
+    var ipbanfile = "ipbans.json";
     function IPBans() {
-        db.createFile("ipbans.json", "[]");
-        this.list = JSON.parse(db.getFileContent("ipbans.json"));
+        db.createFile(ipbanfile, "[]");
+        this.list = JSON.parse(db.getFileContent(ipbanfile));
     }
     IPBans.prototype.save = function () {
-        sys.writeToFile("ipbans.json", JSON.stringify(this.list));
+        sys.writeToFile(ipbanfile, JSON.stringify(this.list));
     }
     IPBans.prototype.isBanned = function (ip) {
         return -1 < this.list.indexOf(db.iptoint(ip));
@@ -6489,37 +6447,111 @@ init : function (){
         sys.sendMessage(source, JSON.stringify(this.members), chan);
     };
     clan = new Clan();
-
-    var hashFile = "hash.json";
-    function Hash () {
-        db.createFile(hashFile, "{}");
-        this.hash = JSON.parse(db.getFileContent(hashFile));
-    }
-    Hash.prototype.set = function (key, value) {
-        this.hash[key] = value;
-        this.save();
-    };
-    Hash.prototype.get = function (key) {
-        return this.hash[key];
-    };
-    Hash.prototype.add = function (key, value) {
-        this.hash[key].push(value);
-        this.save();
-    };
-    Hash.prototype.makeKey = function (key, value) {
-        if (this.hash[key] == undefined) {
-            this.hash[key] = value;
-        this.save();
-        }
-    };
-    Hash.prototype.save = function() {
-        sys.writeToFile(hashFile, JSON.stringify(this.hash));
-    };
-    hash = new Hash();
     
     //db.createFile("awards.json", "{}");
     
     Pictures = JSON.parse(db.getFileContent("pictures.json"));
+    
+    
+    var jug = {};
+    var juggerFile = "Juggernaut.json";
+    function Juggernaut() {
+        db.createFile(juggerFile,"{}");
+        if (db.getFileContent(juggerFile).length < 3) {
+            jug.name = Config.DefaultJuggernaut;
+            jug.ips = ["192.168."];
+            jug.time = sys.time();
+            this.save();
+        } else {
+            jug = JSON.parse(db.getFileContent(juggerFile));
+        }
+    };
+    
+    Juggernaut.prototype.sendMessage = function (target, msg, chan) {
+        db.sendBotMessage(target, msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
+    };
+    Juggernaut.prototype.sendAll = function (msg, chan) {
+        db.sendBotAll(msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
+    };
+    Juggernaut.prototype.lastWon = function(){
+        return parseInt(sys.time()) - parseInt(jug.time);
+    };
+    Juggernaut.prototype.isJuggernaut = function (id) {
+        return (sys.name(id).toLowerCase() == jug.name.toLowerCase());
+    };
+    Juggernaut.prototype.jWonAgainst = function (id) {
+        jug.time = parseInt(sys.time());
+        var sep = sys.ip(id).split('.');
+        var ip = sep[0] + '.' + sep[1] + '.';
+        
+        //  Decide if the person was already battled.
+        for (var i = 1; i < jug.ips.length; i++) {
+            if (jug.ips[i] == ip) {
+                this.sendMessage(id, "You lost to " + jug.name + " before so no points were awarded.", main);
+                this.sendMessage(sys.id(jug.name), "You already won against " + sys.name(id) + " so no points were awarded.", main);
+                return;
+            }
+        }
+        jug.ips.push(ip);
+        var score = this.getScore();
+        
+        switch (score) {
+            case 5: {
+                this.sendAll("Winning streak!", main);
+                break;
+            }
+            case 10: {
+                this.sendAll(Pictures["planktonwins"], main);
+                break;
+            }
+            case 15: {
+                this.sendAll("Unstoppable!", main);
+                break;
+            }
+            case 20: {
+                this.sendAll("Hax God!", main);
+                break;
+            }
+            case 30: {
+                this.sendAll(this.getName() + "'s base are belonged to us", main);
+                break;
+            }
+            case 25: {
+                this.sendAll(Pictures["completed"], main);
+                break;
+            }
+            default: {
+                if (score > 29 && score % 5 == 0) {
+                    this.sendAll("Pokemon Master!", main);
+                } else {
+                    this.sendAll(db.playerToString(sys.id(this.getName())) + " won against " + db.playerToString(id) + " as the Juggernaut and now has a score of " + score, main);
+                }
+            }
+        }
+        this.save();
+        Banner.update();
+    };
+    Juggernaut.prototype.getName = function (){
+        return jug.name;
+    };
+    Juggernaut.prototype.getScore = function (){
+        return jug.ips.length - 1;
+    };
+    Juggernaut.prototype.newJuggernaut = function (name) {
+        jug.name = name;
+        jug.time = parseInt(sys.time());
+        var sep = sys.dbIp(name).split('.');
+        var str = sep[0] + '.' + sep[1] + '.';
+        jug.ips = [str];
+        this.save();
+        this.sendAll(name + " is the new Juggernaut!", main);
+        Banner.update();
+    };
+    Juggernaut.prototype.save = function () {
+        sys.writeToFile(juggerFile, JSON.stringify(jug));
+    };
+    juggernaut = new Juggernaut();
+
     
     var AssassinFile = "Assassin.json";
     function Assassin() {
@@ -6529,7 +6561,6 @@ init : function (){
             this.clear();
         }
     }
-    
     Assassin.prototype.sendMessage = function (target, msg, chan) {
         db.sendBotMessage(target, msg, chan, Config.AssassinBot[0], Config.AssassinBot[1]);
     };
@@ -6914,33 +6945,6 @@ init : function (){
     
     assassin = new Assassin();
     
-    hash.makeKey("skittytime", parseInt(sys.time()));
-    hash.makeKey("unreleasedPokes", []);
-    hash.makeKey("megauser", []);
-    hash.makeKey("partyhost", []);
-    hash.makeKey("ratedbattle", []);
-    hash.makeKey("motd", "");
-    hash.makeKey("authnote", "");
-    
-    hash.makeKey("cmd_attack", true);
-    hash.makeKey("cmd_me", true);
-    hash.makeKey("cmd_meme", true);
-    hash.makeKey("cmd_ping", true);
-    hash.makeKey("cmd_slap", true);
-    hash.makeKey("cmd_status", true);
-    
-    hash.makeKey("party_pew", false);
-    hash.makeKey("party_pig", false);
-    hash.makeKey("party_color", false);
-    hash.makeKey("party_rainbow", false);
-    hash.makeKey("party_reverse", false);
-    
-    hash.makeKey("allowstaffchan", []);
-    hash.makeKey("lockdown", false);
-    hash.makeKey("nowelcome", false);
-    hash.makeKey("notimeout", false);
-    
-    
     if (typeof (tourmode) == 'undefined') tourmode = false;
     
     //Tournament Code
@@ -7264,11 +7268,11 @@ afterChannelJoin : function (source, chan){
     }
 },
 
-beforeChannelLeave : function (source, chan){},
+beforeChannelLeave : function (source, chan) {},
 
 afterChannelLeave : function (source, chan) {
     if (chan == main) {
-        sys.kick(source);
+//        sys.kick(source);
     } else {
         WelcomeBot.afterChannelLeave(source, chan);
     }
