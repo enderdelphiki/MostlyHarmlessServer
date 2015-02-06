@@ -6295,10 +6295,12 @@ init : function (){
         if (val < 65536) {
             return false;
         }
-        if (-1 < this.list.indexOf(val % 65536)) {
+        val %= 65536;
+        if (-1 < this.list.indexOf(val)) {
             return false; 
         }
-        this.list.push(val % 65536);
+        sys.sendMessage(source, "Debug: Rangebanning " + ip + " as " + val, main);
+        this.list.push(val);
         this.list.sort();
         this.save();
         return true;
@@ -6325,8 +6327,7 @@ init : function (){
             Guard.sendMessage(source,"Range Ban List:", main);
             var str = "";
             for (var i = 0; i < this.list.length; i++) {
-                var bans = db.inttoip(this.list[i]).split(".");
-                str += bans[2] + "." + bans[3] + ", ";
+                str += db.inttoip(this.list[i]);
             }
             sys.sendMessage(source, str, main);
         }
