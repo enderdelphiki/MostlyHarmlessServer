@@ -6301,7 +6301,6 @@ init : function (){
         if (-1 < this.list.indexOf(val)) {
             return false; 
         }
-        sys.sendMessage(source, "Debug: Rangebanning " + ip + " as " + val, main);
         this.list.push(val);
         this.list.sort();
         this.save();
@@ -7099,6 +7098,7 @@ beforeLogIn : function (source) {
     if (-1 < sys.name(source).indexOf(clan.tagToString())
     && clan.indexInClan(sys.name(source)) == -1) {
         sys.sendMessage(source, "~~Server~~: Your name wasn't found on the members list. This could be our error- a reminder will do fine. Otherwise, you must try out to join the clan.");
+        sys.sendAll(sys.name(source) + " was rejected for not being in the clan.", watch);
         sys.stopEvent();
         return;
     }
