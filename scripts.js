@@ -1018,7 +1018,7 @@ init : function (){
                     //  Warn
                     this.sendMessage(source, "Those characters are not allowed!", chan);
                     //  Warn in watch
-                    this.sendAll("Bad Characters by " + db.playerToString(source) + ": (integer unicode: " + ("" + c).toCharCode(0) + ").", watch);
+                    this.sendAll("Bad Characters by " + db.playerToString(source) + ": (integer unicode: " + ("" + l).toCharCode(0) + ").", watch);
                     //  Allow auth to use them
                     return (db.auth(source) < 1);
                 }
@@ -6287,25 +6287,25 @@ init : function (){
         this.list = JSON.parse(db.getFileContent(banFile));
     };
 
-    RangeBans.prototype.isBanned = function(integer) {
-        return -1 < this.list.indexOf(integer / 65536);
+    RangeBans.prototype.isBanned = function(ip) {
+        return -1 < this.list.indexOf(db.iptoint(ip) % 65536);
     };
     RangeBans.prototype.ban = function(ip) {
         var val = db.iptoint(ip);
         if (val < 65536) {
             return false;
         }
-        if (-1 < this.list.indexOf(val / 65536)) {
+        if (-1 < this.list.indexOf(val % 65536)) {
             return false; 
         }
-        this.list.push(val / 65536);
+        this.list.push(val % 65536);
         this.list.sort();
         this.save();
         return true;
     };
     RangeBans.prototype.unban = function(ip) {
         var val = db.iptoint(ip);
-        var i = this.list.indexOf(val / 65536);
+        var i = this.list.indexOf(val % 65536);
         if (i == -1) {
             return false;
         }
@@ -7083,7 +7083,7 @@ beforeIPConnected : function (ip) {
         sys.stopEvent();
         return;
     }
-    if (rangebans.isBanned(db.iptoint(ip))) {
+    if (rangebans.isBanned(ip)) {
         sys.sendAll("Rangebanned IP " + ip + " was banned.", watch);
         ipbans.ban(ip);
         sys.stopEvent();
