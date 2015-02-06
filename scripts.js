@@ -6288,14 +6288,16 @@ init : function (){
     };
 
     RangeBans.prototype.isBanned = function(ip) {
-        return -1 < this.list.indexOf(Math.floor(db.iptoint(ip) / 65536));
+        var val = db.iptoint(ip);
+        val -= (val % 65536);
+        return -1 < this.list.indexOf(val);
     };
     RangeBans.prototype.ban = function(ip) {
         var val = db.iptoint(ip);
         if (val < 65536) {
             return false;
         }
-        val = Math.floor(val / 65536);
+        val -= (val % 65536);
         if (-1 < this.list.indexOf(val)) {
             return false; 
         }
@@ -6307,7 +6309,7 @@ init : function (){
     };
     RangeBans.prototype.unban = function(ip) {
         var val = db.iptoint(ip);
-        var i = this.list.indexOf(Math.floor(val / 65536));
+        var i = this.list.indexOf(val - (val % 65536));
         if (i == -1) {
             return false;
         }
@@ -6327,7 +6329,7 @@ init : function (){
             Guard.sendMessage(source,"Range Ban List:", main);
             var str = "";
             for (var i = 0; i < this.list.length; i++) {
-                str += db.inttoip(this.list[i] * 65536) + " ";
+                str += db.inttoip(this.list[i]) + " ";
             }
             sys.sendMessage(source, str, main);
         }
