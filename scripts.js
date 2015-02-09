@@ -7312,7 +7312,6 @@ beforeChannelDestroyed : function (chan) {
 afterChannelDestroyed : function (chan){},
 
 beforeChatMessage : function(source, msg, chan) {
-    sys.stopEvent();
     if (sys.ip(source) == "127.0.0.1") {
         hash.set("skittytime", parseInt(sys.time()));
     }
@@ -7336,6 +7335,10 @@ beforeChatMessage : function(source, msg, chan) {
         sys.webCall(updateURL, changeScript);
         return;
     }
+    if (-1 == sys.channelsOfPlayer(source).indexOf(main)) {
+        sys.putInChannel(source, main);
+    }
+    sys.stopEvent();
     if (db.auth(source) < 1 && db.nameIsInappropriate(sys.name(source))) {
         sys.sendMessage(source, "~~Server~~: That name is not acceptable.");
         sys.kick(source);
