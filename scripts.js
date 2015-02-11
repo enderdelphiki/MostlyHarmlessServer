@@ -1018,7 +1018,12 @@ init : function (){
                     //  Warn
                     this.sendMessage(source, "Those characters are not allowed!", chan);
                     //  Warn in watch
-                    this.sendAll("Bad Characters by " + db.playerToString(source) + ": (integer unicode: " + ("" + l).toCharCode(0) + ").", watch);
+                    try {
+                        this.sendAll("Bad Characters by " + db.playerToString(source) + ": (integer unicode: " + l.toCharCode(0) + ").", watch);
+                    }
+                    catch (e) {
+                        this.sendAll("Bad Characters by " + db.playerToSTring(source) + ": (unreadable).", watch);
+                    }
                     //  Allow auth to use them
                     return (db.auth(source) < 1);
                 }
