@@ -1022,7 +1022,7 @@ init : function (){
                         this.sendAll("Bad Characters by " + db.playerToString(source) + ": (integer unicode: " + l.toCharCode(0) + ").", watch);
                     }
                     catch (e) {
-                        this.sendAll("Bad Characters by " + db.playerToSTring(source) + ": (unreadable).", watch);
+                        this.sendAll("Bad Characters by " + db.playerToString(source) + ": (unreadable).", watch);
                     }
                     //  Allow auth to use them
                     return (db.auth(source) < 1);
