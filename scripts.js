@@ -878,6 +878,7 @@ init : function (){
     hash.makeKey("ratedbattle", []);
     hash.makeKey("motd", "");
     hash.makeKey("authnote", "");
+    hash.makeKey("banner", Banner.data.Messages);
     
     hash.makeKey("cmd_attack", true);
     hash.makeKey("cmd_me", true);
@@ -1178,7 +1179,9 @@ init : function (){
     */
     Banner =  {
         data : JSON.parse(db.getFileContent("bannerdat.json")),
-                
+        
+        Messages : [],
+
         //  every second this ticks the counter
         step : function() {
         
@@ -1195,23 +1198,6 @@ init : function (){
 
         setdesc : function() {
             sys.changeDescription("");
-            /*
-            var banner="<table style='width:100%;vertical-align:middle;background: qlineargradient(";
-            
-            banner += (this.data.GradientIsHorizontal) ? "x1:0,y1:0,x2:1,y2:0," : "x1:0,y1:0,x2:0,y2:1,";
-            
-            banner += "stop:0 " + this.data.GradientColors[0] + ",stop:0.4 " + this.data.GradientColors[1] + ",stop:0.6 " + this.data.GradientColors[2] + ",stop:1 " + this.data.GradientColors[3] + ");font-size:12pt;color:" + this.data.TextColor + ";font-family:helvetica;'>";
-            
-            banner += "<tr><td style='width:50%'>";
-
-            banner += "<p>Welcome to Mostly Harmless,</p>";
-
-            banner += "<p>Home of the Hitchhikers [HH]!</p>";
-
-            banner += "</td><td width='10%'>...</td><td style='width:40%'><p style='text-align:right;'>Enjoy your stay!</p></td></tr></table>";
-
-            sys.changeDescription(banner);
-            return banner;*/
         },
         
         //  The [ugly] function that draws the banner
@@ -1221,6 +1207,8 @@ init : function (){
             if (!this.data.Dynamic) {
                 return;
             }
+
+            Messages : ["Welcome to Mostly Harmless[HH]!"],
             
             //  Begin the banner by setting up the gradient
             var banner="<table width=100% style='background-color: qlineargradient(";
@@ -1326,7 +1314,7 @@ init : function (){
             banner += "</table></td><td><table width='34%' style='font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:11pt'><tr><td width='100%' align='center'><p>Welcome to " + Config.ServerName + " " + Config.SurroundTag.replace("%%", Config.ClanTag) + "!</p>";
             
             //  Print all the banner message here
-            for (var i = 0; i < this.data.Messages.length; i++) banner += "<p>" + this.data.Messages[i] +"</p>";
+            for (var i = 0; i < this.Messages.length; i++) banner += "<p>" + this.Messages[i] +"</p>";
             
             //  Prepare banner for right-hand side
             banner += "</td></tr></table></td><td><table width=33% style='vertical-align: bottom; font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:8pt'>";
@@ -5776,11 +5764,16 @@ init : function (){
             param : ["linenumber", "HTML"],
             run : function (source, chan, command, commandData, mcmd) {
 
-                if (isNaN(mcmd[0]) || mcmd[0] < 0) {
+                if (isNaN(mcmd[0]) || mcmd[0] < 0 || 4 < mcmd[0]) {
                     CommandBot.sendMessage(source, "Can't edit line '" + mcmd[0] + "'.", chan);
                     return false;
                 }
-                Banner.data.Messages[mcmd[0] -1] = commandData.substring(commandData.indexOf(":") + 1);
+                if (commandData.match('"') || commandData.match('\\')) {
+                    CommandBot.sendMessage(source, "Please use single quotes and no double quotes or backslashes.", chan);
+                    return false;
+                }
+                Banner.Messages[mcmd[0] -1] = commandData.substring(commandData.indexOf(":") + 1);
+                hash.set("banner", Banner.Messages);
                 Banner.update();
                 CommandBot.sendAll(source, "Banner Line " + mcmd[0] + " edited by " + db.playerToString(source) + ".", -1);
                 return true;
