@@ -878,7 +878,7 @@ init : function (){
     hash.makeKey("ratedbattle", []);
     hash.makeKey("motd", "");
     hash.makeKey("authnote", "");
-    hash.makeKey("banner", Banner.Messages);
+    hash.makeKey("banner", []);
     
     hash.makeKey("cmd_attack", true);
     hash.makeKey("cmd_me", true);
@@ -2206,9 +2206,6 @@ init : function (){
                     
                         //  Reload the script from file
                         sys.changeScript(db.getFileContent('scripts.js'));
-                        
-                        //  Tell everyone the lag is over
-                        sys.sendAll("~~Server~~: Script update failed. Business as usual!", main);
                         
                         //  Tell updater and auth what went wrong
                         sys.sendMessage(source, err, chan);
