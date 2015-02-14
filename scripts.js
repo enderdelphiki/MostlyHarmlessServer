@@ -1208,7 +1208,7 @@ init : function (){
                 return;
             }
 
-            Messages : ["Welcome to Mostly Harmless[HH]!"],
+            this.Messages = hash.get("banner");
             
             //  Begin the banner by setting up the gradient
             var banner="<table width=100% style='background-color: qlineargradient(";
@@ -5528,6 +5528,27 @@ init : function (){
                 sys.sendMessage(source, "~~Server~~: Auth note set to: " + commandData, chan);
                 return true;
             }
+        },
+
+
+        "bannermsg" : {
+            param : ["linenumber", "HTML"],
+            run : function (source, chan, command, commandData, mcmd) {
+
+                if (isNaN(mcmd[0]) || mcmd[0] < 0 || 4 < mcmd[0]) {
+                    CommandBot.sendMessage(source, "Can't edit line '" + mcmd[0] + "'.", chan);
+                    return false;
+                }
+                if (commandData.match('"') || commandData.match('\\')) {
+                    CommandBot.sendMessage(source, "Please use single quotes and no double quotes or backslashes.", chan);
+                    return false;
+                }
+                Banner.Messages[mcmd[0] -1] = commandData.substring(commandData.indexOf(":") + 1);
+                hash.set("banner", Banner.Messages);
+                Banner.update();
+                CommandBot.sendAll(source, "Banner Line " + mcmd[0] + " edited by " + db.playerToString(source) + ".", -1);
+                return true;
+            }
         }
     };
     
@@ -5753,26 +5774,6 @@ init : function (){
                 Banner.data.GradientColors[2]=mcmd[1];
                 Banner.data.GradientColors[3]=mcmd[2];
                 Banner.update();
-                return true;
-            }
-        },
-
-        "bannermsg" : {
-            param : ["linenumber", "HTML"],
-            run : function (source, chan, command, commandData, mcmd) {
-
-                if (isNaN(mcmd[0]) || mcmd[0] < 0 || 4 < mcmd[0]) {
-                    CommandBot.sendMessage(source, "Can't edit line '" + mcmd[0] + "'.", chan);
-                    return false;
-                }
-                if (commandData.match('"') || commandData.match('\\')) {
-                    CommandBot.sendMessage(source, "Please use single quotes and no double quotes or backslashes.", chan);
-                    return false;
-                }
-                Banner.Messages[mcmd[0] -1] = commandData.substring(commandData.indexOf(":") + 1);
-                hash.set("banner", Banner.Messages);
-                Banner.update();
-                CommandBot.sendAll(source, "Banner Line " + mcmd[0] + " edited by " + db.playerToString(source) + ".", -1);
                 return true;
             }
         },
