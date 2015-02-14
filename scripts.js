@@ -878,7 +878,7 @@ init : function (){
     hash.makeKey("ratedbattle", []);
     hash.makeKey("motd", "");
     hash.makeKey("authnote", "");
-    hash.makeKey("banner", Banner.data.Messages);
+    hash.makeKey("banner", Banner.Messages);
     
     hash.makeKey("cmd_attack", true);
     hash.makeKey("cmd_me", true);
