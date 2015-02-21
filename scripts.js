@@ -5403,7 +5403,7 @@ init : function (){
                     Guard.sendMessage(source, "Cannot ban IP " + mcmd[0], chan);
                     return false;
                 }
-                Guard.sendAll(source, "IP " + mcmd[0] + " was ipbanned.", main);
+                Guard.sendAll("IP " + mcmd[0] + " was ipbanned.", main);
                 return true;
             }
         },
@@ -5414,7 +5414,7 @@ init : function (){
                     Guard.sendMessage(source, "Cannot unban IP " + mcmd[0], chan);
                     return false;
                 }
-                Guard.sendAll(source, "IP " + mcmd[0] + " is no longer ipbanned.", main);
+                Guard.sendAll("IP " + mcmd[0] + " is no longer ipbanned.", main);
                 return true;
             }
         },
