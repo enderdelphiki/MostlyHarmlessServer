@@ -1355,7 +1355,7 @@ init : function (){
             }
             
             //  Print the time
-            banner += "</tr><tr><td></td><td>Server Clock:</td><td>" + hours + ":" + minutes + (isPM?"PM":"AM") + "</td></tr>";
+            banner += "<tr><td></td><td>Server Clock:</td><td>" + hours + ":" + minutes + (isPM?"PM":"AM") + "</td></tr>";
             
             //  Finish off the banner and add the MOTD on the end
             banner += "</table></td></tr><tr><td colspan='3' style=\"text-align:center;font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + "\"><center>" + hash.get("motd") + "</center></td></tr></table>";
