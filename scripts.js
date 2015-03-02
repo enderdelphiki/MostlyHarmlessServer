@@ -1329,11 +1329,7 @@ init : function (){
             var score = juggernaut.getScore();
             banner += "<tr><td></td><td></td><td></td></tr><tr><td></td><td>Juggernaut:</td><td>Score:</td></tr><tr style='text-align:center'><td>" + Pictures["juggernaut"] + "</td><td>" + juggernaut.getName() + "</td><td>" + score + "</td></tr>";
             
-            
-            //  Finish off the banner and add the MOTD on the end
-            banner += "</table></td></tr><tr><td colspan='3' style=\"text-align:center;font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + "\"><center>" + hash.get("motd") + "</center></td></tr></table>";
-
-            //  Add the server clock
+                        //  Add the server clock
             //  set up the vars
             var currentTime = new Date(),
                 hours = currentTime.getHours(),
@@ -1360,6 +1356,9 @@ init : function (){
             
             //  Print the time
             banner += "</tr><tr><td></td><td>Server Clock:</td><td>" + hours + ":" + minutes + (isPM?"PM":"AM") + "</td></tr>";
+            
+            //  Finish off the banner and add the MOTD on the end
+            banner += "</table></td></tr><tr><td colspan='3' style=\"text-align:center;font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + "\"><center>" + hash.get("motd") + "</center></td></tr></table>";
             
             //  Post the banner
             sys.changeAnnouncement(banner);
