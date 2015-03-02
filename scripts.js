@@ -1227,8 +1227,8 @@ init : function (){
             //  Track the first letter as used in the filename for the autballs
                 authletter = ['u', 'm', 'a', 'o'];
                 
-            //  Now go through the first 8 league members
-            for (var x = 0; x < 8; x++) {
+            //  Now go through the first 6 league members
+            for (var x = 0; x < 6; x++) {
                 //  grab the person's name
                 var name = Config.League[x][0],
                 
@@ -1280,6 +1280,35 @@ init : function (){
                 //  add the type
                 banner += "</td><td>" + db.escapeTagName(name, false) + "</td><td><img src='Themes/Classic/types/type" + sys.typeNum(Config.League[x][1]) + ".png'/></td></tr>";
             }
+
+            //  Add the server clock
+            //  set up the vars
+            var currentTime = new Date(),
+                hours = currentTime.getHours(),
+                minutes = currentTime.getMinutes();
+                
+            //  force 0X for single digit minutes
+            if (minutes < 10) minutes = "0" + minutes;
+            
+            //  check if it's AM or PM
+            var isPM = (hours > 11);
+            
+            //  Format the clock to normal-people time
+            if (isPM) {
+                //  Reset PM to 1-12 as opposed to 13-24
+                if (12 < hours) {
+                    hours -= 12;
+                }
+            }
+            
+            //  Make sure there is no 0 o'clock
+            else if (hours == 0) {
+                hours = 12;
+            }
+            
+            //  Print the time
+            banner += "<tr><td></td><td></td><td></td></tr><tr><td></td><td>Server Clock:</td><td>" + hours + ":" + minutes + (isPM?"PM":"AM") + "</td></tr>";
+
             
             //  Now add the middle section of the banner
             banner += "</table></td><td><table width='34%' style='font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:11pt'><tr><td width='100%' align='center'><p>Welcome to " + Config.ServerName + " " + Config.SurroundTag.replace("%%", Config.ClanTag) + "!</p>";
@@ -1291,7 +1320,7 @@ init : function (){
             banner += "</td></tr></table></td><td><table width=33% style='vertical-align: bottom; font-family:" + this.data.FontFamily + "; color:" + this.data.TextColor + "; font-size:8pt'>";
             
             //  Print the E4 (same as gyms, just different range on Config.League
-            for (var x = 8; x < 12; x++) {
+            for (var x = 6; x < 10; x++) {
                 var name = Config.League[x][0],
                     letter = authletter[sys.dbAuth(name)];
                 banner += "<tr><td style='margin:4px'>";
@@ -1319,7 +1348,7 @@ init : function (){
             }
             
             //  Hard-code the champion spot (same as the other spots with a few formatting changes)
-            var name = Config.League[12][0], letter = authletter[sys.dbAuth(name)];
+            var name = Config.League[10][0], letter = authletter[sys.dbAuth(name)];
             if (letter == undefined) {
                 letter = 'u';
             }
@@ -1329,33 +1358,6 @@ init : function (){
             var score = juggernaut.getScore();
             banner += "<tr><td></td><td></td><td></td></tr><tr><td></td><td>Juggernaut:</td><td>Score:</td></tr><tr style='text-align:center'><td>" + Pictures["juggernaut"] + "</td><td>" + juggernaut.getName() + "</td><td>" + score + "</td></tr>";
             
-            //  Add the server clock
-            //  set up the vars
-            var currentTime = new Date(),
-                hours = currentTime.getHours(),
-                minutes = currentTime.getMinutes();
-                
-            //  force 0X for single digit minutes
-            if (minutes < 10) minutes = "0" + minutes;
-            
-            //  check if it's AM or PM
-            var isPM = (hours > 11);
-            
-            //  Format the clock to normal-people time
-            if (isPM) {
-                //  Reset PM to 1-12 as opposed to 13-24
-                if (12 < hours) {
-                    hours -= 12;
-                }
-            }
-            
-            //  Make sure there is no 0 o'clock
-            else if (hours == 0) {
-                hours = 12;
-            }
-            
-            //  Print the time
-            banner += "<tr><td></td><td>Server Clock:</td><td>" + hours + ":" + minutes + (isPM?"PM":"AM") + "</td></tr>";
             
             //  Finish off the banner and add the MOTD on the end
             banner += "</table></td></tr><tr><td colspan='3' style=\"text-align:center;font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + "\"><center>" + hash.get("motd") + "</center></td></tr></table>";
