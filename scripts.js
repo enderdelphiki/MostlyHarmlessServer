@@ -1818,20 +1818,20 @@ init : function (){
                     var ban = false;
                     for (var i = 0; i < 6; i++) {
                         var poke = sys.pokemon(sys.teamPoke(source, tsource, i));
-                        if (-1 == this.data.EnderPoke.indexOf(poke)) {
-                            this.sendMessage(source, poke + " is not strong enough for this competition.", main);
+                        if (-1 < this.data.EnderPoke.indexOf(poke)) {
+                            this.sendMessage(source, poke + " is not allowed in this competition.", main);
                             ban = true;
                         }
                         var item = sys.item(sys.teamPokeItem(source, tsource, i));
                         if (-1 < this.data.EnderItem.indexOf(item)) {
                             this.sendMessage(source,
-                                item + " is not allowed due to recoil or banlists.", main);
+                                item + " is not allowed in this competition.", main);
                             ban = true;
                         }
                         var ability = sys.ability(sys.teamPokeAbility(source, tsource, i));
                         if (-1 < this.data.EnderAbility.indexOf(ability)) {
                             this.sendMessage(source,
-                                ability + " is not allowed due self-harm or banlists.", main);
+                                ability + " is not allowed in this competition.", main);
                             ban = true;
                         }
                         for (var j = 0; j < 4; j++) {
@@ -1844,7 +1844,7 @@ init : function (){
                             move = sys.move(move);
                             if (-1 < this.data.EnderMove.indexOf(move)) {
                                 this.sendMessage(source,
-                                    move + " is not allowed due to the potential for self-harm or banlists.",main);
+                                    move + " is not allowed in this competition.", main);
                                 ban = true;
                             }
                         }
