@@ -275,9 +275,13 @@ init : function (){
         getMoveCategory : function (moveId) {
             if (categoryList === undefined) {
                 categoryList = {};
-                var data = sys.getFileContent(this.data.moveDir + 'damage_class.txt').split('\n').split(' ');
+                var data = sys.getFileContent(this.data.moveDir + 'damage_class.txt').split('\n');
                 for (var i = 0; i < data.length; i++) {
-                    categoryList[data[i][0]] = data[i][1];
+                    var index = data[i].indexOf(" ");
+                    var key = data[i].substr(0, index);
+                    var category = data[i].substr(index + 1, index + 2);
+                    sys.sendAll("Putting " + category + " into " + key + "." , watch);
+                    categoryList[key] = category;
                 }
             }
             if (categoryList[moveId] == 1) {
@@ -1327,7 +1331,7 @@ init : function (){
             
             //  Add the juggernaut info
             var score = juggernaut.getScore();
-            banner += "<tr><td></td><td></td><td></td></tr><tr><td></td><td>Juggernaut:</td><td>Score:</td></tr><tr style='text-align:center'><td>" + Pictures["juggernaut"] + "</td><td>" + juggernaut.getName() + "</td><td>" + score + "</td></tr>";
+            banner += "<tr><td></td><td></td><td></td></tr><tr><td></td><td>Juggernaut:</td><td>Score:</td></tr><tr style='text-align:center'><td></td><td>" + juggernaut.getName() + "</td><td>" + score + "</td></tr>";
             
                         //  Add the server clock
             //  set up the vars
@@ -7900,7 +7904,7 @@ sys.ratedBattles(int,int),
 sys.ratedBattles(QString,QString),
 sys.reloadDosSettings(),
 sys.reloadTiers(),
-sys.rethis.data.moveDir(QString),
+
 sys.removePlugin(int),
 sys.removeVal(QString),
 sys.removeVal(QString,QString),
