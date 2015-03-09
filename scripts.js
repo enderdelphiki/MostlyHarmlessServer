@@ -280,7 +280,6 @@ init : function (){
                     var index = data[i].indexOf(" ");
                     var key = data[i].substr(0, index);
                     var category = data[i].substr(index + 1, index + 2);
-                    sys.sendAll("Putting " + category + " into " + key + "." , watch);
                     categoryList[key] = category;
                 }
             }
@@ -3115,7 +3114,7 @@ init : function (){
                 //  Print out the data
                 sys.sendHtmlMessage(source, "", chan);
                 sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.move(moveId) + "</font></b>", chan);
-                sys.sendHtmlMessage(source, "<table border = 1 cellpadding = 2><tr><th>Type</th><th>Category</th><th>Power</th><th>Accuracy</th><th>PP (Max)</th><th>Contact</th></tr><tr><td><center>" + type + "</center></td><td><center>" + category + "</center></td><td><center>" + BP + "</center></td><td><center>" + accuracy + "</center></td><td><center>" + PP + " (" + (PP * 8/5) + ")</center></td><td><center>" + contact + "</center></td></tr></table>");
+                sys.sendHtmlMessage(source, "<table border = 1 cellpadding = 2><tr><th>Type</th><th>Category</th><th>Power</th><th>Accuracy</th><th>PP (Max)</th><th>Contact</th></tr><tr><td><center>" + type + "</center></td><td><center>" + category + "</center></td><td><center>" + BP + "</center></td><td><center>" + accuracy + "</center></td><td><center>" + PP + " (" + (PP * 8/5) + ")</center></td><td><center>" + contact + "</center></td></tr></table>", chan);
                 sys.sendHtmlMessage(source, "", chan);
                 sys.sendHtmlMessage(source, "<b>Effect:</b> " + effect, chan);
                 sys.sendHtmlMessage(source, "", chan);
