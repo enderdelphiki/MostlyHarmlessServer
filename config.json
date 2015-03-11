@@ -84,7 +84,9 @@
     "AssassinBot" : ["AssassinBot", "black"],
     
     "League" : [
-        ["Open", "???"],
+        ["[HH]Ender", "Flying"],
+
+        ["[HH]Mystery Gift", "Poison"],
 
         ["[HH]SilverRain", "Dark"],
 
@@ -99,9 +101,7 @@
         ["[HH]ChuchuLP0", "Normal"],
         
         ["[HH]HelloSkitty9", "Grass"],
-        
-        ["Closed", "???"],
-        
+                
         ["[HH]Blade", "Rock"],
 
         ["[HH]Messiah", "Water"],

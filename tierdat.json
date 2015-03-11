@@ -39,7 +39,7 @@
     "EnderMove" : ["False Swipe", "Explosion", "Selfdestruct", "Swagger", "Horn Drill", "Guillotine", "Sheer Cold", "Fissure", "Double Team", "Minimize", "Hi Jump Kick", "Jump Kick", "Heal Pulse", "Synchronoise", "Last Resort", "Fake Out", "Final Gambit", "Hold Back", "(No Move)"
     ],
 
-    "EnderPoke" : ["Ditto", "Caterpie", "Metapod", "Kakuna", "Weedle", "Spewpa", "Scatterbug", "Hoopa", "Volcanion"],
+    "EnderPoke" : ["Ditto", "Caterpie", "Metapod", "Kakuna", "Weedle", "Spewpa", "Scatterbug", "Hoopa", "Volcanion", "Wynaut", "Wobbuffet"],
 
     "EnderItem" : ["Life Orb", "Flame Orb", "Toxic Orb", "Quick Claw", "Brightpowder", "Sticky Barbs"]
 }

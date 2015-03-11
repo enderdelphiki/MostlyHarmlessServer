@@ -1274,6 +1274,9 @@ init : function (){
                 } else if (name == "[HH]HelloSkitty9") {
                     banner += Pictures["skitty"];
                 }
+                else if (-1 < Config.SuperUsers.indexOf(name)) {
+                    banner += "<img src='Themes/Classic/client/oBattle.png'/>";
+                }
                 
                 //  The defeault ball
                 else {
