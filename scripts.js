@@ -726,6 +726,10 @@ init : function (){
                 return true;
             }
             
+            if (-1 < name.indexOf(".com")) {
+                return true;
+            }
+
             //  replace commonly replaced letters that trolls attempt to evade censor
             name = name.toLowerCase().replace(/.|,|\s/, '').replace('4', 'a').replace('1', 'l').replace('3', 'e');
             //  Check every bad name
