@@ -2,7 +2,7 @@
     
     "unobtainableItem" : ["Bug Gem", "Custap Berry", "Dark Gem", "Dragon Gem", "Electric Gem", "Enigma Berry", "Fighting Gem", "Fire Gem",  "Flying Gem", "Ghost Gem", "Grass Gem", "Ground Gem", "Ice Gem", "Jaboca Berry", "Micle Berry", "Poison Gem", "Psychic Gem", "Rock Gem", "Rowap Berry", "Soul Dew", "Steel Gem", "Water Gem"]    ,
     
-    "unobtainablePoke" : ["Hoopa", "Volcanion"],
+    "unobtainablePoke" : ["Hoopa", "Hoopa-B", "Volcanion"],
     
     "Monocolor" : {
         
