@@ -4101,7 +4101,7 @@ init : function (){
                 }
                 
                 //  Display
-                CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan == rpchan)) + " slaps " + db.playerToString(target, false, (chan == rpchan)) + " around a bit with a large trout.</font>", chan);
+                CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan == rpchan)) + " slaps " + db.playerToString(target, false, (chan == rpchan)) + " around a bit with a rubber chicken.</font>", chan);
                 return true;
             }
         },
