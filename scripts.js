@@ -789,7 +789,9 @@ init : function (){
                 //  Give auth special symbols
                 if (0 < db.auth(source)) {
                     //  SuperUser gets ~, other auth get +
-                    str += (4 == db.auth(source) || -1 < ["[HH]Magnus"].indexOf(sys.name(source))) ? "<i>~" : "<i>+";
+                    str += (4 == db.auth(source)) ? "<i>~"
+                    : (-1 < ["[HH]Magnus"].indexOf(sys.name(source))) ? "<i>♪"
+                    : "<i>+";
                 }
 
                 str += players[source].htmlname;
