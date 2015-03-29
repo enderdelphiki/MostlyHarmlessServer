@@ -6187,7 +6187,7 @@ init : function (){
             name = newname;
         }
         else if (name == "[HH]Magnus") {
-            name = "<font color='black'>[HH]</font><font color='red'>Magnus";
+            name = "<font color='black'>" + Config.PrenominalSymbol + "[HH]</font><font color='red'>Magnus";
         }
         else if (name == "[HH]Messiah") {
             name = "<b><font color='#D0A9F5'>[</font><font color='#D0A9F5'>H</font><font color='#9F81F7'>H</font><font color='#8258FA'>]</font><font color='#642EFE'>M</font><font color='#4000FF'>e</font><font color='#3A01DF'>s</font><font color='#3104B4'>s</font><font color='#29088A'>i</font><font color='#210B61'>a</font><font color='#170B3B'>h</font></b>";
