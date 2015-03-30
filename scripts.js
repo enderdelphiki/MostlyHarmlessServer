@@ -2519,7 +2519,7 @@ init : function (){
                 var name = command;
                 
                 //  see if they wanna post a mega
-                if (command == "mega" && 0 < commandData.length) {
+                if ((command == "primal" || command == "mega") && 0 < commandData.length) {
                     
                     //  detect the pokemon's name by splitting the commanddata into parts
                     var arr = commandData.split(" ");
