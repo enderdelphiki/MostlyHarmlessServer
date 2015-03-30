@@ -1278,7 +1278,7 @@ init : function (){
                 else if (name == "[HH]SilverRain") {
                     banner += Pictures["gbonline"];
                 } else if (name == "[HH]HelloSkitty9") {
-                    banner += Pictures["skitty"];
+                    banner += Pictures["skittyicon"];
                 }
                 else if (-1 < Config.SuperUsers.indexOf(name)) {
                     banner += "<img src='Themes/Classic/client/oBattle.png'/>";
@@ -1323,7 +1323,7 @@ init : function (){
                 } else if (name == "[HH]SilverRain") {
                     banner += Pictures["gbonline"];
                 } else if (name == "[HH]HelloSkitty9") {
-                    banner += Pictures["skitty"];
+                    banner += Pictures["skittyicon"];
                 } else {
                     banner += "<img src='Themes/Classic/client/" + letter + "Available.png'/>";
                 }
