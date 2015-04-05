@@ -1532,18 +1532,30 @@ init : function (){
                     //  Handle the Shiny case
                     if (rand == 13) {
                         //  add the keyword
-                        var seed = players[source].seed;
-                        players[source].seed = 13;
+                        //  make the name all shiny
+                        var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
+                        var newname = "";
+                        var name = sys.name(source);
+                        for (var i = 0; i < name.length; i++) {
+                            //  by coloring each letter one by one
+                            newname += "<font color=" + colors[i%6] + ">" + name[i]+"</font>";
+                        }
+                        players[source].htmlname = newname;
                         welcomemsg += "shiny " + db.playerToString(source);
-                        players[source].seed = seed;
                     }
                     
                     //  Handle the Pokerus case
                     else if (rand == 23) {
-                        var seed = players[source].seed;
-                        players[source].seed = 23;
+                        //  make the name all infecty
+                        var colors = ["purple", "green"];
+                        var newname = "";
+                        var name = sys.name(source);
+                        for (var i = 0; i < name.length; i++) {
+                            //  by coloring each letter one by one
+                            newname += "<font color=" + colors[i%2] + ">" + name[i]+"</font>";
+                        }
+                        players[source].htmlname = newname;
                         welcomemsg += "infected " + db.playerToString(source);
-                        players[source].seed = seed;
                     } 
                     
                     //  This person is not special
@@ -2580,38 +2592,38 @@ init : function (){
         //  The list of publically known images. There are obviously more as any picture on the server can be presented
         list : [
             "Envy, Gluttony, Lust, Pride, Sloth, Wrath, Greed: Did you miss us?",
-            ":p - MSN emoticon",
-            "aliens - Only on the Discovery channel",
-            "asiandad - Ticket for going 80mph? Should have been 100mph!" ,
-            "begging - Pweeeease?",
-            "boom - Swiss Cheesed",
-            "braceyourself - Winter's coming",
-            "calm - I'M COMPLETELY CALM!",
-            "completed - That was a challenge?",
-            "disapprove - For those frowny-face shenanigans",
-            "doge - very meme such funny wow",
-            "facepalm - Features Dawn so you know it's stupid",
-            "fail - When one facepalm just isn't enough",
-            "feelsbd - This frog is sad",
-            "fry - Not sure if meme or just stupid",
-            "fucking - There are 8 badges in the Kanto region. He got all 10.",
-            "giggity - For those moments",
-            "gotcha - Challeng Accepted",
-            "interesting - Stay thirsty, my friends.",
-            "notbutter - I can't believe it!",
-            "oak - You can't use that here!",
-            "onions - Will you get out of here?!",
-            "otaku - mmmmmmmmmmm",
-            "peekaboo - Green dinosaur plays hide-and-seek",
-            "philosophy - For the greatest life questions",
-            "phrasing - God damnit, Lana!",
-            "success - Achievement unlocked",
-            "uhh - If I had a nickel for every brain I didn't have... I'd have one nickel.",
-            "morpheus - What if I told you...",
-            "wish - You only get one.",
-            "wonka - So you thought you knew your memes?",
-            "wumbology - Have you tried setting it to Wumbo?",
-            "zoidberg - Fry meme dead? Why not Zoidberg?"
+            ":p MSN emoticon",
+            "aliens: Only on the Discovery channel",
+            "asiandad: Ticket for going 80mph? Should have been 100mph!" ,
+            "begging: Pweeeease?",
+            "boom: Swiss Cheesed",
+            "braceyourself: Winter's coming",
+            "calm: I'M COMPLETELY CALM!",
+            "completed: That was a challenge?",
+            "disapprove: For those frowny-face shenanigans",
+            "doge: very meme such funny wow",
+            "facepalm: Features Dawn so you know it's stupid",
+            "fail: When one facepalm just isn't enough",
+            "feelsbd: This frog is sad",
+            "fry: Not sure if meme or just stupid",
+            "fucking: There are 8 badges in the Kanto region. He got all 10.",
+            "giggity: For those moments",
+            "gotcha: Challeng Accepted",
+            "interesting: Stay thirsty, my friends.",
+            "notbutter: I can't believe it!",
+            "oak: You can't use that here!",
+            "onions: Will you get out of here?!",
+            "otaku: mmmmmmmmmmm",
+            "peekaboo: Green dinosaur plays hide-and-seek",
+            "philosophy: For the greatest life questions",
+            "phrasing: God damnit, Lana!",
+            "success: Achievement unlocked",
+            "uhh: If I had a nickel for every brain I didn't have... I'd have one nickel.",
+            "morpheus: What if I told you...",
+            "wish: You only get one.",
+            "wonka: So you thought you knew your memes?",
+            "wumbology: Have you tried setting it to Wumbo?",
+            "zoidberg: Fry meme dead? Why not Zoidberg?"
         ]
     };
 
