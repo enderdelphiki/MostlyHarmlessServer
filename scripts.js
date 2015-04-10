@@ -1479,7 +1479,7 @@ init : function (){
             var rand, name = sys.name(source);
             
             //  Autoshiny award
-            if (name == "[HH]PinkBlaze" || name == "[HH]Prism") {            
+            if (name == "[HH]PinkBlaze") {            
                 rand = 13;
             }
             
