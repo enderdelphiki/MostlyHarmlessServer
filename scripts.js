@@ -2617,6 +2617,7 @@ init : function (){
             "peekaboo: Green dinosaur plays hide-and-seek",
             "philosophy: For the greatest life questions",
             "phrasing: God damnit, Lana!",
+            "pundog: For the awkward pause after the lame punchline",
             "success: Achievement unlocked",
             "uhh: If I had a nickel for every brain I didn't have... I'd have one nickel.",
             "morpheus: What if I told you...",
