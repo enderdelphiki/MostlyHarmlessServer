@@ -1339,7 +1339,7 @@ init : function (){
             
             //  Add the juggernaut info
             var score = juggernaut.getScore();
-            banner += "<tr><td colspan='3'></td></tr><tr><td colspan='2'>Juggernaut: <a href='http://w11.zetaboards.com/The_Valley/topic/11101964/1/'><font color='" + this.data.TextColor + "'>(rules)</font></a></td><td>Score:</td></tr><tr style='text-align:center' colspan='2'><td>" + juggernaut.getName() + "</td><td>" + score + "</td></tr>";
+            banner += "<tr><td colspan='3'></td></tr><tr><td colspan='2'>Juggernaut: <a href='http://w11.zetaboards.com/The_Valley/topic/11101964/1/'><font color='" + this.data.TextColor + "'>(rules)</font></a></td><td>Score:</td></tr><tr style='text-align:center'><td colspan='2'>" + juggernaut.getName() + "</td><td>" + score + "</td></tr>";
             
                         //  Add the server clock
             //  set up the vars
