@@ -86,19 +86,31 @@
     "AssassinBot" : ["AssassinBot", "black"],
     
     "League" : [
-        ["[HH]Ender", "Flying"],
-        ["Who", "???"],
-        ["[HH]Saiomai", "Fighting"],
-        ["[HH]Shadowborg", "Ice"],
-        ["[HH]SilverRain", "Dark"],
-        ["[HH]Eris", "Psychic"],
-        ["[HH]Luca", "Steel"],
-        ["[HH]Magnus", "Dragon"],
-        ["[HH]Messiah", "Water"],
-        ["[HH]Mystery Gift", "Poison"],
-        ["[HH]HelloSkitty9", "Grass"],
-        ["[HH]Blade", "Rock"],
-        ["Closed", "???"]
+        ["[HH]Ender", "Flying","http://w11.zetaboards.com/The_Valley/topic/11044804/1/"],
+
+        ["Apply here", "???","http://w11.zetaboards.com/The_Valley/topic/8136084/1/"],
+
+        ["[HH]Saiomai", "Fighting","http://w11.zetaboards.com/The_Valley/topic/10917726/1/"],
+
+        ["[HH]Shadowborg", "Ice","http://w11.zetaboards.com/The_Valley/topic/10652505/1/"],
+
+        ["[HH]SilverRain", "Dark","http://w11.zetaboards.com/The_Valley/topic/11014001/1/"],
+        
+        ["[HH]Eris", "Psychic","http://w11.zetaboards.com/The_Valley/topic/10610584/1/"],
+        
+        ["[HH]Luca", "Steel","http://w11.zetaboards.com/The_Valley/topic/8895661/1/"],
+        
+        ["[HH]Magnus", "Dragon","http://w11.zetaboards.com/The_Valley/topic/10474800/1/"],
+        
+        ["[HH]Messiah", "Water","http://w11.zetaboards.com/The_Valley/topic/9996900/1/"],
+        
+        ["[HH]Mystery Gift", "Poison","http://w11.zetaboards.com/The_Valley/topic/11045458/1/"],
+        
+        ["[HH]HelloSkitty9", "Grass","http://w11.zetaboards.com/The_Valley/topic/8023414/1/"],
+        
+        ["[HH]Blade", "Rock","http://w11.zetaboards.com/The_Valley/topic/8508821/1/"],
+        
+        ["Closed", "???","http://w11.zetaboards.com/The_Valley/topic/8519142/1/"]
     ],
     
     "LeagueRules" : [
