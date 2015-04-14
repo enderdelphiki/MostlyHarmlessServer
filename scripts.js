@@ -5064,7 +5064,7 @@ init : function (){
                     return false;
                 }
                 var ip = sys.dbIp(mcmd[0]);
-                if (!mutes.isMuted(id)) {
+                if (!mutes.isMuted(ip)) {
                     sys.sendMessage(source, "That player is not muted...", chan);
                     return false;
                 }

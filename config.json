@@ -87,29 +87,17 @@
     
     "League" : [
         ["Who", "???"],
-        
         ["[HH]Ender", "Flying"],
-
-        ["[HH]Mystery Gift", "Poison"],
-
-        ["[HH]SilverRain", "Dark"],
-
-        ["[HH]Magnus", "Dragon"],
-
         ["[HH]Saiomai", "Fighting"],
-        
         ["[HH]Shadowborg", "Ice"],
-        
+        ["[HH]SilverRain", "Dark"],
         ["[HH]Eris", "Psychic"],
-        
-        ["[HH]HelloSkitty9", "Grass"],
-                
-        ["[HH]Blade", "Rock"],
-
-        ["[HH]Messiah", "Water"],
-        
         ["[HH]Luca", "Steel"],
-        
+        ["[HH]Magnus", "Dragon"],
+        ["[HH]Messiah", "Water"],
+        ["[HH]Mystery Gift", "Poison"],
+        ["[HH]HelloSkitty9", "Grass"],
+        ["[HH]Blade", "Rock"],
         ["Closed", "???"]
     ],
     
