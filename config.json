@@ -86,8 +86,8 @@
     "AssassinBot" : ["AssassinBot", "black"],
     
     "League" : [
-        ["Who", "???"],
         ["[HH]Ender", "Flying"],
+        ["Who", "???"],
         ["[HH]Saiomai", "Fighting"],
         ["[HH]Shadowborg", "Ice"],
         ["[HH]SilverRain", "Dark"],
