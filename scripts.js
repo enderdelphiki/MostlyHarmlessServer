@@ -1290,7 +1290,7 @@ init : function (){
                 }
                 
                 //  add the name
-                banner += "</td><td><a href='" + Config.League[x][2] + "''><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type" + sys.typeNum(Config.League[x][1]) + ".png'/></td></tr>";
+                banner += "</td><td><a href='" + Config.League[x][2] + "'><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type" + sys.typeNum(Config.League[x][1]) + ".png'/></td></tr>";
             }
             
             //  Now add the middle section of the banner
@@ -1327,7 +1327,7 @@ init : function (){
                 } else {
                     banner += "<img src='Themes/Classic/client/" + letter + "Available.png'/>";
                 }
-                banner += "</td><td><a href='" + Config.League[x][2] + "''><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type" + sys.typeNum(Config.League[x][1]) + ".png'/></td></tr>";
+                banner += "</td><td><a href='" + Config.League[x][2] + "'><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type" + sys.typeNum(Config.League[x][1]) + ".png'/></td></tr>";
             }
             
             //  Hard-code the champion spot (same as the other spots with a few formatting changes)
@@ -1335,7 +1335,7 @@ init : function (){
             if (letter == undefined) {
                 letter = 'u';
             }
-            banner += "<tr><td style='margin:4px'>" + ((sys.id(name) == undefined) ? "<img src='Themes/Classic/client/" + letter +"Ignore.png'/>"  : "<img src='Themes/Classic/client/" + letter +"Battle.png'/>") + "</td><td><a href='" + Config.League[12][2] + "''><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type18.png'/></td></tr>";
+            banner += "<tr><td style='margin:4px'>" + ((sys.id(name) == undefined) ? "<img src='Themes/Classic/client/" + letter +"Ignore.png'/>"  : "<img src='Themes/Classic/client/" + letter +"Battle.png'/>") + "</td><td><a href='" + Config.League[12][2] + "'><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type18.png'/></td></tr>";
             
             //  Add the juggernaut info
             var score = juggernaut.getScore();
