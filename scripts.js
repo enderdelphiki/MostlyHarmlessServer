@@ -6,6 +6,7 @@
 var Award, Config, db, Banner, WelcomeBot, Tumbleweed, ChatBot, TierBot, Guard, NickBot, TourBot, Party, CommandBot, Pictures, AuthLogs, ipbans;
 
 var root = "https://raw.githubusercontent.com/todd-beckman/MostlyHarmlessServer/master/";
+var json = "json/";
 
 var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","tierdat.json","dbdat.json","awarddat.json","tumbleweed.json","trainers.json"];
 
@@ -15,7 +16,7 @@ function include() {
     var files = sys.filesForDirectory(".");
     includes.forEach(function(element, index, array) {
         if (-1 == files.indexOf(element) || -1 < forcereload.indexOf(element)) {
-            sys.webCall(root + element, function(write) {
+            sys.webCall(root + json + element, function(write) {
                 sys.writeToFile(element, write);
                 print("Loaded " + element);
             });
@@ -72,7 +73,23 @@ init : function (){
                 return "";
             }
         },
-        data : JSON.parse(sys.getFileContent("dbdat.json")),
+
+        getJSON: function (file) {
+            try {
+                return JSON.parse(json + sys.getFileContent(file));
+            }
+            catch (e) {
+                print("Unable to read file " + file);
+                sys.sendAll("Unable to read file " + file, watch);
+                return "";
+            }
+        },
+
+        setJSON : function (file, object) {
+            sys.writeToFile(json + file, JSON.stringify(data));
+        },
+
+        data : this.getJSON("dbdat.json"),
         
         
         //  Formats a bot's display message intended for just a user to see.
@@ -849,14 +866,80 @@ init : function (){
             It should be easy for anyone without programming ability to read and edit these as
             long as the syntax remains unchanged.
     */
-    Config = JSON.parse(sys.getFileContent("config.json"));
+    Config = db.getJSON("config.json");
     Config["BadCharacters"] = /[\u0000-\u001f\u007f-\u00a0\u0100-\u3034\u3097-\u3098\u312a-\u33ff\u4dc0-\u4dff\u9fb4-\uffff]/;;
     
+    var awarddata = "awarddat.json";
+    var awardFile = "awards.json";
+    function Award() {
+        this.data = db.getJSON(awarddata);
+        this.awards = db.getJSON(awardFile);
+    }
+
+    Award.prototype.tell = function (source, message, chan) {
+        db.sendBotMessage(source, message, chan, Config.data.AwardBot[0], Config.data.AwardBot[1]);        
+    };
+    Award.prototype.say = function(message, chan) {
+        db.sendBotAll(message, chan, Config.data.AwardBot[0], Config.data.AwardBot[1]);
+    };
+    Award.prototype.playerIndex = function(name, award) {
+        return this.awards[award].indexOf(name);
+    };
+    Award.prototype.hasAward = function(name, award) {
+        return -1 < this.playerIndex(name, award);
+    };
+    Award.prototype.win = function (name, award) {
+        if (!this.hasAward(name, award)) {
+            this.awards[award].push(name);
+            this.say(name + " has earned the " + award + " Award! " Pictures.get[this.data[award]["badge"]] + " For more information, use !awards", main);
+            this.save();
+        }
+    };
+    Award.prototype.take = function (source, chan, name, award) {
+        var index = this.playerIndex(name, award);
+        if (-1 == index) {
+            this.tell(source, name + " doesn't have the " + award + " Award.", chan);
+        }
+        else {
+            this.awards[award].splice(index, 1);
+            this.save();
+        }
+    }
+    Award.prototype.viewAward = function(source, award, chan) {
+        sys.sendHtmlMessage(source, "<hr>");
+        var color = Config.data.AwardBot[1];
+        sys.sendHtmlMessage(source, this.data[award]["badge"] + "<font size='+4'>" + award + " Award.</font>");
+        sys.sendMessage(source, "Earned by " + this.data[award]["by"], chan);
+        sys.sendMessage(source, "Having it will " + this.data[award]["effect"], chan);
+        this.tell(source, "The following users have won this award:", chan);
+        if (this.awards[award].length == 0) {
+            sys.sendMessage(source, "None yet!", chan);
+        }
+        else {
+            sys.sendMessage(source, this.awards[award].join(", "), chan);
+        }
+        sys.sendHtmlMessage(source, "<hr>");
+    }
+    Award.prototype.viewAllAwards = function(source, chan) {
+        sys.sendHtmlMessage(source, "<hr>", chan);
+        var table = "<table><tr>";
+        for (i in this.data) {
+            table += "<td>" + Pictures[this.data[i]["badge"]] + "<br>" + i + "</td>";
+        }
+        table += "</tr></table>";
+        sys.sendHtmlMessage(source, table, chan);
+        this.tell(source, "Use !awards Name to view information on a specific award.", chan);
+        sys.sendHtmlMessage(source, "<hr>", chan);
+    }
+    Award.prototype.save = function() {
+        db.setJSON(awardFile, this.awards);
+    }
+    awards = new Award();
 
     var hashFile = "hash.json";
     function Hash () {
         db.createFile(hashFile, "{}");
-        this.hash = JSON.parse(db.getFileContent(hashFile));
+        this.hash = db.getJSON(hashFile);
     }
     Hash.prototype.set = function (key, value) {
         this.hash[key] = value;
@@ -876,7 +959,7 @@ init : function (){
         }
     };
     Hash.prototype.save = function() {
-        sys.writeToFile(hashFile, JSON.stringify(this.hash));
+        db.setJSON(hashFile, this.hash);
     };
     hash = new Hash();
 
@@ -918,7 +1001,7 @@ init : function (){
         Load this before everything else plz
     */
     ChatBot = {
-        data : JSON.parse(db.getFileContent("chatdat.json")),
+        data : db.getJSON("chatdat.json"),
         
         //  Format the bot's private messaging.
         sendMessage : function (target, msg, chan) {
@@ -1187,7 +1270,7 @@ init : function (){
             but for permanent changes to any of this, it's best to update this in the script.
     */
     Banner =  {
-        data : JSON.parse(db.getFileContent("bannerdat.json")),
+        data : db.getJSON("bannerdat.json"),
         
         Messages : [],
 
@@ -1493,6 +1576,13 @@ init : function (){
             
             //  Store the secret ID
             players[source].seed = rand;
+
+            if (rand == 13) {
+                //  do nothing yet
+            }
+            else if (rand == 23) {
+                //  do nothing yet
+            }
                         
             
             //  Display the info we've generated so far
@@ -1656,7 +1746,7 @@ init : function (){
         //  Tracks how long before the next idle chat display
         count : 360,
         
-        data : JSON.parse(db.getFileContent("tumbleweed.json")),
+        data : db.getJSON("tumbleweed.json"),
         
         //   Formats and displays the idle message of choice
         post : function (i) {
@@ -1696,7 +1786,7 @@ init : function (){
         TierBot is a pseudobot that enforces all script-based tier rules. 
     */
     TierBot = {
-        data : JSON.parse(db.getFileContent("tierdat.json")),
+        data : db.getJSON("tierdat.json"),
         
         //  Format private message
         sendMessage : function (target, msg, chan) {
@@ -2247,7 +2337,7 @@ init : function (){
             }
         },
         
-        "update" : {
+        "updatejson" : {
             run : function (source, chan, command, commandData, mcmd) {
 
                 //  If you aren't owner, gtfo
@@ -2262,7 +2352,7 @@ init : function (){
                 
                 
                 //  grab the file
-                sys.webCall(root + commandData, function (resp) {
+                sys.webCall(root + json + commandData, function (resp) {
                 
                     //  If nothing was received, do nothing.
                     if (resp == "") {
@@ -2511,7 +2601,7 @@ init : function (){
     MemeCommands = {
         cost : 40,
 
-        trainers : JSON.parse(db.getFileContent("trainers.json")),
+        trainers : db.getJSON("trainers.json"),
         
         run : function (source, chan, isshiny, command, commandData, mcmd) {
         
@@ -3799,6 +3889,27 @@ init : function (){
                 }
                 showMessage+="<tr><td></td><td></td></tr></table><br>";
                 sys.sendHtmlMessage(source, showMessage, chan);
+                return true;
+            }
+        },
+
+        //  Remade.. Probably a bit buggy because untested but I'm confident
+        "awards" : {
+            cost : 0,
+            help : "View data about the awards",
+            param : ["award name (optional)"],
+            run : function(source, chan, command, commandData, mcmd) {
+                if (commandData != undefined) {
+                    if (-1 == awards.data.indexOf(commandData.toLowerCase())) {
+                        awards.tell(source, "There is no known award by the name " + commandData + ".", chan);
+                    }
+                    else {
+                        awards.viewAward(source, commandData.toLowerCase(), chan);
+                    }
+                }
+                else {
+                    awards.viewAllAwards(source, chan);
+                }
                 return true;
             }
         }
@@ -5875,7 +5986,7 @@ init : function (){
             run : function (source, chan, command, commandData, mcmd) {
 
                 try {
-                    sys.sendMessage(source, db.getFileContent(commandData), chan);
+                    sys.sendMessage(source, db.getFileContent(json + commandData), chan);
                     return true;
                 } catch (e) {
                     sys.sendMessage(source, "Couldn't find " + commandData, chan);
@@ -5894,7 +6005,7 @@ init : function (){
                         return false;
                     }
                     try {
-                        sys.writeToFile(mcmd[0], resp);
+                        sys.writeToFile(json + mcmd[0], resp);
                         sys.changeScript(db.getFileContent('scripts.js'));
                     } catch (err) {
                         sys.sendMessage(source, err, chan);
@@ -6253,7 +6364,7 @@ init : function (){
     var mutefile = "Mute.json";
     function Mutes() {
         db.createFile(mutefile, "{}");
-        this.muted = JSON.parse(db.getFileContent(mutefile));
+        this.muted = db.getJSON(mutefile);
     }
     Mutes.prototype.isMuted = function(ip) {
         if (typeof(this.muted[ip]) != "object") {
@@ -6315,7 +6426,7 @@ init : function (){
     var banFile = "RangeBan.json";
     function RangeBans() {
         db.createFile(banFile, "[]");
-        this.list = JSON.parse(db.getFileContent(banFile));
+        this.list = db.getJSON(banFile);
     };
 
     RangeBans.prototype.isBanned = function(ip) {
@@ -6348,7 +6459,7 @@ init : function (){
         return true;
     };
     RangeBans.prototype.save = function() {
-        sys.writeToFile(banFile, JSON.stringify(this.list));
+        db.setJSON(banFile, this.list);
     };
     RangeBans.prototype.display = function (source, chan, command, commandData, mcmd){
         sys.sendHtmlMessage(source, "<hr>", main);
@@ -6370,10 +6481,10 @@ init : function (){
     var ipbanfile = "ipbans.json";
     function IPBans() {
         db.createFile(ipbanfile, "[]");
-        this.list = JSON.parse(db.getFileContent(ipbanfile));
+        this.list = db.getJSON(ipbanfile);
     }
     IPBans.prototype.save = function () {
-        sys.writeToFile(ipbanfile, JSON.stringify(this.list));
+        db.setJSON(ipbanfile, this.list);
     }
     IPBans.prototype.isBanned = function (ip) {
         return -1 < this.list.indexOf(db.iptoint(ip));
@@ -6417,7 +6528,7 @@ init : function (){
     var memberFile = "Members.json";
     function Clan() {
         db.createFile(memberFile, "[]");
-        this.members = JSON.parse(db.getFileContent(memberFile));
+        this.members = db.getJSON(memberFile);
     }
     Clan.prototype.tagToString = function () {
         return "" + Config.SurroundTag.replace("%%", Config.ClanTag);
@@ -6451,7 +6562,10 @@ init : function (){
         }
         this.members.push(db.escapeTagName(name).toLowerCase());
         sys.sendAll("~~Server~~: " + name + " was added to " + this.tagToString() + "!", main);
-        sys.writeToFile(memberFile, JSON.stringify(this.members));
+        this.save();
+    }
+    Clan.prototype.save = function() {
+        db.setJSON(memberFile, this.members);
     };
     Clan.prototype.removeMember = function (source, name) {
         name = db.escapeTagName(name, false).toLowerCase();
@@ -6463,10 +6577,10 @@ init : function (){
             this.members.splice(x, 1);
         }
         sys.sendAll("~~Server~~: " + name + " was removed from the database.", main);
-        sys.writeToFile(memberFile, JSON.stringify(this.members));
+        save();
     };
     Clan.prototype.showAll = function (source, chan) {
-        this.members = JSON.parse(db.getFileContent(memberFile));
+        this.members = db.getJSON(memberFile);
         if (this.members[0] == undefined) {
             sys.sendMessage(source, "~~Server~~: No members!");
             return;
@@ -6474,16 +6588,14 @@ init : function (){
         this.members = this.members.sort();
         sys.sendMessage(source, "~~Server~~: The " + this.members.length + " members are:", chan);
         sys.sendMessage(source, this.members.join(", "), chan);
-        sys.writeToFile(memberFile, JSON.stringify(this.members));
+        save();
     };
     Clan.prototype.exportMembers = function (source, chan) {
-        sys.sendMessage(source, JSON.stringify(this.members), chan);
+        sys.sendMessage(source, db.getJSON(memberFile), chan);
     };
     clan = new Clan();
-    
-    //db.createFile("awards.json", "{}");
-    
-    Pictures = JSON.parse(db.getFileContent("pictures.json"));
+        
+    Pictures = db.getJSON("pictures.json");
     
     
     var jug = {};
@@ -6496,7 +6608,7 @@ init : function (){
             jug.time = sys.time();
             this.save();
         } else {
-            jug = JSON.parse(db.getFileContent(juggerFile));
+            jug = db.getJSON(juggerFile);
         }
     };
     
@@ -6581,7 +6693,7 @@ init : function (){
         Banner.update();
     };
     Juggernaut.prototype.save = function () {
-        sys.writeToFile(juggerFile, JSON.stringify(jug));
+        db.setJSON(juggerFile, jug);
     };
     juggernaut = new Juggernaut();
 
@@ -6589,7 +6701,7 @@ init : function (){
     var AssassinFile = "Assassin.json";
     function Assassin() {
         db.createFile(AssassinFile, "{}");
-        this.data = JSON.parse(db.getFileContent(AssassinFile));
+        this.data = db.getJSON(AssassinFile);
         if (this.data.players == undefined) {
             this.clear();
         }
@@ -6948,12 +7060,12 @@ init : function (){
     };
     
     Assassin.prototype.save = function () {
-        sys.writeToFile(AssassinFile,JSON.stringify(this.data));
+        db.setJSON(AssassinFile, this.data);
     };
 
     function AuthLogs () {
         db.createFile("authlogs.json", "[]");
-        this.logs = JSON.parse(sys.getFileContent("authlogs.json"));
+        this.logs = db.getJSON.("authlogs.json");
     }
 
     AuthLogs.prototype.log = function(source, command, target, reason) {
@@ -6971,7 +7083,7 @@ init : function (){
     }
 
     AuthLogs.prototype.save = function() {
-        sys.writeToFile("authlogs.json", JSON.stringify(this.logs));
+        db.setJSON("authlogs.json", this.logs);
     }
 
     logs = new AuthLogs();
