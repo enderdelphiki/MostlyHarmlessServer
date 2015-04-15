@@ -879,7 +879,7 @@ init : function (){
 
         //  Inconsistent behavior of stuff
         //  Basically, this is "if the file is bs"
-        if (this.awards.length <= 2) {
+        if (this.awards["Shiny"] == undefined) {
             this.awards = {};
             for (award in this.data) {
                 this.awards[award] = [];
@@ -1302,7 +1302,14 @@ init : function (){
         
         //  The [ugly] function that draws the banner
         update : function() {
-        
+            if (this.Messages.length == 0) {
+                this.Messages = [
+                    hash.get("banner_1"),
+                    hash.get("banner_2"),
+                    hash.get("banner_3"),
+                    hash.get("banner_4")
+                ];
+            }
             //  If we aren't managing the banner, do nothing
             if (!this.data.Dynamic) {
                 return;
@@ -3457,13 +3464,15 @@ init : function (){
                 //  If they want the rules they can just look.
                 if (commandData == "rules") {
                     CommandBot.sendMessage(source, "Juggernaut Rules", chan);
-                    sys.sendMessage(source, "1: The rules of the battle do not matter; no tiers, no excuse, no redoes. Forfeiting counts as losing, while ties result in no change. You solely are responsible for what you accept.", chan);
-                    sys.sendMessage(source, "2: If you are the Juggernaut and you win a battle, you get a point.", chan);
-                    sys.sendMessage(source, "3: If you are the Juggernaut and you lose a battle, you lose all of your points and are replaced with the winner.", chan);
-                    sys.sendMessage(source, "4: You may only get 1 point per IP range.", chan);
-                    sys.sendMessage(source, "5: Your name is on the banner as the current Juggernaut. People will want to change that. Accept their challenges when you can.", chan);
-                    sys.sendMessage(source, "6: You must battle at least once per two days. Consistently pushing the limits may cost you the Juggernaut.", chan);
-                    sys.sendMessage(source, "7: Don't forget to bring your towel.", chan);
+                        sys.sendMessage(source, "There is no registration process. Simply battling with the current Juggernaut is all that is needed to play.", chan);
+                        sys.sendMessage(source, "The rules of the battle do not matter. Every battle with every team against every player in every tier counts toward the Juggernaut game. No excuses. No redoes. Try not to have any regrets.", chan);
+                        sys.sendMessage(source, "Forfeiting counts as losing, while ties result in no change.", chan);
+                        sys.sendMessage(source, "If you are the Juggernaut and you win a battle, you get a point.", chan);
+                        sys.sendMessage(source, "If you are the Juggernaut and you lose a battle, you lose all of your points and the winner of the match becomes the new Juggernaut.", chan);
+                        sys.sendMessage(source, "You may only get 1 point per IP range. However, if you lose against a player from whom you have received a point, you still lose your Juggernaut slot.", chan);
+                        sys.sendMessage(source, "Accept challenges when you can. If you do not have the time to battle, then you don't become the Juggernaut until you do have time.", chan);
+                        sys.sendMessage(source, "If the Juggernaut goes 48 hours without a battle, the Juggernaut status is given away to the winner of the next battle, even if neither player is the Juggernaut.", chan);
+                        sys.sendMessage(source, "Don't forget to bring your towel.", chan);
                     return true;
                 }
                 
