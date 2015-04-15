@@ -940,8 +940,23 @@ init : function (){
         }
         table += "</tr></table>";
         sys.sendHtmlMessage(source, table, chan);
-        this.tell(source, "Use !awards Name to view information on a specific award.", chan);
+        this.tell(source, "Use !myawards to view your awards. Use !awards Name to view information on a specific award.", chan);
         sys.sendHtmlMessage(source, "<hr>", chan);
+    }
+    Award.prototype.viewOnesAwards = function(source, chan) {
+        sys.sendHtmlMessage(source, "<hr>", chan);
+        this.tell(source, "Your awards are:", chan);
+        var table = "<table><tr>";
+        var name = sys.name(source);
+        for (i in this.data) {
+            if (this.hasAward(name, i)) {
+                table += "<td>" + Pictures[this.data[i]["badge"]] + "<br>" + i + "</td>";
+            }
+        }
+        table += "</tr></table>";
+        sys.sendHtmlMessage(source, table, chan);
+        this.tell(source, "Use !awards Name to view information on a specific award.", chan);
+        sys.sendHtmlMessage(source, "<hr>", chan);        
     }
     Award.prototype.save = function() {
         db.setJSON(awardFile, this.awards);
@@ -2740,13 +2755,17 @@ init : function (){
                 CommandBot.sendMessage(source, "Posting pictures to chat is currently disabled.", chan);
                 return true;
             }
-            if (players[source].ppleft < this.cost) {
-                this.sendMessage(source, "Insufficient PP! You have " + players[source].ppleft + "PP and you need " + this.cost + "PP to use that command.", chan);
+            var cost = this.cost;
+            if (awards.hasAward(sys.name(source), "ThinkFast")) {
+                cost /= 2;
+            }
+            if (players[source].ppleft < cost) {
+                this.sendMessage(source, "Insufficient PP! You have " + players[source].ppleft + "PP and you need " + cost + "PP to use that command.", chan);
                 return false;
             }
             //  Make the display
             sys.sendHtmlAll(db.playerToString(source, true, chan == rpchan) + " " + pic + " " + db.htmlEscape(commandData), chan);
-            players[source].ppleft -= this.cost;
+            players[source].ppleft -= cost;
             return true;
         },
         
@@ -3984,6 +4003,25 @@ init : function (){
                 else {
                     awards.viewAllAwards(source, chan);
                 }
+                return true;
+            }
+        },
+
+        //  Remade.. Probably a bit buggy because untested but I'm confident
+        "myawards" : {
+            cost : 0,
+            help : "View your awards",
+            run : function(source, chan, command, commandData, mcmd) {
+                awards.viewOnesAwards(source, chan);
+                return true;
+            }
+        },
+
+        "pp" : {
+            cost : 0,
+            help : "View your PP remaining",
+            run : function(source, chan, command, commandData, mcmd) {
+                CommandBot.sendMessage(source, "You have " + players[source].ppleft + "PP remaining.", chan);
                 return true;
             }
         }
@@ -6165,6 +6203,9 @@ init : function (){
             }
             if (UserCommands[command] != undefined) {
                 var cost = UserCommands[command].cost;
+                if (awards.hasAward(sys.name(source), "ThinkFast")) {
+                    cost /= 2;
+                }
                 if (players[source].ppleft < cost) {
                     this.sendMessage(source, "Insufficient PP! You have " + players[source].ppleft + "PP and you need " + cost + "PP to use that command.", chan);
                 }
@@ -6182,6 +6223,9 @@ init : function (){
                     return;
                 }
                 var cost = RPCommands[command].cost;
+                if (awards.hasAward(sys.name(source), "ThinkFast")) {
+                    cost /= 2;
+                }
                 if (players[source].ppleft < cost) {
                     this.sendMessage(source, "Insufficient PP! You have " + players[source].ppleft + "PP and you need " + cost + "PP to use that command.", chan);
                 }
