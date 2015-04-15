@@ -6739,7 +6739,7 @@ init : function (){
         this.members = this.members.sort();
         sys.sendMessage(source, "~~Server~~: The " + this.members.length + " members are:", chan);
         sys.sendMessage(source, this.members.join(", "), chan);
-        save();
+        this.save();
     };
     Clan.prototype.exportMembers = function (source, chan) {
         sys.sendMessage(source, db.getJSON(memberFile), chan);
