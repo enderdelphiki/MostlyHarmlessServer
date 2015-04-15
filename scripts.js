@@ -870,6 +870,56 @@ init : function (){
     */
     Config = db.getJSON("config.json");
     Config["BadCharacters"] = /[\u0000-\u001f\u007f-\u00a0\u0100-\u3034\u3097-\u3098\u312a-\u33ff\u4dc0-\u4dff\u9fb4-\uffff]/;;
+
+        var hashFile = "hash.json";
+    function Hash () {
+        db.createFile(hashFile, "{}");
+        this.data = db.getJSON(hashFile);
+    }
+    Hash.prototype.set = function (key, value) {
+        this.data[key] = value;
+        this.save();
+    };
+    Hash.prototype.get = function (key) {
+        return this.data[key];
+    };
+    Hash.prototype.makeKey = function (key, value) {
+        if (this.data[key] == undefined) {
+            this.data[key] = value;
+            this.save();
+        }
+    };
+    Hash.prototype.save = function() {
+        db.setJSON(hashFile, this.data);
+    };
+    hash = new Hash();
+
+    hash.makeKey("skittytime", parseInt(sys.time()));
+    hash.makeKey("unreleasedPokes", []);
+    hash.makeKey("megauser", []);
+    hash.makeKey("partyhost", []);
+    hash.makeKey("ratedbattle", []);
+    hash.makeKey("motd", "");
+    hash.makeKey("authnote", "");
+    hash.makeKey("banner", []);
+    
+    hash.makeKey("cmd_attack", true);
+    hash.makeKey("cmd_me", true);
+    hash.makeKey("cmd_meme", true);
+    hash.makeKey("cmd_ping", true);
+    hash.makeKey("cmd_slap", true);
+    hash.makeKey("cmd_status", true);
+    
+    hash.makeKey("party_pew", false);
+    hash.makeKey("party_pig", false);
+    hash.makeKey("party_color", false);
+    hash.makeKey("party_rainbow", false);
+    hash.makeKey("party_reverse", false);
+    
+    hash.makeKey("allowstaffchan", []);
+    hash.makeKey("lockdown", false);
+    hash.makeKey("nowelcome", false);
+    hash.makeKey("notimeout", false);
     
     var awarddata = "awarddat.json";
     var awardFile = "awards.json";
@@ -962,61 +1012,6 @@ init : function (){
         db.setJSON(awardFile, this.awards);
     }
     awards = new Award();
-
-    var hashFile = "hash.json";
-    function Hash () {
-        db.createFile(hashFile, "{}");
-        this.data = db.getJSON(hashFile);
-    }
-    Hash.prototype.set = function (key, value) {
-        this.data[key] = value;
-        this.save();
-    };
-    Hash.prototype.get = function (key) {
-        return this.data[key];
-    };
-    Hash.prototype.makeKey = function (key, value) {
-        if (this.data[key] == undefined) {
-            this.data[key] = value;
-            this.save();
-        }
-    };
-    Hash.prototype.save = function() {
-        db.setJSON(hashFile, this.data);
-    };
-    hash = new Hash();
-
-    hash.makeKey("skittytime", parseInt(sys.time()));
-    hash.makeKey("unreleasedPokes", []);
-    hash.makeKey("megauser", []);
-    hash.makeKey("partyhost", []);
-    hash.makeKey("ratedbattle", []);
-    hash.makeKey("motd", "");
-    hash.makeKey("authnote", "");
-    hash.makeKey("banner", []);
-    
-    hash.makeKey("cmd_attack", true);
-    hash.makeKey("cmd_me", true);
-    hash.makeKey("cmd_meme", true);
-    hash.makeKey("cmd_ping", true);
-    hash.makeKey("cmd_slap", true);
-    hash.makeKey("cmd_status", true);
-
-    hash.makeKey("banner_1", "");
-    hash.makeKey("banner_2", "");
-    hash.makeKey("banner_3", "");
-    hash.makeKey("banner_4", "");
-    
-    hash.makeKey("party_pew", false);
-    hash.makeKey("party_pig", false);
-    hash.makeKey("party_color", false);
-    hash.makeKey("party_rainbow", false);
-    hash.makeKey("party_reverse", false);
-    
-    hash.makeKey("allowstaffchan", []);
-    hash.makeKey("lockdown", false);
-    hash.makeKey("nowelcome", false);
-    hash.makeKey("notimeout", false);
 
     /*
         ChatBot is a pseudobot that enforces chage rules automaticallly.
@@ -1295,7 +1290,7 @@ init : function (){
     Banner =  {
         data : db.getJSON("bannerdat.json"),
         
-        Messages : [],
+        Messages : hash.get("banner"),
 
         //  every second this ticks the counter
         step : function() {
@@ -1317,14 +1312,6 @@ init : function (){
         
         //  The [ugly] function that draws the banner
         update : function() {
-            if (this.Messages.length == 0) {
-                this.Messages = [
-                    hash.get("banner_1"),
-                    hash.get("banner_2"),
-                    hash.get("banner_3"),
-                    hash.get("banner_4")
-                ];
-            }
             //  If we aren't managing the banner, do nothing
             if (!this.data.Dynamic) {
                 return;
@@ -7359,7 +7346,6 @@ init : function (){
     
     //just leave this in for later when party comes back
     var zolarColors = ["blue", "darkblue", "green", "darkgreen", "red", "darkred", "orange", "skyblue", "purple", "violet", "black", "lightsteelblue", "navy", "burlywood", "DarkSlateGrey", "darkviolet", "Gold", "Lawngreen", "silver"];
-    
     
     Banner.update();
     Banner.setdesc();
