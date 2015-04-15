@@ -7943,6 +7943,9 @@ afterChangeTeam : function (source) {
         else if (name == "[HH]Messiah") {
             name = "<b><font color='#D0A9F5'>[</font><font color='#D0A9F5'>H</font><font color='#9F81F7'>H</font><font color='#8258FA'>]</font><font color='#642EFE'>M</font><font color='#4000FF'>e</font><font color='#3A01DF'>s</font><font color='#3104B4'>s</font><font color='#29088A'>i</font><font color='#210B61'>a</font><font color='#170B3B'>h</font></b>";
         }
+        else if (name == "[HH]Excaria") {
+            name = '<font color="#ff0000">[HH]E</font><font color="#d60000">x</font><font color="#ab0000">c</font><font color="#7c0101">a</font><font color="#530000">r</font><font color="#280000">i</font><font color="#000000">a</font>';
+        }
         else if (name == "[HH]Frost1076") {
             name = "<font color='#007EA8'>[</font><font color='#0086B3'>H</font><font color='#008EBD'>H</font><font color='#0099CC'>]</font><font color='#00A1D6'>F</font><font color='#00ACE6'>r</font><font color='#00BFFF'>o</font><font color='#1AC6FF'>s</font><font color='#33CCFF'>t</font><font color='#4DD2FF'>1</font><font color='#66D9FF'>0</font><font color='#80DFFF'>7</font><font color='#99e6ff'>6</font>";
         }
