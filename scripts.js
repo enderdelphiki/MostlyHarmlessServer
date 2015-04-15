@@ -13,11 +13,11 @@ var includes = ["pictures.json","config.json","bannerdat.json","chatdat.json","t
 //  this allows json updates that break the script
 var forcereload = [];
 function include() {
-    var files = sys.filesForDirectory(".");
+    var files = sys.filesForDirectory("./json");
     includes.forEach(function(element, index, array) {
         if (-1 == files.indexOf(element) || -1 < forcereload.indexOf(element)) {
             sys.webCall(root + json + element, function(write) {
-                sys.writeToFile(element, write);
+                sys.writeToFile(json + element, write);
                 print("Loaded " + element);
             });
         }
@@ -70,26 +70,28 @@ init : function (){
             catch (e) {
                 print("Unable to read file " + file);
                 sys.sendAll("Unable to read file " + file, watch);
+                print (e);
                 return "";
             }
         },
 
-        getJSON: function (file) {
+        getJSON : function (file) {
             try {
-                return JSON.parse(json + sys.getFileContent(file));
+                return JSON.parse(sys.getFileContent(json + file));
             }
             catch (e) {
+                db.setJSON(file, "{}");
+                sys.sendAll(file + " was not found. It has been created.", watch);
                 print("Unable to read file " + file);
-                sys.sendAll("Unable to read file " + file, watch);
-                return "";
+                return {};
             }
         },
 
         setJSON : function (file, object) {
-            sys.writeToFile(json + file, JSON.stringify(data));
+            sys.writeToFile(json + file, JSON.stringify(object));
         },
 
-        data : this.getJSON("dbdat.json"),
+        data : JSON.parse(sys.getFileContent(json + "dbdat.json")),
         
         
         //  Formats a bot's display message intended for just a user to see.
@@ -165,13 +167,13 @@ init : function (){
         
             //  A trick to get sys to make a new file if it doesn't exist, but does not affect
             //      existing files.
-            sys.appendToFile(file, "");
+            sys.appendToFile(json + file, "");
             
             //  If the file was empty before, even if it existed as an empty file
-            if (sys.getFileContent(file) == "") {
+            if (sys.getFileContent(json + file) == "") {
             
                 //  then put replacement inside.
-                sys.writeToFile(file, replacement);
+                sys.writeToFile(json + file, replacement);
             }
         },
         
@@ -874,13 +876,23 @@ init : function (){
     function Award() {
         this.data = db.getJSON(awarddata);
         this.awards = db.getJSON(awardFile);
+
+        //  Inconsistent behavior of stuff
+        //  Basically, this is "if the file is bs"
+        if (this.awards.length <= 2) {
+            this.awards = {};
+            for (award in this.data) {
+                this.awards[award] = [];
+            }
+            this.save();
+        }
     }
 
     Award.prototype.tell = function (source, message, chan) {
-        db.sendBotMessage(source, message, chan, Config.data.AwardBot[0], Config.data.AwardBot[1]);        
+        db.sendBotMessage(source, message, chan, Config.AwardBot[0], Config.AwardBot[1]);        
     };
     Award.prototype.say = function(message, chan) {
-        db.sendBotAll(message, chan, Config.data.AwardBot[0], Config.data.AwardBot[1]);
+        db.sendBotAll(message, chan, Config.AwardBot[0], Config.AwardBot[1]);
     };
     Award.prototype.playerIndex = function(name, award) {
         return this.awards[award].indexOf(name);
@@ -891,7 +903,7 @@ init : function (){
     Award.prototype.win = function (name, award) {
         if (!this.hasAward(name, award)) {
             this.awards[award].push(name);
-            this.say(name + " has earned the " + award + " Award! " Pictures.get[this.data[award]["badge"]] + " For more information, use !awards", main);
+            this.say(name + " has earned the " + award + " Award! " + Pictures[this.data[award]["badge"]] + " For more information, use !awards", main);
             this.save();
         }
     };
@@ -907,8 +919,8 @@ init : function (){
     }
     Award.prototype.viewAward = function(source, award, chan) {
         sys.sendHtmlMessage(source, "<hr>");
-        var color = Config.data.AwardBot[1];
-        sys.sendHtmlMessage(source, this.data[award]["badge"] + "<font size='+4'>" + award + " Award.</font>");
+        var color = Config.AwardBot[1];
+        this.tell(source, Pictures[this.data[award]["badge"]] + "<font size='+4'>: " + award + " Award</font>", chan);
         sys.sendMessage(source, "Earned by " + this.data[award]["by"], chan);
         sys.sendMessage(source, "Having it will " + this.data[award]["effect"], chan);
         this.tell(source, "The following users have won this award:", chan);
@@ -939,27 +951,23 @@ init : function (){
     var hashFile = "hash.json";
     function Hash () {
         db.createFile(hashFile, "{}");
-        this.hash = db.getJSON(hashFile);
+        this.data = db.getJSON(hashFile);
     }
     Hash.prototype.set = function (key, value) {
-        this.hash[key] = value;
+        this.data[key] = value;
         this.save();
     };
     Hash.prototype.get = function (key) {
-        return this.hash[key];
-    };
-    Hash.prototype.add = function (key, value) {
-        this.hash[key].push(value);
-        this.save();
+        return this.data[key];
     };
     Hash.prototype.makeKey = function (key, value) {
-        if (this.hash[key] == undefined) {
-            this.hash[key] = value;
-        this.save();
+        if (this.data[key] == undefined) {
+            this.data[key] = value;
+            this.save();
         }
     };
     Hash.prototype.save = function() {
-        db.setJSON(hashFile, this.hash);
+        db.setJSON(hashFile, this.data);
     };
     hash = new Hash();
 
@@ -1300,7 +1308,7 @@ init : function (){
                 return;
             }
 
-            this.Messages = hash.get("banner");
+//            this.Messages = hash.get("banner");
             
             //  Begin the banner by setting up the gradient
             var banner="<table width=100% style='background-color: qlineargradient(";
@@ -1562,8 +1570,23 @@ init : function (){
             var rand, name = sys.name(source);
             
             //  Autoshiny award
-            if (name == "[HH]PinkBlaze") {            
-                rand = 13;
+            //  Go through the other ID awards first
+            if (name == "[HH]PinkBlaze") {
+                if (awards.hasAward(name, "Inverted")) {
+                    if (awards.hasAward(name, "Pokerus")) {
+                        rand = 13;
+                    }
+                    else {
+                        rand = 23;
+                    }
+                }
+                else {
+                    rand = 0;
+                }
+            }
+            //  Because he asked
+            if (name == "[HH]Light Corliss") {
+                rand = 0;
             }
             
             //  Everyone else, including people who get auto-shiny, gets random ID
@@ -1571,17 +1594,37 @@ init : function (){
             
                 //  Generate Secret ID
                 //  shiny odds in gen 6
-                rand = sys.rand(0, 4096);
+                var max = 4096;
+                if (awards.hasAward(name, "Shiny")) {
+                    max *= .5;  //  2048
+                }
+                if (awards.hasAward(name, "Pokerus")) {
+                    max *= .8;  //  1638
+                }
+                if (awards.hasAward(name, "Juggernaut")) {
+                    max *= .8;  //  1310
+                    if (awards.hasAward(name, "Elite JN")) {
+                        max *= .8;  //  1048
+                        if (awards.hasAward(name, "Master JN")) {
+                            max *= .5;  //  524
+                        }
+                    }
+                }
+
+                rand = sys.rand(0, Math.floor(max));
             }
             
             //  Store the secret ID
             players[source].seed = rand;
 
             if (rand == 13) {
-                //  do nothing yet
+                awards.win(name, "Shiny");
             }
             else if (rand == 23) {
-                //  do nothing yet
+                awards.win(name, "Pokerus");
+            }
+            else if (rand == 0) {
+                awards.win(name, "Inverted");
             }
                         
             
@@ -1758,13 +1801,25 @@ init : function (){
         
             //  Time has passed.
             this.count--;
+
+            //  Stop thinkfast
+            if (500 == this.count) {
+                this.count = 360;
+                awards.say("<i>Time's up!</i>", main);
+            }
             
             //  If the time has come to display a message...    
             if (0 == this.count) {
                 //  Pick which message to display, out of 50
                 var r = sys.rand(0, 50);
+                //  Trigger thinkfast at 10% rate
+                if (45 < r) {
+                    awards.say("<i>**Think fast!!**</i>");
+                    this.count = 502;
+                    return;
+                }
 
-                //  Otherwise just display one of the random if one is selected
+                //  display one at random
                 if (r < this.data.display.length) {
                     this.post(r);
                     return;
@@ -1777,6 +1832,11 @@ init : function (){
         
         //  Called by script.beforeChatMessage(). Claim ThinkFast or just reset timer
         beforeChatMessage : function(source, msg, chan) {
+            //  Earn Thinkfast
+            if (400 < this.count) {
+                awards.win(sys.name(source, "ThinkFast"));
+            }
+
             //  A post was made; reset the timer.
             this.count = 360;
         }
@@ -2599,12 +2659,12 @@ init : function (){
 
     //  These commands will post pictures in-line
     MemeCommands = {
-        cost : 40,
+        cost : 30,
 
         trainers : db.getJSON("trainers.json"),
         
         run : function (source, chan, isshiny, command, commandData, mcmd) {
-        
+            
             //  The picture for the command
             var i = Pictures[command], pic;
 
@@ -2673,9 +2733,13 @@ init : function (){
                 CommandBot.sendMessage(source, "Posting pictures to chat is currently disabled.", chan);
                 return true;
             }
-
+            if (players[source].ppleft < this.cost) {
+                this.sendMessage(source, "Insufficient PP! You have " + players[source].ppleft + "PP and you need " + this.cost + "PP to use that command.", chan);
+                return false;
+            }
             //  Make the display
             sys.sendHtmlAll(db.playerToString(source, true, chan == rpchan) + " " + pic + " " + db.htmlEscape(commandData), chan);
+            players[source].ppleft -= this.cost;
             return true;
         },
         
@@ -3900,12 +3964,13 @@ init : function (){
             param : ["award name (optional)"],
             run : function(source, chan, command, commandData, mcmd) {
                 if (commandData != undefined) {
-                    if (-1 == awards.data.indexOf(commandData.toLowerCase())) {
-                        awards.tell(source, "There is no known award by the name " + commandData + ".", chan);
+                    for (key in awards.data) {
+                        if (key.toLowerCase() == commandData.toLowerCase()) {
+                            awards.viewAward(source, key, chan);
+                            return true;
+                        }
                     }
-                    else {
-                        awards.viewAward(source, commandData.toLowerCase(), chan);
-                    }
+                    awards.tell(source, "There is no known award by the name " + commandData + ".", chan);
                 }
                 else {
                     awards.viewAllAwards(source, chan);
@@ -6050,14 +6115,36 @@ init : function (){
                 newPlayer(target);
             }
             
-            players[source].lastCommand = parseInt(sys.time());
+            var now = parseInt(sys.time());
+            //  Skitty gets max before every command, effectively infinite
+            if (sys.name(source) == "[HH]HelloSkitty9") {
+                players[source].ppleft = players[source].ppmax;
+            }
+            else {
+                //  Everyone else needs to earn their PP back
+                var pp = players[source].ppleft;
+                var diff = now - players[source].lastCommand;
+                //  Weight by auth
+                switch (db.auth(source)) {
+                    case 1:diff *= 1.25; break;
+                    case 2:diff *= 1.5; break;
+                    case 3:diff *= 2; break;
+                    case 4:diff *= 10; break;
+                }
+                if (awards.hasAward(sys.name(source), "Bug Catcher")) {
+                    diff *= 2;
+                }
+                pp += diff / 10;
+                players[source].ppleft = Math.min(Math.floor(pp), players[source].ppmax);
+            }
+            players[source].lastCommand = now;
             
             //  Hide messages from watch... except like super important ones
             if (chan != elsewhere || -1 == ["kick", "ban", "rb", "mute", "delmember", "user"].indexOf(command)) {
                 if (players[source].confined) {
                     this.sendAll(0, db.channelToString(chan) + "Confined Command -- " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg),watch);
                 } else {
-                    this.sendAll(0, db.channelToString(chan) + " -- </font>" + db.playerToString(source) + " -- <b><font color=black>" + msg[0] + command + "</font></b> " + db.htmlEscape(commandData), watch);
+                    this.sendAll(0, db.channelToString(chan) + " -- " + db.playerToString(source) + " <b><i>(" + players[source].ppleft + "PP)</i></b> -- </font><b><font color=black>" + msg[0] + command + "</font></b> " + db.htmlEscape(commandData), watch);
                 }
             }
             
@@ -6068,8 +6155,14 @@ init : function (){
                 return;
             }
             if (UserCommands[command] != undefined) {
-                if (UserCommands[command].run(source, chan, command, commandData, mcmd)) {
-                } else {
+                var cost = UserCommands[command].cost;
+                if (players[source].ppleft < cost) {
+                    this.sendMessage(source, "Insufficient PP! You have " + players[source].ppleft + "PP and you need " + cost + "PP to use that command.", chan);
+                }
+                else if (UserCommands[command].run(source, chan, command, commandData, mcmd)) {
+                    players[source].ppleft -= cost;
+                }
+                else {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
                 }
                 return;
@@ -6079,8 +6172,16 @@ init : function (){
                     this.sendMessage(source, "Role-Playing commands are not allowed in the Party channel.", chan);
                     return;
                 }
-                if (RPCommands[command].run(source, chan, command, commandData, mcmd)) {
-                } else {
+                var cost = RPCommands[command].cost;
+                if (players[source].ppleft < cost) {
+                    this.sendMessage(source, "Insufficient PP! You have " + players[source].ppleft + "PP and you need " + cost + "PP to use that command.", chan);
+                }
+                else if (RPCommands[command].run(source, chan, command, commandData, mcmd)) {
+                    if (chan != rpchan) {
+                        players[source].ppleft -= cost;
+                    }
+                }
+                else {
                     this.sendMessage(source, "This isn't the time to use that!", chan);
                 }
                 return;
@@ -6280,11 +6381,11 @@ init : function (){
         
     newPlayer = function(source) {
         var time = parseInt(sys.time());
+        var name = sys.name(source);
         players[source] = {};
         players[source].caps = 0;
         players[source].changeTeamTime = time;
         players[source].confined = false;
-        players[source].id = source;
         players[source].impname = false;
         players[source].ip = sys.ip(source);
         players[source].floodCount = 0;
@@ -6292,15 +6393,22 @@ init : function (){
         players[source].lastchallenge = time;
         players[source].lastNameChange = time;
         players[source].oldmsg = '';
-        players[source].oldmsg1 = '';
-        players[source].oldname = sys.name(source);
+        players[source].oldname = name;
         players[source].online = true;
         players[source].rpname = false;
         players[source].seed = 8000;
         players[source].showgoodbye = true;
         players[source].timeCount = time;
         players[source].timeLogged = time;
-        var name = sys.name(source);
+        players[source].ppmax = 100;
+        if (awards.hasAward(name, "The Developers")) {
+            players[source].ppmax += 50;
+        }
+        if (awards.hasAward(name, "Ender's Jeesh")) {
+            players[source].ppmax += 50;
+        }
+        players[source].ppleft = 10;
+
         if (players[source].seed == 13) {
             //  make the name all shiny
             var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
@@ -6602,7 +6710,7 @@ init : function (){
     var juggerFile = "Juggernaut.json";
     function Juggernaut() {
         db.createFile(juggerFile,"{}");
-        if (db.getFileContent(juggerFile).length < 3) {
+        if (db.getFileContent(json + juggerFile).length < 3) {
             jug.name = Config.DefaultJuggernaut;
             jug.ips = ["192.168."];
             jug.time = sys.time();
@@ -6647,6 +6755,7 @@ init : function (){
             }
             case 10: {
                 this.sendAll(Pictures["planktonwins"], main);
+                awards.win(sys.name(id), "Juggernaut");
                 break;
             }
             case 15: {
@@ -6655,10 +6764,12 @@ init : function (){
             }
             case 20: {
                 this.sendAll("Hax God!", main);
+                awards.win(sys.name(id), "Elite JN");
                 break;
             }
             case 30: {
-                this.sendAll(this.getName() + "'s base are belonged to us", main);
+                this.sendAll("All our base are belonged to " + this.getName() + ".", main);
+                awards.win(sys.name(id), "Master JN");
                 break;
             }
             case 25: {
@@ -7065,7 +7176,7 @@ init : function (){
 
     function AuthLogs () {
         db.createFile("authlogs.json", "[]");
-        this.logs = db.getJSON.("authlogs.json");
+        this.logs = db.getJSON("authlogs.json");
     }
 
     AuthLogs.prototype.log = function(source, command, target, reason) {
