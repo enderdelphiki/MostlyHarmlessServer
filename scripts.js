@@ -1310,13 +1310,15 @@ init : function (){
             sys.changeDescription("");
         },
 
+        authletter : ['u', 'm', 'a', 'o'],
+
         getleader : function(x) {
             var banner = "";
             //  grab the person's name
             var name = Config.League[x][0],
             
             //  determine which authball is to be used
-                letter = authletter[sys.dbAuth(name)];
+                letter = this.authletter[sys.dbAuth(name)];
                 
             //  prepare the output
             banner += "<tr><td style='margin:4px'>";
@@ -1390,8 +1392,7 @@ init : function (){
             //  Begin the banner content; prepare it for the left-hand league info
             banner += "<tr><td><table width='33%' border=0 style='vertical-align: bottom; font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + ";font-size:8pt' >";
 
-            var spl = Config.League,
-            
+            var spl = 
             //  Track the first letter as used in the filename for the autballs
                 authletter = ['u', 'm', 'a', 'o'];
                 
@@ -1415,7 +1416,7 @@ init : function (){
             }
             
             //  Hard-code the champion spot (same as the other spots with a few formatting changes)
-            var name = Config.League[12][0], letter = authletter[sys.dbAuth(name)];
+            var name = Config.League[12][0], letter = this.authletter[sys.dbAuth(name)];
             if (letter == undefined) {
                 letter = 'u';
             }
