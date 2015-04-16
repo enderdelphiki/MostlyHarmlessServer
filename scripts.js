@@ -1309,6 +1309,65 @@ init : function (){
         setdesc : function() {
             sys.changeDescription("");
         },
+
+        getleader : function(x) {
+            var banner = "";
+            //  grab the person's name
+            var name = Config.League[x][0],
+            
+            //  determine which authball is to be used
+                letter = authletter[sys.dbAuth(name)];
+                
+            //  prepare the output
+            banner += "<tr><td style='margin:4px'>";
+            
+            //  default people to user if they have never logged in before
+            if (letter == undefined) {
+                letter = 'u';
+            }
+            
+            //  Check to see if the player is offline
+            if (sys.id(name) == undefined) {
+            
+                //  Luca gets a special ball
+                if (name == "[HH]Luca") {
+                    banner += Pictures["gsaway"];
+                }
+                
+                //  Rain also gets a special ball
+                else if (name == "[HH]SilverRain") {
+                    banner += Pictures["gbaway"];
+                }
+                
+                //  The default ball
+                else {
+                    banner += "<img src='Themes/Classic/client/" + letter + "Away.png'/>"
+                }
+            }
+            
+            //  special ball
+            else if (name == "[HH]Luca") {
+                banner += Pictures["gsonline"];
+            }
+            else if (name == "[HH]SilverRain") {
+                banner += Pictures["gbonline"];
+            } else if (name == "[HH]HelloSkitty9") {
+                banner += Pictures["skittyicon"];
+            }
+            else if (-1 < Config.SuperUsers.indexOf(name)) {
+                banner += "<img src='Themes/Classic/client/oBattle.png'/>";
+            }
+            
+            //  The default ball
+            else {
+                banner += "<img src='Themes/Classic/client/" + letter + "Available.png'/>";
+            }
+            
+            //  add the name
+            banner += "</td><td><a href='" + Config.League[x][2] + "'><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type" + sys.typeNum(Config.League[x][1]) + ".png'/></td></tr>";
+            return banner;
+
+        },
         
         //  The [ugly] function that draws the banner
         update : function() {
@@ -1338,59 +1397,7 @@ init : function (){
                 
             //  Now go through the first 6 league members
             for (var x = 0; x < 8; x++) {
-                //  grab the person's name
-                var name = Config.League[x][0],
-                
-                //  determine which authball is to be used
-                    letter = authletter[sys.dbAuth(name)];
-                    
-                //  prepare the output
-                banner += "<tr><td style='margin:4px'>";
-                
-                //  default people to user if they have never logged in before
-                if (letter == undefined) {
-                    letter = 'u';
-                }
-                
-                //  Check to see if the player is offline
-                if (sys.id(name) == undefined) {
-                
-                    //  Luca gets a special ball
-                    if (name == "[HH]Luca") {
-                        banner += Pictures["gsaway"];
-                    }
-                    
-                    //  Rain also gets a special ball
-                    else if (name == "[HH]SilverRain") {
-                        banner += Pictures["gbaway"];
-                    }
-                    
-                    //  The default ball
-                    else {
-                        banner += "<img src='Themes/Classic/client/" + letter + "Away.png'/>"
-                    }
-                }
-                
-                //  special ball
-                else if (name == "[HH]Luca") {
-                    banner += Pictures["gsonline"];
-                }
-                else if (name == "[HH]SilverRain") {
-                    banner += Pictures["gbonline"];
-                } else if (name == "[HH]HelloSkitty9") {
-                    banner += Pictures["skittyicon"];
-                }
-                else if (-1 < Config.SuperUsers.indexOf(name)) {
-                    banner += "<img src='Themes/Classic/client/oBattle.png'/>";
-                }
-                
-                //  The defeault ball
-                else {
-                    banner += "<img src='Themes/Classic/client/" + letter + "Available.png'/>";
-                }
-                
-                //  add the name
-                banner += "</td><td><a href='" + Config.League[x][2] + "'><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type" + sys.typeNum(Config.League[x][1]) + ".png'/></td></tr>";
+                banner += this.getleader(x);
             }
             
             //  Now add the middle section of the banner
@@ -1404,30 +1411,7 @@ init : function (){
             
             //  Print the E4 (same as gyms, just different range on Config.League
             for (var x = 8; x < 12; x++) {
-                var name = Config.League[x][0],
-                    letter = authletter[sys.dbAuth(name)];
-                banner += "<tr><td style='margin:4px'>";
-                if (letter == undefined) {
-                    letter = 'u';
-                }
-                if (sys.id(name) == undefined) {
-                    if (name == "[HH]Luca") {
-                        banner += Pictures["gsaway"];
-                    } else if (name == "[HH]SilverRain") {
-                        banner += Pictures["gbaway"];
-                    } else {
-                        banner += "<img src='Themes/Classic/client/" + letter + "Away.png'/>"; 
-                    }
-                } else if (name == "[HH]Luca") {
-                    banner += Pictures["gsonline"];
-                } else if (name == "[HH]SilverRain") {
-                    banner += Pictures["gbonline"];
-                } else if (name == "[HH]HelloSkitty9") {
-                    banner += Pictures["skittyicon"];
-                } else {
-                    banner += "<img src='Themes/Classic/client/" + letter + "Available.png'/>";
-                }
-                banner += "</td><td><a href='" + Config.League[x][2] + "'><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type" + sys.typeNum(Config.League[x][1]) + ".png'/></td></tr>";
+                banner += this.getleader(x);
             }
             
             //  Hard-code the champion spot (same as the other spots with a few formatting changes)
@@ -1435,7 +1419,7 @@ init : function (){
             if (letter == undefined) {
                 letter = 'u';
             }
-            banner += "<tr><td style='margin:4px'>" + ((sys.id(name) == undefined) ? "<img src='Themes/Classic/client/" + letter +"Ignore.png'/>"  : "<img src='Themes/Classic/client/" + letter +"Battle.png'/>") + "</td><td><a href='" + Config.League[12][2] + "'><font color='" + this.data.TextColor + "'>"+ db.escapeTagName(name, false) + "</font></a></td><td><img src='Themes/Classic/types/type18.png'/></td></tr>";
+            banner += "<tr><td style='margin:4px'>" + ((sys.id(name) == undefined) ? "<img src='Themes/Classic/client/" + letter +"Ignore.png'/>"  : "<img src='Themes/Classic/client/" + letter +"Battle.png'/>") + "</td><td><a href='" + Config.League[12][2] + "'><font color='" + this.data.TextColor + "'>Champion</font></a></td><td><img src='Themes/Classic/types/type18.png'/></td></tr>";
             
             //  Add the juggernaut info
             var score = juggernaut.getScore();
@@ -2747,8 +2731,8 @@ init : function (){
                 cost /= 2;
             }
             if (players[source].ppleft < cost) {
-                this.sendMessage(source, "Insufficient PP! You have " + players[source].ppleft + "PP and you need " + cost + "PP to use that command.", chan);
-                return false;
+                CommandBot.sendMessage(source, "Insufficient PP! You have " + players[source].ppleft + "PP and you need " + cost + "PP to use that command.", chan);
+                return true;
             }
             //  Make the display
             sys.sendHtmlAll(db.playerToString(source, true, chan == rpchan) + " " + pic + " " + db.htmlEscape(commandData), chan);
