@@ -1341,6 +1341,8 @@ init : function (){
         
         Messages : hash.get("banner"),
 
+        3am : false;
+
         //  every second this ticks the counter
         step : function() {
         
