@@ -1341,7 +1341,7 @@ init : function (){
         
         Messages : hash.get("banner"),
 
-        3am : false;
+        3am : false,
 
         //  every second this ticks the counter
         step : function() {
@@ -1500,6 +1500,16 @@ init : function (){
             //  Make sure there is no 0 o'clock
             else if (hours == 0) {
                 hours = 12;
+            }
+
+            if (hours == '3' && !isPM) {
+                if (hours == '00' && !this.3am) {
+                    sys.sendHtmlAll(Pictures["3am"]);
+                    this.3am = true;
+                }
+                else {
+                    this.3am = false;
+                }
             }
             
             //  Print the time
