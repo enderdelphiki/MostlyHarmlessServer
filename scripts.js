@@ -2448,7 +2448,7 @@ init : function (){
                     try {
                     
                         //  Write the file
-                        sys.writeToFile(commandData, resp);
+                        sys.writeToFile(json + commandData, resp);
                         
                         sys.sendMessage(source, "Success!", chan);
                         
