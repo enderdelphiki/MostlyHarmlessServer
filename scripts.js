@@ -1341,7 +1341,7 @@ init : function (){
         
         Messages : hash.get("banner"),
 
-        3am : false,
+        threeam : false,
 
         //  every second this ticks the counter
         step : function() {
@@ -1503,13 +1503,13 @@ init : function (){
             }
 
             if (hours == '3' && !isPM) {
-                if (hours == '00' && !this.3am) {
+                if (hours == '00' && !this.threeam) {
                     sys.sendHtmlAll(Pictures["3am"]);
-                    this.3am = true;
+                    this.threeam = true;
                 }
-                else {
-                    this.3am = false;
-                }
+            }
+            else {
+                this.threeam = false;
             }
             
             //  Print the time
@@ -5351,7 +5351,9 @@ init : function (){
                     return false;
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " set " + db.playerToString(sys.id(mcmd[0])) + "'s name to " + mcmd[1] + "!", -1);
-                sys.changeName(sys.id(mcmd[0]), mcmd[1]);
+                var target = sys.id(mcmd[0]);
+                sys.changeName(target, mcmd[1]);
+                players[target].htmlname = db.getPlayerHtmlName(target);
                 logs.log(sys.name(source), command + ": to " + mcmd[1], mcmd[0], mcmd[2] == undefined ? "no reason" : mcmd[2]);
                 return true;
             }
