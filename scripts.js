@@ -1877,7 +1877,7 @@ init : function (){
         beforeChatMessage : function(source, msg, chan) {
             //  Earn Thinkfast
             if (400 < this.count) {
-                awards.win(sys.name(source, "ThinkFast"));
+                awards.win(sys.name(source), "ThinkFast");
             }
 
             //  A post was made; reset the timer.
