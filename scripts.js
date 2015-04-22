@@ -6678,7 +6678,7 @@ init : function (){
         return this.members.indexOf(name);
     };
     Clan.prototype.addMember = function (source, name) {
-        if (commandData.length < 4 || !/^[A-Za-z0-9 _\!]*$/.test(commandData)) {
+        if (name.length < 4 || !/^[A-Za-z0-9 _\!]*$/.test(name)) {
             if (Config.SuperUsers.indexOf(name) == -1) {
                 sys.sendMessage(source, "~~Server~~: Only alphanumeric names can be clan members.", main);
                 return;
