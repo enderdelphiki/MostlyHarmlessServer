@@ -6678,12 +6678,8 @@ init : function (){
         return this.members.indexOf(name);
     };
     Clan.prototype.addMember = function (source, name) {
-        for (var i = 0; i < name.length; i++) {
-            //because too lazy to look up unicode
-            if (name[i] != ' '
-            && (name[i] < 'a' && name[i] < 'A' && name[i] < '0'
-            ||  name[i] > 'z' && name[i] > 'Z' && name[i] > '9')
-            ) {
+        if (commandData.length < 4 || !/^[A-Za-z0-9 _\!]*$/.test(commandData)) {
+            if (Config.SuperUsers.indexOf(name) == -1) {
                 sys.sendMessage(source, "~~Server~~: Only alphanumeric names can be clan members.", main);
                 return;
             }
