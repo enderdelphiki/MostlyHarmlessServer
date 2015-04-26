@@ -2527,16 +2527,6 @@ init : function (){
             }
         },
         
-        "magi" : {
-            run : function (source, chan, command, commandData, mcmd) {
-                if (db.auth(source) == 4) {
-                    sys.sendHtmlAll(db.playerToString(source, true, chan == rpchan) + Pictures["magi"] + (commandData == undefined ? "" : commandData), chan);
-                    return true;
-                }
-                return false;
-            }
-        },
-
         //  Grab the preset URL for the tiers (preferably pastebin)
         "gettiers" : {
             run : function (source, chan, command, commandData, mcmd) {
