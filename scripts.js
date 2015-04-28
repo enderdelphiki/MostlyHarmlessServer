@@ -5567,7 +5567,7 @@ init : function (){
                     CommandBot.sendMessage(source, "No player exists by this name.", chan);
                     return false;
                 }
-                if (db.auth(source) <= db.auth(mcmd[0])) {
+                if (db.auth(source) <= db.auth(sys.id(mcmd[0]))) {
                     CommandBot.sendMessage(source, "Insufficent auth.", chan);
                     return false;
                 }
