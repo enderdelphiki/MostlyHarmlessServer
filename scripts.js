@@ -1726,6 +1726,12 @@ init : function (){
                     //  start message
                     var welcomemsg = "A wild ";
                     
+                    //  Award prefix
+                    var num = awards.countAwards(sys.name(source))
+                    if (0 < num) {
+                        welcomemsg += "<font color='#aa0650'>(" + num + ")</font>";
+                    }
+
                     //  Make sure the person registers
                     if (!sys.dbRegistered(name)) {
                         sys.sendMessage(source, "~~Server~~: Register your name so no one can impersonate you.", main);
@@ -1745,11 +1751,6 @@ init : function (){
                     //  This person is not special
                     else {
                         welcomemsg += db.playerToString(source);
-                    }
-
-                    var num = awards.countAwards(sys.name(source))
-                    if (0 < num) {
-                        welcomemsg += "<font color='#aa0650'>(" + num + ")</font>";
                     }
                     
                     //  Display the message
