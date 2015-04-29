@@ -133,10 +133,9 @@ init : function (){
         },
         
         //  Overrides the sys.auth to give SuperUser status higher auth.
-        auth : function (source) {
-            //  The user must be logged in; otherwise, less than a user.
-            if (sys.name(source) == undefined) {
-                return -1;
+        auth : function (source, string) {
+            if (string) {
+                return sys.maxAuth(source);
             }
             
             //  Grant auth level 4 to SuperUsers
@@ -994,7 +993,7 @@ init : function (){
     }
 
     Award.prototype.tell = function (source, message, chan) {
-        db.sendBotMessage(source, message, chan, Config.AwardBot[0], Config.AwardBot[1]);        
+        db.sendBotMessage(source, message, chan, Config.AwardBot[0], Config.AwardBot[1]);
     };
     Award.prototype.say = function(message, chan) {
         db.sendBotAll(message, chan, Config.AwardBot[0], Config.AwardBot[1]);
@@ -1062,6 +1061,15 @@ init : function (){
         sys.sendHtmlMessage(source, table, chan);
         this.tell(source, "Use !awards Name to view information on a specific award.", chan);
         sys.sendHtmlMessage(source, "<hr>", chan);        
+    }
+    Award.prototype.countAwards = function(player) {
+        var i = 0;
+        for (x in this.data) {
+            if (this.hasAward(player, x)) {
+                i++;
+            }
+        }
+        return i;
     }
     Award.prototype.save = function() {
         db.setJSON(awardFile, this.awards);
@@ -1737,6 +1745,11 @@ init : function (){
                     //  This person is not special
                     else {
                         welcomemsg += db.playerToString(source);
+                    }
+
+                    var num = awards.countAwards(sys.name(source))
+                    if (0 < num) {
+                        welcomemsg += "<font color='#aa0650'>(" + num + ")</font>";
                     }
                     
                     //  Display the message
@@ -5263,13 +5276,11 @@ init : function (){
                     return false;
                 }
                 if (sys.id(mcmd[0]) !== undefined) {
-                    if (db.auth(source) < db.auth(sys.id(mcmd[0])))  {
+                    if (db.auth(source) < db.auth(sys.id(mcmd[0]))
+                    ||  db.auth(source) < db.auth(mcmd[0], true))  {
                         CommandBot.sendMessage(source, "Insufficient auth.", chan);
                         return false;
                     }
-                } else if (db.auth(source) < sys.dbAuth(mcmd[0])) {
-                    CommandBot.sendMessage(source, "Insufficient auth.", chan);
-                    return false;
                 }
                 if (mcmd[1] == undefined || mcmd[1].length < 4) {
                     CommandBot.sendMessage(source, "Giving a reason is required.", chan);
@@ -5567,7 +5578,8 @@ init : function (){
                     CommandBot.sendMessage(source, "No player exists by this name.", chan);
                     return false;
                 }
-                if (db.auth(source) <= db.auth(sys.id(mcmd[0]))) {
+                if (db.auth(source) < db.auth(sys.id(mcmd[0]))
+                ||  db.auth(source) < db.auth(mcmd[0], true))  {
                     CommandBot.sendMessage(source, "Insufficent auth.", chan);
                     return false;
                 }
