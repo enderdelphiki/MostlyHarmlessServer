@@ -1729,7 +1729,7 @@ init : function (){
                     //  Award prefix
                     var num = awards.countAwards(sys.name(source))
                     if (0 < num) {
-                        welcomemsg += "<font color='#aa0650'>(" + num + ")</font>";
+                        welcomemsg += "<font color='#aa0650'>[" + num + "]</font>";
                     }
 
                     //  Make sure the person registers
