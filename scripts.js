@@ -245,7 +245,7 @@ init : function (){
                 name = '<font color="#ff0000">[</font><font color="#e8021d">H</font><font color="#d10439">H</font><font color="#bb0656">]</font><font color="#a40872">S</font><font color="#8d0a8f">a</font><font color="#71248c">i</font><font color="#553e89">o</font><font color="#3a5986">m</font><font color="#1e7383">a</font><font color="#028d80">i</font>';
             }
             else if (name == "[HH]Sora") {
-                name = '<font color="#ff0000">[<font><font color="#d03b25">H</font><font color="#a1764a">H</font><font color="#a6896c">]</font><font color="#ab9d8e">S</font><font color="#b0b0b0">o</font><font color="#58abd8">r</font><font color="#00a5ff">a</font>';
+                name = '<font color="#ff0000">[</font><font color="#d03b25">H</font><font color="#a1764a">H</font><font color="#a6896c">]</font><font color="#ab9d8e">S</font><font color="#b0b0b0">o</font><font color="#58abd8">r</font><font color="#00a5ff">a</font>';
             }
             return name;
         },
