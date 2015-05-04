@@ -1549,7 +1549,7 @@ init : function (){
 
         SpecialWelcome : [
 
-            ["[HH]Luca", "<font style='font-size: 18pt'>The Law has enterred the game.</font>"],
+            ["[HH]Luca", "<font style='font-size: 18pt'>The Law has entered the game.</font>"],
 
             ["[HH]The Professor", "<font style='font-size: 18pt'>Good news, everyone!"],
 
@@ -5579,9 +5579,16 @@ init : function (){
                     CommandBot.sendMessage(source, "No player exists by this name.", chan);
                     return false;
                 }
-                if (db.auth(source) < db.auth(sys.id(mcmd[0]))
-                ||  db.auth(source) < db.auth(mcmd[0], true))  {
-                    CommandBot.sendMessage(source, "Insufficent auth.", chan);
+                var target = sys.id(mcmd[0]);
+                if (target != undefined) {
+                    if (0 < db.auth(target)) {
+                        CommandBot.sendMessage(source, "Cannot ban auth.", chan);
+                        return false;
+                    }
+                }
+                else if (-1 < Config.SuperUsers.indexOf(mcmd[0])
+                 ||      sys.maxAuth(sys.dbIp(mcmd[0])) != 0) {
+                    CommandBot.sendMessage(source, "Cannot ban auth.", chan);
                     return false;
                 }
                 banlist = sys.banList()
@@ -7932,7 +7939,7 @@ beforePlayerAway : function (source, away) {
 afterPlayerAway : function (source, away){},
 
 beforePlayerBan : function (source, target) {
-    if (2 < sys.maxAuth(sys.ip(target)) || db.auth(target) == 4) {
+    if (0 < sys.maxAuth(sys.ip(target)) || -1 < Config.SuperUsers.indexOf(sys.name(target))) {
         sys.stopEvent();
     }
 },
