@@ -1,5 +1,5 @@
 //  I wrote it in the client window not a text editor
-//  so give me credit and forget the lack of comments
+//  Give the shitty code a break
 
 function html_escape(text) {
     var m = String(text);
@@ -34,11 +34,9 @@ function print(message, channel, link) {
 }
 
 var bannedtier = function (tier, tar) {
-    return 
-        -1 < tier.indexOf("Hackmon")
-    ||  -1 < ["Anything Goes", "Challenge Cup"].indexOf(tier);
+    return  -1 < tier.indexOf("Hackmon")
+        ||  -1 < ["Anything Goes", "Challenge Cup", "ORAS Uber", "ORAS Ubers"].indexOf(tier);
 }
-
 var usingSleepClause = function (clauses) { return 1 & clauses; };
 var usingFreezeClause = function (clauses) { return 2 & clauses; };
 var usingDisallowSpectator = function (clauses) { return 4 & clauses; };
@@ -56,19 +54,19 @@ var usingInverted = function (clauses) { return 512 & clauses; };
             print(client.name(tar) + " failed to challenge you with " + tier);
             sys.stopEvent();
         }
-        else if (usingDisallowSpectator(clauses)) {
-            print(client.name(tar) + " failed to challenge you with Disallow Specs.");
-            sys.stopEvent();
-        }
         else if (usingNoTimeOut(clauses)) {
             print(client.name(tar) + " failed to challenge you with No Timeout.");
+            sys.stopEvent();
+        }
+        else if (usingDisallowSpectator(clauses)) {
+            print(client.name(tar) + " failed to challenge you with Disallow Specs.");
             sys.stopEvent();
         }
         else if (usingChallengeCup(clauses)) {
             print(client.name(tar) + " failed to challenge you with Challenge Cup.");
             sys.stopEvent();
         }
-        else if (!usingSpeciesClause(clauses)) {
+        else if (!usingSleepClause(clauses)) {
             print(client.name(tar) + " failed to challenge you without Sleep Clause.");
             sys.stopEvent();
         }
