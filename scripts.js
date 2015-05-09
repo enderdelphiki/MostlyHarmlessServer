@@ -2814,7 +2814,7 @@ init : function (){
             "fucking: There are 8 badges in the Kanto region. He got all 10.",
             "giggity: For those moments",
             "gotcha: Challeng Accepted",
-            "grumpycat: I made a meme once. It was horrible."
+            "grumpycat: I made a meme once. It was horrible.",
             "interesting: Stay thirsty, my friends.",
             "notbutter: I can't believe it!",
             "oak: You can't use that here!",
