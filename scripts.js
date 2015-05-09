@@ -1022,7 +1022,7 @@ init : function (){
         }
     }
     Award.prototype.viewAward = function(source, award, chan) {
-        sys.sendHtmlMessage(source, "<hr>");
+        sys.sendHtmlMessage(source, "<hr>", chan);
         var color = Config.AwardBot[1];
         this.tell(source, Pictures[this.data[award]["badge"]] + "<font size='+4'>: " + award + " Award</font>", chan);
         sys.sendMessage(source, "Earned by " + this.data[award]["by"], chan);
@@ -1034,7 +1034,7 @@ init : function (){
         else {
             sys.sendMessage(source, this.awards[award].join(", "), chan);
         }
-        sys.sendHtmlMessage(source, "<hr>");
+        sys.sendHtmlMessage(source, "<hr>", chan);
     }
     Award.prototype.viewAllAwards = function(source, chan) {
         sys.sendHtmlMessage(source, "<hr>", chan);
