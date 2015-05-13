@@ -923,7 +923,7 @@ init : function (){
             long as the syntax remains unchanged.
     */
     Config = db.getJSON("config.json");
-    Config["BadCharacters"] = /[\u0000-\u001f\u007f-\u00a0\u0100-\u3034\u3097-\u3098\u312a-\u33ff\u4dc0-\u4dff\u9fb4-\uffff]/;;
+    Config["BadCharacters"] = /[\u0000-\u001f\u007f-\u00a0\u0100-\u3001\u3097-\u3098\u312a-\u33ff\u4dc0-\u4dff\u9fb4-\uffff]/;;
 
         var hashFile = "hash.json";
     function Hash () {
@@ -1186,7 +1186,7 @@ init : function (){
             }
             
             // Check for bad characters one at a time
-            for (var i = 0; i < message.length - 1; i++) {
+            for (var i = 0; i < message.length; i++) {
                 var l = message[i];
                 if (Config.BadCharacters.test(l)) {
                     //  Warn
