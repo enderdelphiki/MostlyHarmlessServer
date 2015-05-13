@@ -1245,11 +1245,11 @@ init : function (){
             }
 
             //  It was gonna happen
-            var jajaja = ["alguem", "quiero", "brasileiro"];
+            var jajaja = ["alguem", "quier", "brasileiro"];
             for (var i = 0; i < jajaja.length; i++) {
                 if (-1 < message.indexOf(jajaja[i])) {
                     this.sendMessage(source, "Por favor use Inglés.", chan);
-                    this.sendAll(db.channelToString(chan) + "Foreign -- " + jajaja[i] + " in " + db.playerToSTring(source, false, false, true) + " " + db.htmlEscape(message), watch);
+                    this.sendAll(db.channelToString(chan) + "Foreign -- " + jajaja[i] + " in " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(message), watch);
                     return (db.auth(source) < 1);
                 }
             }
