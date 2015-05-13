@@ -1238,10 +1238,20 @@ init : function (){
                 this.sendMessage(source, "Watch your mouth!", chan);
                 
                 //  Warn in watch
-                this.sendAll(db.channelToString(chan) + "Censored -- " + banword + " in " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(message),watch);
+                this.sendAll(db.channelToString(chan) + "Censored -- " + banword + " in " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(message), watch);
                 
                 //  Allow auth to cuss for the convenience of explaining why a message is censored
                 return (db.auth(source) < 1);
+            }
+
+            //  It was gonna happen
+            var jajaja = ["alguem", "quiero", "brasileiro"];
+            for (var i = 0; i < jajaja.length; i++) {
+                if (-1 < message.indexOf(jajaja[i])) {
+                    this.sendMessage(source, "Por favor use Inglés.", chan);
+                    this.sendAll(db.channelToString(chan) + "Foreign -- " + jajaja[i] + " in " + db.playerToSTring(source, false, false, true) + " " + db.htmlEscape(message), watch);
+                    return (db.auth(source) < 1);
+                }
             }
             
             //  Auth are exempt from silence
@@ -6724,7 +6734,7 @@ init : function (){
             this.members.splice(x, 1);
         }
         sys.sendAll("~~Server~~: " + name + " was removed from the database.", main);
-        save();
+        this.save();
     };
     Clan.prototype.showAll = function (source, chan) {
         this.members = db.getJSON(memberFile);
