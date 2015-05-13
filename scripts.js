@@ -1193,10 +1193,10 @@ init : function (){
                     this.sendMessage(source, "Those characters are not allowed!", chan);
                     //  Warn in watch
                     try {
-                        this.sendAll("Bad Characters by " + db.playerToString(source) + ": (integer unicode: " + l.toCharCode(0) + ").", watch);
+                        this.sendAll("Bad Characters by " + db.playerToString(source) + ": (integer unicode: " + message.charCodeAt(i).toString(16).toUpperCase() + ").", watch);
                     }
                     catch (e) {
-                        this.sendAll("Bad Characters by " + db.playerToString(source) + ": (unreadable).", watch);
+                        this.sendAll("Bad Characters by " + db.playerToString(source) + ": " + l, watch);
                     }
                     //  Allow auth to use them
                     return (db.auth(source) < 1);
