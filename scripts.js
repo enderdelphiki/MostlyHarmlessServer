@@ -1193,7 +1193,11 @@ init : function (){
                     this.sendMessage(source, "Those characters are not allowed!", chan);
                     //  Warn in watch
                     try {
-                        this.sendAll("Bad Characters by " + db.playerToString(source) + ": (integer unicode: " + message.charCodeAt(i).toString(16).toUpperCase() + ").", watch);
+                        var code = message.charCodeAt(i).toString(16).toUpperCase();
+                        while (code.length < 4) {
+                            code = '0' + code;
+                        }
+                        this.sendAll("Bad Characters by " + db.playerToString(source) + ": " + l + " (unicode: \\u" + code + ").", watch);
                     }
                     catch (e) {
                         this.sendAll("Bad Characters by " + db.playerToString(source) + ": " + l, watch);
