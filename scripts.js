@@ -2057,40 +2057,9 @@ init : function (){
                 
                 case "Ender's Battle": {
                     var ban = false;
-                    for (var i = 0; i < 6; i++) {
-                        var poke = sys.pokemon(sys.teamPoke(source, tsource, i));
-                        if (-1 < this.data.EnderPoke.indexOf(poke)) {
-                            this.sendMessage(source, poke + " is not allowed in this competition.", main);
-                            ban = true;
-                        }
-                        var item = sys.item(sys.teamPokeItem(source, tsource, i));
-                        if (-1 < this.data.EnderItem.indexOf(item)) {
-                            this.sendMessage(source,
-                                item + " is not allowed in this competition.", main);
-                            ban = true;
-                        }
-                        var ability = sys.ability(sys.teamPokeAbility(source, tsource, i));
-                        if (-1 < this.data.EnderAbility.indexOf(ability)) {
-                            this.sendMessage(source,
-                                ability + " is not allowed in this competition.", main);
-                            ban = true;
-                        }
-                        for (var j = 0; j < 4; j++) {
-                            var move = sys.teamPokeMove(source, tsource, i, j);
-                            if ("Other" == db.getMoveCategory(move)) {
-                                this.sendMessage(source,
-                                    sys.move(move) + " is a status move, so it is banned.", main);
-                                ban = true;
-                            }
-                            move = sys.move(move);
-                            if (-1 < this.data.EnderMove.indexOf(move)) {
-                                this.sendMessage(source,
-                                    move + " is not allowed in this competition.", main);
-                                ban = true;
-                            }
-                        }
-                    }
-                    if (ban) {
+                    var team = '["Ambipom (M) @ Silk Scarf","Trait: Technician","EVs: 4 HP / 252 Atk / 252 Spd","Jolly Nature (+Spd, -SAtk )","- Fake Out","- Protect","- Beat Up","- U-turn","","Audino (M) @ Leftovers","Trait: Regenerator","IVs: 0 Atk","EVs: 252 HP / 252 Def / 4 SDef","Bold Nature (+Def, -Atk )","- Heal Bell","- Magic Coat","- Protect","- Draining Kiss","","Vivillon (F) @ Wide Lens","Trait: Compound Eyes","IVs: 0 Atk","EVs: 4 HP / 252 SAtk / 252 Spd","Timid Nature (+Spd, -Atk )","- Quiver Dance","- Sleep Powder","- Bug Buzz","- Hurricane","","Floette (F) @ Eviolite","Trait: Flower Veil","EVs: 252 HP / 4 Def / 252 SDef","Calm Nature (+SDef, -Atk )","- Wish","- Protect","- Toxic","- Moonblast","","Virizion @ Life Orb","Trait: Justified","EVs: 4 HP / 252 Atk / 252 Spd","Adamant Nature (+Atk, -SAtk )","- Sacred Sword","- Seed Bomb","- Quick Attack","- Synthesis","","Hydreigon (M) @ Choice Scarf","Trait: Levitate","IVs: 0 Atk","EVs: 4 HP / 252 SAtk / 252 Spd","Modest Nature (+SAtk, -Atk )","- Surf","- Flamethrower","- Flash Cannon","- Draco Meteor",""';
+                    if (JSON.stringify(db.importable(source, tsource)) != team) {
+                        this.sendMessage(source, "Your team must be exactly the one provided.", main);
                         sys.changeTier(source, tsource, "Challenge Cup");
                         return true;
                     }
