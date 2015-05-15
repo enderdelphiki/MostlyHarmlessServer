@@ -703,9 +703,9 @@ init : function (){
                 
                 //  Nature Nature (+Bst, -Rdc)
                 var nature = sys.teamPokeNature(source, team, i);
-                ret.push(sys.nature(nature + " Nature (+" + db.statBoostedBy(nature) + ", -" + this.statReducedBy(nature) + " )"));
+                ret.push(sys.nature(nature) + " Nature (+" + db.statBoostedBy(nature) + ", -" + this.statReducedBy(nature) + " )");
                 
-                //  print all the moves
+                // print all the moves
                 for (var j = 0; j < 4; ++j) {
                     //  grab the move
                     var move = sys.teamPokeMove(source, team, i, j);
