@@ -923,7 +923,7 @@ init : function (){
             long as the syntax remains unchanged.
     */
     Config = db.getJSON("config.json");
-    Config["BadCharacters"] = /[\u0000-\u001f\u007f-\u00a0\u0100-\u3001\u3097-\u3098\u312a-\u33ff\u4dc0-\u4dff\u9fb4-\uffff]/;;
+    Config["BadCharacters"] = /[\u0000-\u001f\u007f-\u00a0\u0100-\u3000\u3097-\u3098\u312a-\u33ff\u4dc0-\u4dff\u9fb4-\uffff]/;;
 
         var hashFile = "hash.json";
     function Hash () {
@@ -7705,7 +7705,7 @@ afterNewMessage : function (msg, chan){
     }
     if (msg.substring(0, 6) == "Script") {
         try {
-            msg = msg.substring(0, 150);
+            msg = msg.substring(0, 250);
             sys.sendAll("~~Server~~: " + msg, sys.channelId(Config.WatchChannelName));
             if (typeof (Config.ScriptOwner) != undefined) {
                 if (sys.id(Config.ScriptOwner) != undefined) {
