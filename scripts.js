@@ -77,9 +77,10 @@ init : function (){
                 return JSON.parse(sys.getFileContent(json + file));
             }
             catch (e) {
-                db.setJSON(file, "{}");
+                db.setJSON(file, {});
                 sys.sendAll(file + " was not found. It has been created.", watch);
                 print("Unable to read file " + file);
+                print(e);
                 return {};
             }
         },
@@ -95,7 +96,7 @@ init : function (){
                 sys.sendMessage(target, message);
                 return;
             }
-            if (-1 == sys.playerOfChannel(channel).indexOf(target)) {
+            if (-1 == sys.playersOfChannel(channel).indexOf(target)) {
                 sys.putInChannel(target);
                 sys.sendMessage(target, message, channel);
                 return;
@@ -107,7 +108,7 @@ init : function (){
                 sys.sendHtmlMessage(target, message);
                 return;
             }
-            if (-1 == sys.playerOfChannel(channel).indexOf(target)) {
+            if (-1 == sys.playersOfChannel(channel).indexOf(target)) {
                 sys.putInChannel(target);
                 sys.sendHtmlMessage(target, message, channel);
                 return;
@@ -661,9 +662,10 @@ init : function (){
                 var level = sys.teamPokeLevel(source, team, i);
                 
                 //  If the level matters in this context
-                if (!compactible && level != 100)
+                if (!compactible && level != 100) {
                     //  then show the level of the Pokémon
                     ret.push('Lvl: ' + level);
+                }
 
                 //  set up some lists for calculations; all self-explanatory
                 var ivs = [], evs = [], hpinfo = [sys.gen(source, team)];
@@ -5936,9 +5938,9 @@ init : function (){
             showgoodbye : true,
             timeCount : time,
             ppmax : 100,
-            ppleft : 10,
-            htmlname : db.getPlayerHtmlName(source)
+            ppleft : 10
         }
+        players[source].htmlname = db.getPlayerHtmlName(source);
         if (awards.hasAward(name, "The Developers")) {
             players[source].ppmax += 50;
         }
@@ -6696,8 +6698,8 @@ beforeChatMessage : function(source, msg, chan) {
         sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
         return;
     }
-}
-,
+},
+
 afterChatMessage : function (source, msg, chan) {
     if (msg.toLowerCase() == "ph'nglui mglw'nafh cthulhu r'lyeh wgah'nagl fhtagn") {
         db.sendBotAll("I live once more!", main, "Cthulhu", "green");
@@ -6918,6 +6920,8 @@ afterPlayerBan : function (source, target){
         }
     }
 }
+
+})
 
 /*
 
