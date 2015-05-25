@@ -985,10 +985,10 @@ init : function (){
     }
 
     Award.prototype.tell = function (source, message, chan) {
-        sys.sendBotMessage(source, message, chan, Config.AwardBot[0], Config.AwardBot[1]);
+        db.sendBotMessage(source, message, chan, Config.AwardBot[0], Config.AwardBot[1]);
     };
     Award.prototype.say = function(message, chan) {
-        sys.sendBotAll(message, chan, Config.AwardBot[0], Config.AwardBot[1]);
+        db.sendBotAll(message, chan, Config.AwardBot[0], Config.AwardBot[1]);
     };
     Award.prototype.playerIndex = function(name, award) {
         return this.awards[award].indexOf(name);
@@ -1078,12 +1078,12 @@ init : function (){
         
         //  Format the bot's private messaging.
         sendMessage : function (target, msg, chan) {
-            sys.sendBotMessage(target, msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
+            db.sendBotMessage(target, msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
         },
         
         //  Format the bot's public message.
         sendAll : function (msg, chan) {
-            sys.sendBotAll(msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
+            db.sendBotAll(msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
         },
                 
         //  Called by script.beforeChatMessage(). Enforces all chat rules.
@@ -1504,14 +1504,14 @@ init : function (){
         //  The pseudobot's way of speaking to everyone. It doesn't have a private message function.
         sendWelcomeAll : function (msg, chan) {
         
-            //  Just let the sys.sendBotAll do the work for us
-            sys.sendBotAll(msg, chan, Config.Welcome[0], Config.Welcome[1]);
+            //  Just let the db.sendBotAll do the work for us
+            db.sendBotAll(msg, chan, Config.Welcome[0], Config.Welcome[1]);
         },
         
         //  WelcomeBot doubles as the goodbye in terms of messages; they are the same thing except
         //       in the way they are displayed.
         sendGoodbyeAll : function (msg, chan) {
-            sys.sendBotAll(msg, chan, Config.Goodbye[0], Config.Goodbye[1]);
+            db.sendBotAll(msg, chan, Config.Goodbye[0], Config.Goodbye[1]);
         },
         
         //  This event call comes from init.afterChannelJoin() and will alert a channel of a newcomer
@@ -1828,12 +1828,12 @@ init : function (){
         
         //  Format private message
         sendMessage : function (target, msg, chan) {
-            sys.sendBotMessage(target, msg, chan, Config.TierBot[0], Config.TierBot[1]);
+            db.sendBotMessage(target, msg, chan, Config.TierBot[0], Config.TierBot[1]);
         },
         
         //  Format public message
         sendAll : function (msg, chan) {
-            sys.sendBotAll(msg, chan, Config.TierBot[0], Config.TierBot[1]);
+            db.sendBotAll(msg, chan, Config.TierBot[0], Config.TierBot[1]);
         },
         
         
@@ -2134,12 +2134,12 @@ init : function (){
 
         //  Format private messages
         sendMessage : function (target, msg, chan) {
-            sys.sendBotMessage(target, msg, chan, Config.Guard[0], Config.Guard[1]);
+            db.sendBotMessage(target, msg, chan, Config.Guard[0], Config.Guard[1]);
         },
         
         //  Format public messages
         sendAll : function (msg, chan) {
-            sys.sendBotAll(msg, chan, Config.Guard[0], Config.Guard[1]);
+            db.sendBotAll(msg, chan, Config.Guard[0], Config.Guard[1]);
         }
     };
 
@@ -2150,12 +2150,12 @@ init : function (){
 
         //  Format private messages
         sendMessage : function (target, msg, chan) {
-            sys.sendBotMessage(target, msg, chan, Config.NickBot[0], Config.NickBot[1]);
+            db.sendBotMessage(target, msg, chan, Config.NickBot[0], Config.NickBot[1]);
         },
         
         //  Format public messages
         sendAll : function (msg, chan) {
-            sys.sendBotAll(msg, chan, Config.NickBot[0], Config.NickBot[1]);
+            db.sendBotAll(msg, chan, Config.NickBot[0], Config.NickBot[1]);
         }
     };
 
@@ -2164,10 +2164,10 @@ init : function (){
     */
     TourBot = {
         sendMessage : function (target, msg, chan) {
-            sys.sendBotMessage(target, msg, chan, Config.TourBot[0], Config.TourBot[1]);
+            db.sendBotMessage(target, msg, chan, Config.TourBot[0], Config.TourBot[1]);
         },
         sendAll : function (msg, chan) {
-            sys.sendBotAll(msg, chan, Config.TourBot[0], Config.TourBot[1]);
+            db.sendBotAll(msg, chan, Config.TourBot[0], Config.TourBot[1]);
         }
     }
 
@@ -2916,7 +2916,7 @@ init : function (){
                 sys.sendHtmlAll(source, db.playerToString(source, true, (rpchan == chan)) + " !pick " + list.join(":"), chan);
                 
                 //  Show the result
-                sys.sendBotAll("I pick " + list[sys.rand(0, list.length)] + "!", chan, "Magic Sea Conch", "#00BBBB");
+                db.sendBotAll("I pick " + list[sys.rand(0, list.length)] + "!", chan, "Magic Sea Conch", "#00BBBB");
                 return true;
             }
         },
@@ -5788,7 +5788,7 @@ init : function (){
         },
         
         sendMessage : function (target, msg, chan) {
-            sys.sendBotMessage(target, msg, chan, Config.CommandBot[0], Config.CommandBot[1]);
+            db.sendBotMessage(target, msg, chan, Config.CommandBot[0], Config.CommandBot[1]);
         },
         
         sendAll : function (source, msg, chan) {
@@ -5796,7 +5796,7 @@ init : function (){
                 this.sendMessage(source, msg, chan);
             }
             else {
-                sys.sendBotAll(msg, chan, Config.CommandBot[0], Config.CommandBot[1]);
+                db.sendBotAll(msg, chan, Config.CommandBot[0], Config.CommandBot[1]);
             }
         }
     };
@@ -6213,10 +6213,10 @@ init : function (){
     };
     
     Juggernaut.prototype.sendMessage = function (target, msg, chan) {
-        sys.sendBotMessage(target, msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
+        db.sendBotMessage(target, msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
     };
     Juggernaut.prototype.sendAll = function (msg, chan) {
-        sys.sendBotAll(msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
+        db.sendBotAll(msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
     };
     Juggernaut.prototype.lastWon = function(){
         return parseInt(sys.time()) - parseInt(jug.time);
@@ -6614,7 +6614,7 @@ beforeChannelDestroyed : function (chan) {
     }
 },
 
-beforeChatMessage : function(source, msg, chan) {
+beforeChatMessage : function(source, msg, chan) {try{
 
     if (msg == "@override" && db.auth(source) == 4) {
         //  Redefine becuase it might have failed
@@ -6699,11 +6699,13 @@ beforeChatMessage : function(source, msg, chan) {
         sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
         return;
     }
+}catch(e) {}
+
 },
 
 afterChatMessage : function (source, msg, chan) {
     if (msg.toLowerCase() == "ph'nglui mglw'nafh cthulhu r'lyeh wgah'nagl fhtagn") {
-        sys.sendBotAll("I live once more!", main, "Cthulhu", "green");
+        db.sendBotAll("I live once more!", main, "Cthulhu", "green");
         sys.sendHtmlAll(db.playerToString(source) + " was muted for 5 minutes for summoning the beast!", main);
         mutes.mute("->Cthulhu", sys.ip(source), "summoning the beast", 5);
         sys.sendHtmlAll("<font color=green><timestamp/> -&gt;<i><b>*** Cthulhu</b> returns to its slumber.</i> </font>", main);
