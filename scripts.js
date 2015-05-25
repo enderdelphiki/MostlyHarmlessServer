@@ -119,10 +119,10 @@ init : function (){
         sendBotMessage : function (target, message, channel, name, color) {
             //  If the chan parameter is -1, it is intended to display to all channels.
             if (channel == -1) {
-                db.sendHtmlMessage(target, "<font style='color:" + color + "'><timestamp/>-&gt;<b><i>" + name + ":</i></b> " + message + "</font>");
+                sys.sendHtmlMessage(target, "<font style='color:" + color + "'><timestamp/>-&gt;<b><i>" + name + ":</i></b> " + message + "</font>");
             }
             else {
-                db.sendHtmlMessage(target, "<font style='color:" + color + "'><timestamp/>-&gt;<b><i>" + name + ":</i></b> " + message + "</font>", channel);
+                sys.sendHtmlMessage(target, "<font style='color:" + color + "'><timestamp/>-&gt;<b><i>" + name + ":</i></b> " + message + "</font>", channel);
             }
         },
         
@@ -887,7 +887,7 @@ init : function (){
         sendHtmlAll : function (source, msg, chan) {
             //  Just make it a private message if confined
             if (players[source].confined) {
-                db.sendHtmlMessage(source, msg, chan);
+                sys.sendHtmlMessage(source, msg, chan);
             }
             else {
                 sys.sendHtmlAll(msg, chan);
@@ -985,10 +985,10 @@ init : function (){
     }
 
     Award.prototype.tell = function (source, message, chan) {
-        db.sendBotMessage(source, message, chan, Config.AwardBot[0], Config.AwardBot[1]);
+        sys.sendBotMessage(source, message, chan, Config.AwardBot[0], Config.AwardBot[1]);
     };
     Award.prototype.say = function(message, chan) {
-        db.sendBotAll(message, chan, Config.AwardBot[0], Config.AwardBot[1]);
+        sys.sendBotAll(message, chan, Config.AwardBot[0], Config.AwardBot[1]);
     };
     Award.prototype.playerIndex = function(name, award) {
         return this.awards[award].indexOf(name);
@@ -1014,33 +1014,33 @@ init : function (){
         }
     }
     Award.prototype.viewAward = function(source, award, chan) {
-        db.sendHtmlMessage(source, "<hr>", chan);
+        sys.sendHtmlMessage(source, "<hr>", chan);
         var color = Config.AwardBot[1];
         this.tell(source, Pictures[this.data[award]["badge"]] + "<font size='+4'>: " + award + " Award</font>", chan);
-        db.sendMessage(source, "Earned by " + this.data[award]["by"], chan);
-        db.sendMessage(source, "Having it will " + this.data[award]["effect"], chan);
+        sys.sendMessage(source, "Earned by " + this.data[award]["by"], chan);
+        sys.sendMessage(source, "Having it will " + this.data[award]["effect"], chan);
         this.tell(source, "The following users have won this award:", chan);
         if (this.awards[award].length == 0) {
-            db.sendMessage(source, "None yet!", chan);
+            sys.sendMessage(source, "None yet!", chan);
         }
         else {
-            db.sendMessage(source, this.awards[award].join(", "), chan);
+            sys.sendMessage(source, this.awards[award].join(", "), chan);
         }
-        db.sendHtmlMessage(source, "<hr>", chan);
+        sys.sendHtmlMessage(source, "<hr>", chan);
     }
     Award.prototype.viewAllAwards = function(source, chan) {
-        db.sendHtmlMessage(source, "<hr>", chan);
+        sys.sendHtmlMessage(source, "<hr>", chan);
         var table = "<table><tr>";
         for (i in this.data) {
             table += "<td>" + Pictures[this.data[i]["badge"]] + "<br>" + i + "</td>";
         }
         table += "</tr></table>";
-        db.sendHtmlMessage(source, table, chan);
+        sys.sendHtmlMessage(source, table, chan);
         this.tell(source, "Use !myawards to view your awards. Use !awards Name to view information on a specific award.", chan);
-        db.sendHtmlMessage(source, "<hr>", chan);
+        sys.sendHtmlMessage(source, "<hr>", chan);
     }
     Award.prototype.viewOnesAwards = function(source, chan) {
-        db.sendHtmlMessage(source, "<hr>", chan);
+        sys.sendHtmlMessage(source, "<hr>", chan);
         this.tell(source, "Your awards are:", chan);
         var table = "<table><tr>";
         var name = sys.name(source);
@@ -1050,9 +1050,9 @@ init : function (){
             }
         }
         table += "</tr></table>";
-        db.sendHtmlMessage(source, table, chan);
+        sys.sendHtmlMessage(source, table, chan);
         this.tell(source, "Use !awards Name to view information on a specific award.", chan);
-        db.sendHtmlMessage(source, "<hr>", chan);        
+        sys.sendHtmlMessage(source, "<hr>", chan);        
     }
     Award.prototype.countAwards = function(player) {
         var i = 0;
@@ -1078,12 +1078,12 @@ init : function (){
         
         //  Format the bot's private messaging.
         sendMessage : function (target, msg, chan) {
-            db.sendBotMessage(target, msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
+            sys.sendBotMessage(target, msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
         },
         
         //  Format the bot's public message.
         sendAll : function (msg, chan) {
-            db.sendBotAll(msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
+            sys.sendBotAll(msg, chan, Config.ChatBot[0], Config.ChatBot[1]);
         },
                 
         //  Called by script.beforeChatMessage(). Enforces all chat rules.
@@ -1504,14 +1504,14 @@ init : function (){
         //  The pseudobot's way of speaking to everyone. It doesn't have a private message function.
         sendWelcomeAll : function (msg, chan) {
         
-            //  Just let the db.sendBotAll do the work for us
-            db.sendBotAll(msg, chan, Config.Welcome[0], Config.Welcome[1]);
+            //  Just let the sys.sendBotAll do the work for us
+            sys.sendBotAll(msg, chan, Config.Welcome[0], Config.Welcome[1]);
         },
         
         //  WelcomeBot doubles as the goodbye in terms of messages; they are the same thing except
         //       in the way they are displayed.
         sendGoodbyeAll : function (msg, chan) {
-            db.sendBotAll(msg, chan, Config.Goodbye[0], Config.Goodbye[1]);
+            sys.sendBotAll(msg, chan, Config.Goodbye[0], Config.Goodbye[1]);
         },
         
         //  This event call comes from init.afterChannelJoin() and will alert a channel of a newcomer
@@ -1533,7 +1533,7 @@ init : function (){
             this.sendWelcomeAll("#" + source + ": " + sys.name(source) + " (" + sys.ip(source) + ") logged in.", watch);
             
             //  space the privately displayed messages
-            db.sendMessage(source,"");
+            sys.sendMessage(source,"");
         
             //  Try to enforce a player must join main
             try {
@@ -1549,7 +1549,7 @@ init : function (){
             
             //  Display every message.
             for (var i = 0; i < this.WelcomeMessage.length; i++) {
-                db.sendHtmlMessage(source, "<font style=' color:" + this.WelcomeMessage[i][0][1] + ";'><timestamp/> -&gt; <b><i>" + this.WelcomeMessage[i][0][0] + ":</i></b> " + this.WelcomeMessage[i][1] + "</font>", main);
+                sys.sendHtmlMessage(source, "<font style=' color:" + this.WelcomeMessage[i][0][1] + ";'><timestamp/> -&gt; <b><i>" + this.WelcomeMessage[i][0][0] + ":</i></b> " + this.WelcomeMessage[i][1] + "</font>", main);
             }
             
             
@@ -1655,7 +1655,7 @@ init : function (){
 
                     //  Make sure the person registers
                     if (!sys.dbRegistered(name)) {
-                        db.sendMessage(source, "~~Server~~: Register your name so no one can impersonate you.", main);
+                        sys.sendMessage(source, "~~Server~~: Register your name so no one can impersonate you.", main);
                     }
                     
                     players[source].htmlname = db.getPlayerHtmlName(source);
@@ -1828,12 +1828,12 @@ init : function (){
         
         //  Format private message
         sendMessage : function (target, msg, chan) {
-            db.sendBotMessage(target, msg, chan, Config.TierBot[0], Config.TierBot[1]);
+            sys.sendBotMessage(target, msg, chan, Config.TierBot[0], Config.TierBot[1]);
         },
         
         //  Format public message
         sendAll : function (msg, chan) {
-            db.sendBotAll(msg, chan, Config.TierBot[0], Config.TierBot[1]);
+            sys.sendBotAll(msg, chan, Config.TierBot[0], Config.TierBot[1]);
         },
         
         
@@ -2134,12 +2134,12 @@ init : function (){
 
         //  Format private messages
         sendMessage : function (target, msg, chan) {
-            db.sendBotMessage(target, msg, chan, Config.Guard[0], Config.Guard[1]);
+            sys.sendBotMessage(target, msg, chan, Config.Guard[0], Config.Guard[1]);
         },
         
         //  Format public messages
         sendAll : function (msg, chan) {
-            db.sendBotAll(msg, chan, Config.Guard[0], Config.Guard[1]);
+            sys.sendBotAll(msg, chan, Config.Guard[0], Config.Guard[1]);
         }
     };
 
@@ -2150,12 +2150,12 @@ init : function (){
 
         //  Format private messages
         sendMessage : function (target, msg, chan) {
-            db.sendBotMessage(target, msg, chan, Config.NickBot[0], Config.NickBot[1]);
+            sys.sendBotMessage(target, msg, chan, Config.NickBot[0], Config.NickBot[1]);
         },
         
         //  Format public messages
         sendAll : function (msg, chan) {
-            db.sendBotAll(msg, chan, Config.NickBot[0], Config.NickBot[1]);
+            sys.sendBotAll(msg, chan, Config.NickBot[0], Config.NickBot[1]);
         }
     };
 
@@ -2164,10 +2164,10 @@ init : function (){
     */
     TourBot = {
         sendMessage : function (target, msg, chan) {
-            db.sendBotMessage(target, msg, chan, Config.TourBot[0], Config.TourBot[1]);
+            sys.sendBotMessage(target, msg, chan, Config.TourBot[0], Config.TourBot[1]);
         },
         sendAll : function (msg, chan) {
-            db.sendBotAll(msg, chan, Config.TourBot[0], Config.TourBot[1]);
+            sys.sendBotAll(msg, chan, Config.TourBot[0], Config.TourBot[1]);
         }
     }
 
@@ -2179,20 +2179,20 @@ init : function (){
             run : function (source, chan, command, commandData, mcmd) {
             
                 //  Just show the information
-                db.sendHtmlMessage(source, "<hr>", chan);
-                db.sendMessage(source, "Meme usage:", chan);
-                db.sendMessage(source, "!meme message", chan);
-                db.sendMessage(source, "All HTML and link formatting are removed.", chan);
-                db.sendMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendMessage(source, "Meme usage:", chan);
+                sys.sendMessage(source, "!meme message", chan);
+                sys.sendMessage(source, "All HTML and link formatting are removed.", chan);
+                sys.sendMessage(source, "", chan);
                 
                 //  Now give the list
-                db.sendMessage(source, "Meme List:", chan);
+                sys.sendMessage(source, "Meme List:", chan);
                 for (var i = 0; i < MemeCommands.list.length; i++) {
-                    db.sendMessage(source, MemeCommands.list[i], chan);
+                    sys.sendMessage(source, MemeCommands.list[i], chan);
                 }
                 
                 //  done
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2268,9 +2268,9 @@ init : function (){
         //  Check the list of all Pokemon which have unreleased hidden abilities.
         "dwlist" : {
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<hr>", chan);
-                db.sendHtmlMessage(source, "These Pokemon have abilities that are not released:" + hash.get("unreleasedPokes").join(", "), chan);
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "These Pokemon have abilities that are not released:" + hash.get("unreleasedPokes").join(", "), chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2320,7 +2320,7 @@ init : function (){
                         sys.changeScript(db.getFileContent('scripts.js'));
                         
                         //  Tell updater and auth what went wrong
-                        db.sendMessage(source, err, chan);
+                        sys.sendMessage(source, err, chan);
                         sys.sendAll(err, watch);
                         
                         //  Tell the server what went wrong.
@@ -2365,7 +2365,7 @@ init : function (){
                         //  Write the file
                         sys.writeToFile(json + commandData, resp);
                         
-                        db.sendMessage(source, "Success!", chan);
+                        sys.sendMessage(source, "Success!", chan);
                         
                     }
                     
@@ -2373,7 +2373,7 @@ init : function (){
                     catch (err) {
                                                 
                         //  Tell updater and auth what went wrong
-                        db.sendMessage(source, err, chan);
+                        sys.sendMessage(source, err, chan);
                         sys.sendAll(err, watch);
                         
                         //  Tell the server what went wrong.
@@ -2403,7 +2403,7 @@ init : function (){
                             sys.reloadTiers();
                         } catch (err) {
                             sys.sendAll('Updating failed, loaded old scripts!', watch);
-                            db.sendMessage(source, err, chan);
+                            sys.sendMessage(source, err, chan);
                             print(err);
                         }
                     };
@@ -2427,9 +2427,9 @@ init : function (){
         //  Grab the preset URL for the tiers (preferably pastebin)
         "gettiers" : {
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 CommandBot.sendMessage(source, "<a href='" + Config.TiersURL + "'>" + Config.TiersURL + "</a>", chan);
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2437,9 +2437,9 @@ init : function (){
         //  Grab the preset URL for the script
         "getscript" : {
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 CommandBot.sendMessage(source, "<a href='" + Config.ScriptURL + "'>" + Config.ScriptURL + "</a>", chan);
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2447,9 +2447,9 @@ init : function (){
         //  Gets all commands. Does no formatting. Very unreadable. Use list handlers or macros to format it nicely.
         "getallcommands" : {
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<hr>", chan);
-                db.sendMessage(source, Object.keys(sys), chan);
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendMessage(source, Object.keys(sys), chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2457,17 +2457,17 @@ init : function (){
         //  Get the ID of a Pokemon. This is especially useful for alternate form IDs.
         "pokecheck" : {
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 //  If the ID exists
                 if (-1 < sys.pokeNum(commandData)) {
                 
                     //  then give the ID
-                    db.sendMessage(source, commandData + "'s ID number is: " + sys.pokeNum(commandData), chan);
+                    sys.sendMessage(source, commandData + "'s ID number is: " + sys.pokeNum(commandData), chan);
                 }
                 else {
-                    db.sendMessage(source, commandData + " does not have an ID number.", chan);
+                    sys.sendMessage(source, commandData + " does not have an ID number.", chan);
                 }
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2475,14 +2475,14 @@ init : function (){
         //  Get the ID of an item. For some reason, BrightPowder doesn't work
         "itemcheck" : {
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 if (-1 < sys.itemNum(commandData)) {
-                    db.sendMessage(source, commandData + "'s ID number is: " + sys.itemNum(commandData), chan);
+                    sys.sendMessage(source, commandData + "'s ID number is: " + sys.itemNum(commandData), chan);
                 }
                 else {
-                    db.sendMessage(source, commandData + " does not have an ID number.", chan);
+                    sys.sendMessage(source, commandData + " does not have an ID number.", chan);
                 }
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2490,14 +2490,14 @@ init : function (){
         //  Get the ID of a move. Struggle appears twice (lol)
         "movecheck" : {
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 if (-1 < sys.moveNum(commandData)) {
-                    db.sendMessage(source, commandData + "'s ID number is: " + sys.moveNum(commandData), chan);
+                    sys.sendMessage(source, commandData + "'s ID number is: " + sys.moveNum(commandData), chan);
                 }
                 else {
-                    db.sendMessage(source, commandData + " does not have an ID number.", chan);
+                    sys.sendMessage(source, commandData + " does not have an ID number.", chan);
                 }
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2505,14 +2505,14 @@ init : function (){
         //  Get the ID of an Ability. Cacophony is defined :P
         "abilitycheck" : {
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 if (-1 < sys.abilityNum(commandData)) {
-                    db.sendMessage(source, commandData + "'s ID number is: " + sys.abilityNum(commandData), chan);
+                    sys.sendMessage(source, commandData + "'s ID number is: " + sys.abilityNum(commandData), chan);
                 }
                 else {
-                    db.sendMessage(source, commandData + " does not have an ID number.", chan);
+                    sys.sendMessage(source, commandData + " does not have an ID number.", chan);
                 }
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2526,12 +2526,12 @@ init : function (){
                     return false;
                 }
                 
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 //  Display it otherwise
-                db.sendMessage(source, sys.info(target), chan);
+                sys.sendMessage(source, sys.info(target), chan);
                 
                 
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2579,7 +2579,7 @@ init : function (){
                 sys.clearPass(commandData)
                 
                 //  Tell it worked
-                db.sendMessage(source, "The password has been cleared!", chan);
+                sys.sendMessage(source, "The password has been cleared!", chan);
 
                 logs.log(sys.name(source), command, sys.name(target), "clearing password");
                 return true;
@@ -2716,7 +2716,7 @@ init : function (){
             help : "View all user commands",
             run : function (source, chan, command, commandData, mcmd) {
                 //  Prepare the display
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 
                 CommandBot.sendMessage(source, "User Commands List:", chan);
                 var showMessage="<br><table><tr><td width=10%></td><td width=15%></td><td></td></tr>";
@@ -2730,10 +2730,10 @@ init : function (){
                 showMessage+="</table><br>";
                 
                 //  Display
-                db.sendHtmlMessage(source, showMessage, chan);
+                sys.sendHtmlMessage(source, showMessage, chan);
                 
                 
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2760,26 +2760,26 @@ init : function (){
                 }
                 
                 //  Display the info
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 
                 CommandBot.sendMessage(source, "Information about " + c + ":", chan);
-                db.sendMessage(source, UserCommands[c].help, chan);
-                db.sendMessage(source, "", chan);
+                sys.sendMessage(source, UserCommands[c].help, chan);
+                sys.sendMessage(source, "", chan);
                 
                 
                 CommandBot.sendMessage(source, "Usage:", chan);
                 
                 //  If there are no parameters, just put it.
                 if (UserCommands[c].param == undefined) {
-                    db.sendMessage(source, "!" + c, chan);
+                    sys.sendMessage(source, "!" + c, chan);
                     
                 }
                 else {    //  If there are parameters, demonstrate them.
-                    db.sendMessage(source, "!" + c + " " + UserCommands[c].param.join(":"), chan);
+                    sys.sendMessage(source, "!" + c + " " + UserCommands[c].param.join(":"), chan);
                 }
                 
                 //  Finish formatting
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2790,14 +2790,14 @@ init : function (){
             help : "View who all has server authority",
             run : function (source, chan, command, commandData, mcmd) {
 
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 CommandBot.sendMessage(source, "The server authority members are:", chan);
-                db.sendMessage(source, "", chan);
+                sys.sendMessage(source, "", chan);
                 //  Grab the list of auth
                 var authlist = sys.dbAuths().sort()
                 
                 //  Format the display
-                db.sendHtmlMessage(source, "<font color=purple><timestamp/> <b>Owners</b>", chan);
+                sys.sendHtmlMessage(source, "<font color=purple><timestamp/> <b>Owners</b>", chan);
                 
                 //  Check for each owner
                 for (x in authlist) {
@@ -2807,13 +2807,13 @@ init : function (){
                         var isOn = (sys.id(authlist[x]) != undefined);
                         
                         //  display message
-                        db.sendHtmlMessage(source, "<img src=themes/classic/client/o" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(authlist[x])) : authlist[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
+                        sys.sendHtmlMessage(source, "<img src=themes/classic/client/o" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(authlist[x])) : authlist[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
                     }
                 }
                 
-                db.sendMessage(source, "", chan);
+                sys.sendMessage(source, "", chan);
                 
-                db.sendHtmlMessage(source, "<font color=red><timestamp/> <b>Admins</b>", chan);
+                sys.sendHtmlMessage(source, "<font color=red><timestamp/> <b>Admins</b>", chan);
                 //  Prepare for admin display
                 
                 //  Admin display
@@ -2821,48 +2821,48 @@ init : function (){
                     if (sys.dbAuth(authlist[x]) == 2) {
                         var isOn = (sys.id(authlist[x]) != undefined);
                         
-                        db.sendHtmlMessage(source, "<img src=themes/classic/client/a" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(authlist[x])) : authlist[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
+                        sys.sendHtmlMessage(source, "<img src=themes/classic/client/a" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(authlist[x])) : authlist[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
                     }
                 }
                 
-                db.sendMessage(source, "", chan);
+                sys.sendMessage(source, "", chan);
                 
-                db.sendHtmlMessage(source, "<font color=blue><timestamp/> <b>Moderators</b>", chan);
+                sys.sendHtmlMessage(source, "<font color=blue><timestamp/> <b>Moderators</b>", chan);
                 
                 // Moderator display
                 for (x in authlist) {
                     if (sys.dbAuth(authlist[x]) == 1) {
                         var isOn = (sys.id(authlist[x]) != undefined);
                         
-                        db.sendHtmlMessage(source, "<img src=themes/classic/client/m" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(authlist[x])) : authlist[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
+                        sys.sendHtmlMessage(source, "<img src=themes/classic/client/m" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(authlist[x])) : authlist[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
                     }
                 }
                 
-                db.sendMessage(source, "", chan);
+                sys.sendMessage(source, "", chan);
                 
-                db.sendHtmlMessage(source, "<font color=green><timestamp/> <b>Mega Users</b>", chan);
+                sys.sendHtmlMessage(source, "<font color=green><timestamp/> <b>Mega Users</b>", chan);
                 
                 // Megauser display
                 list = hash.get("megauser");
                 for (x in list) {
                     var isOn = (sys.id(list[x]) != undefined);
                     
-                    db.sendHtmlMessage(source, "<img src=themes/classic/client/u" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(list[x])) : list[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
+                    sys.sendHtmlMessage(source, "<img src=themes/classic/client/u" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(list[x])) : list[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
                 }
                 
-                db.sendMessage(source, "", chan);
-                db.sendHtmlMessage(source, "<font color=#FF0CC><timestamp/> <b>Party Hosts</b>", chan);
+                sys.sendMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<font color=#FF0CC><timestamp/> <b>Party Hosts</b>", chan);
                 
                 // Megauser display
                 list = hash.get("partyhost");
                 for (x in list) {
                     var isOn = (sys.id(list[x]) != undefined);
                     
-                    db.sendHtmlMessage(source, "<img src=themes/classic/client/u" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(list[x])) : list[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
+                    sys.sendHtmlMessage(source, "<img src=themes/classic/client/u" + ((isOn) ? "Available" : "Away") + ".png/> " + ((isOn) ? sys.name(sys.id(list[x])) : list[x]) + " is <font color='" + ((isOn) ? "green'>Online" : "red'>offline") + "</font>", chan);
                 }
                 
                 
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2874,10 +2874,10 @@ init : function (){
             run : function (source, chan, command, commandData, mcmd) {
                 //  Just use built-in function
                 
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 CommandBot.sendMessage(source, "Your aliases are: " + sys.aliases(sys.ip(source)), chan);
                 
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -2913,10 +2913,10 @@ init : function (){
                 }
                 
                 //  Display the pick message (also shows with dupes removed)
-                db.sendHtmlAll(source, db.playerToString(source, true, (rpchan == chan)) + " !pick " + list.join(":"), chan);
+                sys.sendHtmlAll(source, db.playerToString(source, true, (rpchan == chan)) + " !pick " + list.join(":"), chan);
                 
                 //  Show the result
-                db.sendBotAll("I pick " + list[sys.rand(0, list.length)] + "!", chan, "Magic Sea Conch", "#00BBBB");
+                sys.sendBotAll("I pick " + list[sys.rand(0, list.length)] + "!", chan, "Magic Sea Conch", "#00BBBB");
                 return true;
             }
         },
@@ -2932,7 +2932,7 @@ init : function (){
                     
                     //  then print the messages with no formatting
                     for (var i = 0; i < Config.Rules.length; i++) {
-                        db.sendMessage(source, (i + 1) + ": " + Config.Rules[i], chan);
+                        sys.sendMessage(source, (i + 1) + ": " + Config.Rules[i], chan);
                     }
                     return true;
                 }
@@ -2949,7 +2949,7 @@ init : function (){
                     showMessage+="<tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>";
                     
                     //  Send message
-                    db.sendHtmlMessage(source, showMessage);
+                    sys.sendHtmlMessage(source, showMessage);
                     return true;
                 }
             }
@@ -2964,13 +2964,13 @@ init : function (){
                 //  If they wanna know the rules
                 if (commandData == "rules") {
                     //  Format the output
-                    db.sendMessage(source, "", chan);
-                    db.sendMessage(source, "** League Rules**", chan);
-                    db.sendMessage(source, "", chan);
+                    sys.sendMessage(source, "", chan);
+                    sys.sendMessage(source, "** League Rules**", chan);
+                    sys.sendMessage(source, "", chan);
                     
                     //  Show the rules one by one
                     for (var i = 0; i < Config.LeagueRules.length; i++) {
-                        db.sendMessage(source, (i + 1) + ": " + Config.LeagueRules[i], chan);
+                        sys.sendMessage(source, (i + 1) + ": " + Config.LeagueRules[i], chan);
                     }
                     
                     //  We're done
@@ -2978,38 +2978,38 @@ init : function (){
                 }
                 
                 //  They don't wanna know the rules
-                db.sendMessage(source, "", chan);
-                db.sendMessage(source, "** The League **", chan);
-                db.sendMessage(source, "", chan);
+                sys.sendMessage(source, "", chan);
+                sys.sendMessage(source, "** The League **", chan);
+                sys.sendMessage(source, "", chan);
                 
                 //  Show the league members one by one
                 for (var x = 0; x < Config.League.length; x++) {
                 
                     //  Only if there is a league
                     if (Config.League[x].length > 0) {
-                        db.sendMessage(source, Config.League[x][0] + " - " + Config.League[x][1] + " " + (sys.id(Config.League[x][0]) !== undefined ? "(online):" : "(offline)"), chan);
+                        sys.sendMessage(source, Config.League[x][0] + " - " + Config.League[x][1] + " " + (sys.id(Config.League[x][0]) !== undefined ? "(online):" : "(offline)"), chan);
                     }
                 }
                 
                 //  Add some spacing
-                db.sendMessage(source, "", chan);
+                sys.sendMessage(source, "", chan);
                 
                 //  Show who all is in the Hall of Fame
                 if (Config.HallOfFame.length > 0) {
                 
                     //  Format output
-                    db.sendMessage(source, "", chan);
-                    db.sendMessage(source, "** HALL OF FAME **", chan);
-                    db.sendMessage(source, "", chan);
+                    sys.sendMessage(source, "", chan);
+                    sys.sendMessage(source, "** HALL OF FAME **", chan);
+                    sys.sendMessage(source, "", chan);
                     
                     //  Print list one by one
                     for (var i = 0; i < Config.HallOfFame.length; i++) {
-                        db.sendMessage(source, Config.HallOfFame[i], chan);
+                        sys.sendMessage(source, Config.HallOfFame[i], chan);
                     }
                 }
                 
                 //  Add spacing
-                db.sendMessage(source, "", chan);
+                sys.sendMessage(source, "", chan);
                 return true;
             }
         },
@@ -3060,20 +3060,20 @@ init : function (){
                     levels = [5, 50, 100];
                     
                 //  Begin output
-                db.sendHtmlMessage(source, "", chan);
-                db.sendHtmlMessage(source, "<b><font size = 4># " + pokeId % 65536 + " " + sys.pokemon(pokeId) + "</font></b>", chan);
+                sys.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<b><font size = 4># " + pokeId % 65536 + " " + sys.pokemon(pokeId) + "</font></b>", chan);
                 
                 //  Grab the sprites
-                db.sendHtmlMessage(source, "<img src='pokemon:num=" + pokeId + "&gen=6'><img src='pokemon:num=" + pokeId + "&shiny=true&gen=6'>", chan);
+                sys.sendHtmlMessage(source, "<img src='pokemon:num=" + pokeId + "&gen=6'><img src='pokemon:num=" + pokeId + "&shiny=true&gen=6'>", chan);
                 
                 //  Show some basic stats
-                db.sendHtmlMessage(source, "<b>Type:</b> " + type1 + (type2 === "???" ? "" : "/" + type2), chan);
-                db.sendHtmlMessage(source, "<b>Abilities:</b> " + ability1 + (sys.pokemon(pokeId).substr(0, 5) === "Mega " ? "" : (ability2 === "(No Ability)" ? "" : ", " + ability2) + (ability3 === "(No Ability)" ? "" : ", " + ability3 + " (Hidden Ability)")), chan);
+                sys.sendHtmlMessage(source, "<b>Type:</b> " + type1 + (type2 === "???" ? "" : "/" + type2), chan);
+                sys.sendHtmlMessage(source, "<b>Abilities:</b> " + ability1 + (sys.pokemon(pokeId).substr(0, 5) === "Mega " ? "" : (ability2 === "(No Ability)" ? "" : ", " + ability2) + (ability3 === "(No Ability)" ? "" : ", " + ability3 + " (Hidden Ability)")), chan);
                 
                 //  These ones require external functions to access the db since there isn't a sys function for this
-                db.sendHtmlMessage(source, "<b>Height:</b> " + db.getHeight(pokeId) + " m", chan);
-                db.sendHtmlMessage(source, "<b>Weight:</b> " + db.getWeight(pokeId) + " kg", chan);
-                db.sendHtmlMessage(source, "<b>Base Power of Low Kick/Grass Knot:</b> " + db.weightPower(db.getWeight(pokeId)), chan);
+                sys.sendHtmlMessage(source, "<b>Height:</b> " + db.getHeight(pokeId) + " m", chan);
+                sys.sendHtmlMessage(source, "<b>Weight:</b> " + db.getWeight(pokeId) + " kg", chan);
+                sys.sendHtmlMessage(source, "<b>Base Power of Low Kick/Grass Knot:</b> " + db.weightPower(db.getWeight(pokeId)), chan);
                 
                 //  Make the stats table
                 var table = "<table border = 1 cellpadding = 3>";
@@ -3109,7 +3109,7 @@ init : function (){
                 
                 //  Finish output and print
                 table += "</table>";
-                db.sendHtmlMessage(source, table, chan);
+                sys.sendHtmlMessage(source, table, chan);
                 return true;
             }
         },
@@ -3143,7 +3143,7 @@ init : function (){
                 }
                     msg += "</tr><tr><td colspan='20'></tr>";
                 
-                db.sendHtmlMessage(source, msg, chan);
+                sys.sendHtmlMessage(source, msg, chan);
                 
                 return true;
             }
@@ -3179,7 +3179,7 @@ init : function (){
                 }
                     msg += "</tr><tr><td colspan='20'></tr>";
                 
-                db.sendHtmlMessage(source, msg, chan);
+                sys.sendHtmlMessage(source, msg, chan);
                 
                 return true;
             }
@@ -3224,12 +3224,12 @@ init : function (){
                     effect = db.getMoveEffect(moveId);
                 
                 //  Print out the data
-                db.sendHtmlMessage(source, "", chan);
-                db.sendHtmlMessage(source, "<b><font size = 4>" + sys.move(moveId) + "</font></b>", chan);
-                db.sendHtmlMessage(source, "<table border = 1 cellpadding = 2><tr><th>Type</th><th>Category</th><th>Power</th><th>Accuracy</th><th>PP (Max)</th><th>Contact</th></tr><tr><td><center>" + type + "</center></td><td><center>" + category + "</center></td><td><center>" + BP + "</center></td><td><center>" + accuracy + "</center></td><td><center>" + PP + " (" + (PP * 8/5) + ")</center></td><td><center>" + contact + "</center></td></tr></table>", chan);
-                db.sendHtmlMessage(source, "", chan);
-                db.sendHtmlMessage(source, "<b>Effect:</b> " + effect, chan);
-                db.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.move(moveId) + "</font></b>", chan);
+                sys.sendHtmlMessage(source, "<table border = 1 cellpadding = 2><tr><th>Type</th><th>Category</th><th>Power</th><th>Accuracy</th><th>PP (Max)</th><th>Contact</th></tr><tr><td><center>" + type + "</center></td><td><center>" + category + "</center></td><td><center>" + BP + "</center></td><td><center>" + accuracy + "</center></td><td><center>" + PP + " (" + (PP * 8/5) + ")</center></td><td><center>" + contact + "</center></td></tr></table>", chan);
+                sys.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<b>Effect:</b> " + effect, chan);
+                sys.sendHtmlMessage(source, "", chan);
                 return true;
             }
         },
@@ -3248,10 +3248,10 @@ init : function (){
                     CommandBot.sendMessage(source, commandData + " is not a valid ability!", chan);
                     return false;
                 }
-                db.sendHtmlMessage(source, "", chan);
-                db.sendHtmlMessage(source, "<b><font size = 4>" + sys.ability(abilityId) + "</font></b>", chan);
-                db.sendHtmlMessage(source, "<b>Effect:</b> " + db.getAbility(abilityId), chan);
-                db.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.ability(abilityId) + "</font></b>", chan);
+                sys.sendHtmlMessage(source, "<b>Effect:</b> " + db.getAbility(abilityId), chan);
+                sys.sendHtmlMessage(source, "", chan);
                 return true;
             }
         },
@@ -3277,22 +3277,22 @@ init : function (){
                 if (itemId >= 9000 || itemId === 1000 || itemId === 1001 || itemId === 304) {
                     isGSC = true;
                 }
-                db.sendHtmlMessage(source, "", chan);
-                db.sendHtmlMessage(source, "<b><font size = 4>" + sys.item(itemId) + "</font></b>", chan);
+                sys.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<b><font size = 4>" + sys.item(itemId) + "</font></b>", chan);
                 if (!isGSC) {
-                    db.sendHtmlMessage(source, "<img src=item:" + itemId + ">", chan);
+                    sys.sendHtmlMessage(source, "<img src=item:" + itemId + ">", chan);
                 }
-                db.sendHtmlMessage(source, "<b>Effect:</b> " + (isBerry ? db.getBerry(berryId) : db.getItem(itemId)), chan);
+                sys.sendHtmlMessage(source, "<b>Effect:</b> " + (isBerry ? db.getBerry(berryId) : db.getItem(itemId)), chan);
                 if (!isGSC) {
                     if (flingPower !== undefined) {
-                        db.sendHtmlMessage(source, "<b>Fling base power:</b> " + db.flingPower, chan);
+                        sys.sendHtmlMessage(source, "<b>Fling base power:</b> " + db.flingPower, chan);
                     }
                     if (isBerry) {
-                        db.sendHtmlMessage(source, "<b>Natural Gift type:</b> " + db.getBerryType(berryId), chan);
-                        db.sendHtmlMessage(source, "<b>Natural Gift base power:</b> " + db.getBerryPower(berryId), chan);
+                        sys.sendHtmlMessage(source, "<b>Natural Gift type:</b> " + db.getBerryType(berryId), chan);
+                        sys.sendHtmlMessage(source, "<b>Natural Gift base power:</b> " + db.getBerryPower(berryId), chan);
                     }
                 }
-                db.sendHtmlMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "", chan);
                 return true;
             }
         },
@@ -3319,9 +3319,9 @@ init : function (){
                     
                     var raised = fullStatName[db.statBoostedBy(nature)];
                     var lowered = fullStatName[db.statReducedBy(nature)];
-                    db.sendHtmlMessage(source, "<b><font size=4>" + nature + "</font></b>", chan);
-                    db.sendHtmlMessage(source, "<b>Increases</b> the " + raised + " stat by 10%.", chan);
-                    db.sendHtmlMessage(source, "<b>Decreases</b> the " + lowered + " stat by 10%.", chan);
+                    sys.sendHtmlMessage(source, "<b><font size=4>" + nature + "</font></b>", chan);
+                    sys.sendHtmlMessage(source, "<b>Increases</b> the " + raised + " stat by 10%.", chan);
+                    sys.sendHtmlMessage(source, "<b>Decreases</b> the " + lowered + " stat by 10%.", chan);
                     return true;
                 }
                 CommandBot.sendMessage(source, "Please specify a nature.", chan);
@@ -3333,8 +3333,8 @@ init : function (){
         "natures" : {
             cost: 0, help: "View a chart on which stats are affected by natures",
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<br><b><font size=4>Natures Guide</font></b>", chan);
-                db.sendHtmlMessage(source, "<style type='text/css'>td{border: 1px black solid; padding: 2px; text-align: center}td.left{padding-right:3px}</style><table style='text-align: center'><tr><td class='left'></td><td><b>+ Attack</b></td><td><b>+ Defense</b></td><td><b>+ Speed</b></td><td><b>+ Sp Attack</b></td><td><b>+ Sp Defense</b></td></tr><tr><td class='left'><b>- Attack</b></td><td>Hardy</td><td>Bold</td><td>Timid</td><td>Modest</td><td>Calm</td></tr><tr><td class='left'><b>- Defense</b></td><td>Lonely</td><td>Docile</td><td>Hasty</td><td>Mild</td><td>Gentle</td></tr><tr><td class='left'><b>- Speed</b></td><td>Brave</td><td>Relaxed</td><td>Serious</td><td>Quiet</td><td>Sassy</td></tr><tr><td class='left'><b>- Sp Attack</b></td><td>Adamant</td><td>Impish</td><td>Jolly</td><td>Bashful</td><td>Careful</td></tr><tr><td class='left'><b>- Sp Defense</b></td><td>Naughty</td><td>Lax</td><td>Naive</td><td>Rash</td><td>Quirky</td></tr></table>", chan);
+                sys.sendHtmlMessage(source, "<br><b><font size=4>Natures Guide</font></b>", chan);
+                sys.sendHtmlMessage(source, "<style type='text/css'>td{border: 1px black solid; padding: 2px; text-align: center}td.left{padding-right:3px}</style><table style='text-align: center'><tr><td class='left'></td><td><b>+ Attack</b></td><td><b>+ Defense</b></td><td><b>+ Speed</b></td><td><b>+ Sp Attack</b></td><td><b>+ Sp Defense</b></td></tr><tr><td class='left'><b>- Attack</b></td><td>Hardy</td><td>Bold</td><td>Timid</td><td>Modest</td><td>Calm</td></tr><tr><td class='left'><b>- Defense</b></td><td>Lonely</td><td>Docile</td><td>Hasty</td><td>Mild</td><td>Gentle</td></tr><tr><td class='left'><b>- Speed</b></td><td>Brave</td><td>Relaxed</td><td>Serious</td><td>Quiet</td><td>Sassy</td></tr><tr><td class='left'><b>- Sp Attack</b></td><td>Adamant</td><td>Impish</td><td>Jolly</td><td>Bashful</td><td>Careful</td></tr><tr><td class='left'><b>- Sp Defense</b></td><td>Naughty</td><td>Lax</td><td>Naive</td><td>Rash</td><td>Quirky</td></tr></table>", chan);
                 return true;
             }
         },
@@ -3384,15 +3384,15 @@ init : function (){
                 //  If they want the rules they can just look.
                 if (commandData == "rules") {
                     CommandBot.sendMessage(source, "Juggernaut Rules", chan);
-                        db.sendMessage(source, "There is no registration process. Simply battling with the current Juggernaut is all that is needed to play.", chan);
-                        db.sendMessage(source, "The rules of the battle do not matter. Every battle with every team against every player in every tier counts toward the Juggernaut game. No excuses. No redoes. Try not to have any regrets.", chan);
-                        db.sendMessage(source, "Forfeiting counts as losing, while ties result in no change.", chan);
-                        db.sendMessage(source, "If you are the Juggernaut and you win a battle, you get a point.", chan);
-                        db.sendMessage(source, "If you are the Juggernaut and you lose a battle, you lose all of your points and the winner of the match becomes the new Juggernaut.", chan);
-                        db.sendMessage(source, "You may only get 1 point per IP range. However, if you lose against a player from whom you have received a point, you still lose your Juggernaut slot.", chan);
-                        db.sendMessage(source, "Accept challenges when you can. If you do not have the time to battle, then you don't become the Juggernaut until you do have time.", chan);
-                        db.sendMessage(source, "If the Juggernaut goes 48 hours without a battle, the Juggernaut status is given away to the winner of the next battle, even if neither player is the Juggernaut.", chan);
-                        db.sendMessage(source, "Don't forget to bring your towel.", chan);
+                        sys.sendMessage(source, "There is no registration process. Simply battling with the current Juggernaut is all that is needed to play.", chan);
+                        sys.sendMessage(source, "The rules of the battle do not matter. Every battle with every team against every player in every tier counts toward the Juggernaut game. No excuses. No redoes. Try not to have any regrets.", chan);
+                        sys.sendMessage(source, "Forfeiting counts as losing, while ties result in no change.", chan);
+                        sys.sendMessage(source, "If you are the Juggernaut and you win a battle, you get a point.", chan);
+                        sys.sendMessage(source, "If you are the Juggernaut and you lose a battle, you lose all of your points and the winner of the match becomes the new Juggernaut.", chan);
+                        sys.sendMessage(source, "You may only get 1 point per IP range. However, if you lose against a player from whom you have received a point, you still lose your Juggernaut slot.", chan);
+                        sys.sendMessage(source, "Accept challenges when you can. If you do not have the time to battle, then you don't become the Juggernaut until you do have time.", chan);
+                        sys.sendMessage(source, "If the Juggernaut goes 48 hours without a battle, the Juggernaut status is given away to the winner of the next battle, even if neither player is the Juggernaut.", chan);
+                        sys.sendMessage(source, "Don't forget to bring your towel.", chan);
                     return true;
                 }
                 
@@ -3451,21 +3451,21 @@ init : function (){
                 }
                 
                 //  Start displays
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 TourBot.sendMessage(source, "Round " + roundnumber + " of " + tourtier.toUpperCase() + " Tournament", chan);
                 
                 //  Display finished battles
                 if (battlesLost.length > 0) {
                 
                     //  Header
-                    db.sendMessage(source, "*** Battles finished ***");
-                    db.sendMessage(source, "", chan);
+                    sys.sendMessage(source, "*** Battles finished ***");
+                    sys.sendMessage(source, "", chan);
                     
                     //  Show all who finished
                     for (var i = 0; i < battlesLost.length; i += 2) {
-                        db.sendMessage(source, battlesLost[i] + " won against " + battlesLost[i+1], chan);
+                        sys.sendMessage(source, battlesLost[i] + " won against " + battlesLost[i+1], chan);
                     }
-                    db.sendMessage(source, "", chan);
+                    sys.sendMessage(source, "", chan);
                 }
                 
                 //  Display in progress stuff
@@ -3475,29 +3475,29 @@ init : function (){
                     if (battlesStarted.indexOf(true) != -1) {
                     
                         //  Header
-                        db.sendMessage(source, "", chan);
-                        db.sendMessage(source, "*** Ongoing battles ***", chan);
+                        sys.sendMessage(source, "", chan);
+                        sys.sendMessage(source, "*** Ongoing battles ***", chan);
                         
                         //  Show the pairings
                         for (var i = 0; i < tourbattlers.length; i += 2) {
                             if (battlesStarted [i/2] == true) {
-                                db.sendMessage(source, tourplayers[tourbattlers[i]] + " VS " + tourplayers[tourbattlers[i+1]], chan);
+                                sys.sendMessage(source, tourplayers[tourbattlers[i]] + " VS " + tourplayers[tourbattlers[i+1]], chan);
                             }
                         }
-                        db.sendMessage(source, "", chan);
+                        sys.sendMessage(source, "", chan);
                     }
                     
                     //  Battles that haven't started
                     if (battlesStarted.indexOf(false) != -1) {
                         
                         //  Header
-                        db.sendMessage(source, "", chan);
-                        db.sendMessage(source, "*** Yet to start battles ***", chan);
+                        sys.sendMessage(source, "", chan);
+                        sys.sendMessage(source, "*** Yet to start battles ***", chan);
                         
                         //  Show the pairings
                         for (var i = 0; i < tourbattlers.length; i+=2) {
                             if (battlesStarted [i/2] == false) {
-                                db.sendMessage(source, tourplayers[tourbattlers[i]] + " VS " + tourplayers[tourbattlers[i+1]], chan);
+                                sys.sendMessage(source, tourplayers[tourbattlers[i]] + " VS " + tourplayers[tourbattlers[i+1]], chan);
                             }
                         }
                     }
@@ -3507,21 +3507,21 @@ init : function (){
                 if (tourmembers.length > 0) {
                 
                     //  Header
-                    db.sendMessage(source, "", chan);
-                    db.sendMessage(source, "*** Members to the next round ***", chan);
+                    sys.sendMessage(source, "", chan);
+                    sys.sendMessage(source, "*** Members to the next round ***", chan);
                     
                     //  Show who won already
                     var str = "";
                     for (x in tourmembers) {
                         str += (str.length == 0 ? "" : ", ") + tourplayers[tourmembers[x]];
                     }
-                    db.sendMessage(source, str, chan);
-                    db.sendMessage(source, "", chan);
+                    sys.sendMessage(source, str, chan);
+                    sys.sendMessage(source, "", chan);
                 }
                 
                 //  Close the message
-                db.sendHtmlMessage(source, "<hr>", chan);
-                db.sendMessage(source, "", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendMessage(source, "", chan);
                 return true;
             }
         },
@@ -3540,13 +3540,13 @@ init : function (){
                         sys.eval(commandData);
                         
                         //  Don't kick yourself with eval please
-                        db.sendMessage(source, "Success!", chan);
+                        sys.sendMessage(source, "Success!", chan);
                     }
                     
                     //  Say what went wrong if it broke
                     catch (e) {
-                        db.sendMessage(source, "Failed!", chan);
-                        db.sendMessage(source, e, chan);
+                        sys.sendMessage(source, "Failed!", chan);
+                        sys.sendMessage(source, e, chan);
                     }
                 }
                 
@@ -3680,7 +3680,7 @@ init : function (){
                 }
                 
                 //  Ping the person
-                db.sendHtmlMessage(target, "<timestamp/> <font size=+2>You got pinged by " + db.playerToString(source) + "!<ping/></font>");
+                sys.sendHtmlMessage(target, "<timestamp/> <font size=+2>You got pinged by " + db.playerToString(source) + "!<ping/></font>");
                 CommandBot.sendMessage(source, db.playerToString(target) + " was pinged.", chan);
                 return true;
             }
@@ -3703,14 +3703,14 @@ init : function (){
             run : function (source, chan, command, commandData, mcmd) {
                 
                 //  Just display everything
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 TourBot.sendMessage(source, "Tournament Rules:", chan);
-                db.sendMessage(source, "1: You may only use the tournament's tier in your battles. This is enforced.", chan);
-                db.sendMessage(source, "2: Do not scout other competitors' teams.", chan);
-                db.sendMessage(source, "3: Do not log off after joining. You will be disqualified.", chan);
-                db.sendMessage(source, "4: Do not idle while in a tournament.", chan);
-                db.sendMessage(source, "5: Do not battle players who aren't in the tournament, even (especially) between rounds.", chan);
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendMessage(source, "1: You may only use the tournament's tier in your battles. This is enforced.", chan);
+                sys.sendMessage(source, "2: Do not scout other competitors' teams.", chan);
+                sys.sendMessage(source, "3: Do not log off after joining. You will be disqualified.", chan);
+                sys.sendMessage(source, "4: Do not idle while in a tournament.", chan);
+                sys.sendMessage(source, "5: Do not battle players who aren't in the tournament, even (especially) between rounds.", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -3727,7 +3727,7 @@ init : function (){
                     showMessage+="<tr><td><center>" + RPCommands[c].cost + "pp</center></td><td><b>!" + c + "</b></td><td>" + RPCommands[c].help + "</td></tr>";
                 }
                 showMessage+="<tr><td></td><td></td></tr></table><br>";
-                db.sendHtmlMessage(source, showMessage, chan);
+                sys.sendHtmlMessage(source, showMessage, chan);
                 return true;
             }
         },
@@ -3790,18 +3790,18 @@ init : function (){
                     CommandBot.sendMessage(source, "'!" + c + "' isn't a Role Playing command.", chan);
                     return false;
                 }
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 CommandBot.sendMessage(source, "Information about " + c + ":", chan);
-                db.sendMessage(source, RPCommands[c].help, chan);
-                db.sendMessage(source, "", chan);
+                sys.sendMessage(source, RPCommands[c].help, chan);
+                sys.sendMessage(source, "", chan);
                 CommandBot.sendMessage(source, "Usage:", chan);
                 if (RPCommands[c].param == undefined) {
-                    db.sendMessage(source, "!" + c, chan);
+                    sys.sendMessage(source, "!" + c, chan);
                 }
                 else {
-                    db.sendMessage(source, "!" + c + " " + RPCommands[c].param.join(":"), chan);
+                    sys.sendMessage(source, "!" + c + " " + RPCommands[c].param.join(":"), chan);
                 }
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -3826,7 +3826,7 @@ init : function (){
                 }
                 
                 //  Display
-                db.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status4.png><b><font color=red size=3>" + db.playerToString(target)+ " was burned by " + db.playerToString(source) + " <img src=Themes/Classic/status/battle_status4.png></font>", chan);
+                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status4.png><b><font color=red size=3>" + db.playerToString(target)+ " was burned by " + db.playerToString(source) + " <img src=Themes/Classic/status/battle_status4.png></font>", chan);
                 return true;
             }
         },
@@ -3845,7 +3845,7 @@ init : function (){
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
                 }
-                db.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status2.png><b><font color=Black size=3> " + db.playerToString(source) + " used Heal Bell! " + db.playerToString(target)+ " was cured of all status problems. <img src=Themes/Classic/status/battle_status2.png></font>", chan);
+                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status2.png><b><font color=Black size=3> " + db.playerToString(source) + " used Heal Bell! " + db.playerToString(target)+ " was cured of all status problems. <img src=Themes/Classic/status/battle_status2.png></font>", chan);
                 return true;
             }
         },
@@ -3864,7 +3864,7 @@ init : function (){
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
                 }
-                db.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status3.png><b><font color=blue size=3> " + db.playerToString(target) + " was frozen by " + db.playerToString(source) + "</font><img src=Themes/Classic/status/battle_status3.png>", chan);
+                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status3.png><b><font color=blue size=3> " + db.playerToString(target) + " was frozen by " + db.playerToString(source) + "</font><img src=Themes/Classic/status/battle_status3.png>", chan);
                 return true;
             }
         },
@@ -3883,7 +3883,7 @@ init : function (){
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
                 }
-                db.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status1.png><b><font color=#f8d030 size=3> " + db.playerToString(target) + " was paralyzed by " + db.playerToString(source) + " </font><img src=Themes/Classic/status/battle_status1.png></font>", chan);
+                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status1.png><b><font color=#f8d030 size=3> " + db.playerToString(target) + " was paralyzed by " + db.playerToString(source) + " </font><img src=Themes/Classic/status/battle_status1.png></font>", chan);
                 return true;
             }
         },
@@ -3902,7 +3902,7 @@ init : function (){
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
                 }
-                db.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status5.png><b><font color=Purple size=3> " + db.playerToString(target) + " was poisoned by " + db.playerToString(source) + " </font><img src=Themes/Classic/status/battle_status5.png>", chan);
+                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status5.png><b><font color=Purple size=3> " + db.playerToString(target) + " was poisoned by " + db.playerToString(source) + " </font><img src=Themes/Classic/status/battle_status5.png>", chan);
                 return true;
             }
         },
@@ -3912,7 +3912,7 @@ init : function (){
             cost : 15,
             help : "Flip a table",
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + " (╯°□°）╯︵ ┻━┻", chan);
+                sys.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + " (╯°□°）╯︵ ┻━┻", chan);
                 return true;
             }
         },
@@ -3922,7 +3922,7 @@ init : function (){
             cost : 15,
             help : "Who knows?",
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + "¯\\_(ツ)_/¯", chan);
+                sys.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + "¯\\_(ツ)_/¯", chan);
                 return true;
             }
         },
@@ -3944,7 +3944,7 @@ init : function (){
                 var sourcename = sys.name(source);
                 
                 //  Display
-                db.sendHtmlAll(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + " " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                sys.sendHtmlAll(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + " " + db.htmlEscape(commandData) + "</font></i></font>", chan);
                 return true;
             }
         },
@@ -3962,7 +3962,7 @@ init : function (){
                 
                 //  Define the name for this context
                 var sourcename = sys.name(source);
-                db.sendHtmlAll(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                sys.sendHtmlAll(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
                 return true;
             }
         },
@@ -4013,7 +4013,7 @@ init : function (){
                     }
                 }
                 showMessage+="<tr><td></td><td></td></tr></table><br>";
-                db.sendHtmlMessage(source, showMessage, chan);
+                sys.sendHtmlMessage(source, showMessage, chan);
                 return true;
             }
         },
@@ -4344,7 +4344,7 @@ init : function (){
                     }
                 }
                 showMessage+="<tr><td></td><td></td></tr></table><br>";
-                db.sendHtmlMessage(source, showMessage, chan);
+                sys.sendHtmlMessage(source, showMessage, chan);
                 CommandBot.sendMessage(source, "Note: Party Host commands only work in the Party channel.", chan);
                 return true;
             }
@@ -4503,7 +4503,7 @@ init : function (){
                     }
                 }
                 showMessage+="<tr><td></td><td></td></tr></table><br>";
-                db.sendHtmlMessage(source, showMessage, chan);
+                sys.sendHtmlMessage(source, showMessage, chan);
                 return true;
             }
         },
@@ -4569,6 +4569,7 @@ init : function (){
                 //  Enforce restrictions because some auth don't pay attention
                 if (commandData.length < 4 || !/^[A-Za-z0-9 _\!]*$/.test(commandData)) {
                     CommandBot.sendMessage(source, "Name is not in a valid format.", chan);
+                    return false;
                 }
                 clan.addMember(source, commandData);
                 return true;
@@ -4675,7 +4676,7 @@ init : function (){
                     showMessage+="<tr><td><b><center>" + (x + 1) + ":</center></b></td><td>" + Config.Rules[x] + "</td></tr>";
                 }
                 showMessage+="<tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>";
-                db.sendHtmlMessage(target, showMessage);
+                sys.sendHtmlMessage(target, showMessage);
                 return true;
             }
         },
@@ -4689,13 +4690,13 @@ init : function (){
                     return false;
                 }
                 CommandBot.sendMessage(source, "Information of player " + commandData + ":", chan);
-                db.sendMessage(source, "IP: " + sys.dbIp(commandData), chan);
-                db.sendMessage(source, "Auth Level: " + sys.dbAuth(commandData), chan);
-                db.sendMessage(source, "Max Auth: " + sys.maxAuth(commandData), chan);
-                db.sendMessage(source, "Aliases: " + sys.aliases(sys.dbIp(commandData)), chan);
-                db.sendMessage(source, "Number of aliases: " + sys.aliases(sys.dbIp(commandData)).length, chan); 
-                db.sendMessage(source, "Registered: " + sys.dbRegistered(commandData), chan);
-                db.sendMessage(source, "Logged In: " + (target != undefined), chan);
+                sys.sendMessage(source, "IP: " + sys.dbIp(commandData), chan);
+                sys.sendMessage(source, "Auth Level: " + sys.dbAuth(commandData), chan);
+                sys.sendMessage(source, "Max Auth: " + sys.maxAuth(commandData), chan);
+                sys.sendMessage(source, "Aliases: " + sys.aliases(sys.dbIp(commandData)), chan);
+                sys.sendMessage(source, "Number of aliases: " + sys.aliases(sys.dbIp(commandData)).length, chan); 
+                sys.sendMessage(source, "Registered: " + sys.dbRegistered(commandData), chan);
+                sys.sendMessage(source, "Logged In: " + (target != undefined), chan);
                 if (target != undefined) {
                     var channames = [];
                     var channels = sys.channelsOfPlayer(target);
@@ -4782,7 +4783,7 @@ init : function (){
                 }
                 var ip = sys.dbIp(mcmd[0]);
                 if (!mutes.isMuted(ip)) {
-                    db.sendMessage(source, "That player is not muted...", chan);
+                    sys.sendMessage(source, "That player is not muted...", chan);
                     return false;
                 }
                 mutes.unmute(ip);
@@ -4912,10 +4913,10 @@ init : function (){
 
         "staffchanlist" : {
             run : function (source, chan, command, commandData, mcmd) {
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 Guard.sendMessage(source, "Staff Channel List:", chan);
-                db.sendMessage(source, hash.get("allowstaffchan").join(", "), chan);
-                db.sendHtmlMessage(source, "<hr>", chan);
+                sys.sendMessage(source, hash.get("allowstaffchan").join(", "), chan);
+                sys.sendHtmlMessage(source, "<hr>", chan);
                 return true;
             }
         },
@@ -4979,7 +4980,7 @@ init : function (){
                     }
                 }
                 showMessage+="<tr><td></td><td></td></tr></table><br>";
-                db.sendHtmlMessage(source, showMessage, chan);
+                sys.sendHtmlMessage(source, showMessage, chan);
                 return true;
             }
         },
@@ -5243,7 +5244,7 @@ init : function (){
                 ).join("");
 
                 if (teams) {
-                    db.sendHtmlMessage(source, "<table><tr>" + teams + "</tr></table>", chan);
+                    sys.sendHtmlMessage(source, "<table><tr>" + teams + "</tr></table>", chan);
                     CommandBot.sendAll(source, db.playerToString(source) + " viewed " + db.playerToString(target) + "'s teams.", main);
                     return true;
                 }
@@ -5280,7 +5281,7 @@ init : function (){
             param : ["new message"],
             run : function (source, chan, command, commandData, mcmd) {
                 hash.set("authnote", commandData);
-                db.sendMessage(source, "~~Server~~: Auth note set to: " + commandData, chan);
+                sys.sendMessage(source, "~~Server~~: Auth note set to: " + commandData, chan);
                 return true;
             }
         },
@@ -5324,7 +5325,7 @@ init : function (){
                     }
                 }
                 showMessage+="<tr></tr></table><br>";
-                db.sendHtmlMessage(source, showMessage, chan);
+                sys.sendHtmlMessage(source, showMessage, chan);
                 return true;
             }
         },
@@ -5552,10 +5553,10 @@ init : function (){
                 }
                 CommandBot.sendAll(source, db.playerToString(source) + " sent out Jirachi!</font>", chan);
                 for (var i = 0; i < spamcolors.length; i++) {
-                    db.sendHtmlMessage(target, "<font color=" + spamcolors[i] + "><timestamp/><font size=3>+<b><i>Jirachi use Iron Head! </b></i><font color=black>"+sys.name(target)+" flinched!</font>", chan); 
+                    sys.sendHtmlMessage(target, "<font color=" + spamcolors[i] + "><timestamp/><font size=3>+<b><i>Jirachi use Iron Head! </b></i><font color=black>"+sys.name(target)+" flinched!</font>", chan); 
                 }
                 CommandBot.sendMessage(source, "You privately spammed " + sys.name(target), chan);
-                db.sendHtmlMessage(target, "Jirachi ran out of PP!</font>", chan); 
+                sys.sendHtmlMessage(target, "Jirachi ran out of PP!</font>", chan); 
                 return true;
             }
         },
@@ -5586,10 +5587,10 @@ init : function (){
             run : function (source, chan, command, commandData, mcmd) {
 
                 try {
-                    db.sendMessage(source, db.getFileContent(json + commandData), chan);
+                    sys.sendMessage(source, db.getFileContent(json + commandData), chan);
                     return true;
                 } catch (e) {
-                    db.sendMessage(source, "Couldn't find " + commandData, chan);
+                    sys.sendMessage(source, "Couldn't find " + commandData, chan);
                     return false;
                 }
             }
@@ -5608,7 +5609,7 @@ init : function (){
                         sys.writeToFile(json + mcmd[0], resp);
                         sys.changeScript(db.getFileContent('scripts.js'));
                     } catch (err) {
-                        db.sendMessage(source, err, chan);
+                        sys.sendMessage(source, err, chan);
                         sys.sendAll(err, watch);
                         print(err);
                     }
@@ -5787,7 +5788,7 @@ init : function (){
         },
         
         sendMessage : function (target, msg, chan) {
-            db.sendBotMessage(target, msg, chan, Config.CommandBot[0], Config.CommandBot[1]);
+            sys.sendBotMessage(target, msg, chan, Config.CommandBot[0], Config.CommandBot[1]);
         },
         
         sendAll : function (source, msg, chan) {
@@ -5795,7 +5796,7 @@ init : function (){
                 this.sendMessage(source, msg, chan);
             }
             else {
-                db.sendBotAll(msg, chan, Config.CommandBot[0], Config.CommandBot[1]);
+                sys.sendBotAll(msg, chan, Config.CommandBot[0], Config.CommandBot[1]);
             }
         }
     };
@@ -6006,7 +6007,7 @@ init : function (){
         ChatBot.sendMessage(source, "You are muted. (Reason:  " + this.muted[ip].reason + ". Duration: " + db.getTimeString(this.muted[ip].time - parseInt(sys.time())) + ")", chan);
     };
     Mutes.prototype.display = function (source, chan, command, commandData, mcmd) {
-        db.sendHtmlMessage(source, "<hr>", chan);
+        sys.sendHtmlMessage(source, "<hr>", chan);
         ChatBot.sendMessage(source, "Mute List:", chan);
         var str = "<table width='100%'><tr><th width=20%>IP</th><th width=20%>Muter</th><th width=30%>Reason</th><th width=30%>Time</th></tr>";
         for (var ip in this.muted) {
@@ -6019,8 +6020,8 @@ init : function (){
                 }
             }
         }
-        db.sendHtmlMessage(source, str + "</table>", chan);
-        db.sendHtmlMessage(source, "<hr>", chan);
+        sys.sendHtmlMessage(source, str + "</table>", chan);
+        sys.sendHtmlMessage(source, "<hr>", chan);
     };
     mutes = new Mutes();
       
@@ -6064,9 +6065,9 @@ init : function (){
         db.setJSON(banFile, this.list);
     };
     RangeBans.prototype.display = function (source, chan, command, commandData, mcmd){
-        db.sendHtmlMessage(source, "<hr>", main);
+        sys.sendHtmlMessage(source, "<hr>", main);
         if(this.list.length == 0) {
-          db.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", main);
+          sys.sendHtmlMessage(source,"<timestamp/>No Range Bans yet!", main);
         }
         else {
             Guard.sendMessage(source,"Range Ban List:", main);
@@ -6074,9 +6075,9 @@ init : function (){
             for (var i = 0; i < this.list.length; i++) {
                 str += db.inttoip(this.list[i]) + " ";
             }
-            db.sendMessage(source, str, main);
+            sys.sendMessage(source, str, main);
         }
-        db.sendHtmlMessage(source, "<hr>", main);
+        sys.sendHtmlMessage(source, "<hr>", main);
     };
     rangebans = new RangeBans();
 
@@ -6111,7 +6112,7 @@ init : function (){
         return true;
     }
     IPBans.prototype.display = function (source) {
-        db.sendHtmlMessage(source, "<hr>", main);
+        sys.sendHtmlMessage(source, "<hr>", main);
         if (this.list.length == 0) {
             Guard.sendMessage(source, "No IP bans yet!", main);
         }
@@ -6121,9 +6122,9 @@ init : function (){
             for (var i = 0; i < this.list.length; i++) {
                 str += db.inttoip(this.list[i]) + " ";
             }
-            db.sendHtmlMessage(source, str, main);
+            sys.sendHtmlMessage(source, str, main);
         }
-        db.sendHtmlMessage(source, "<hr>", main);
+        sys.sendHtmlMessage(source, "<hr>", main);
     }
     ipbans = new IPBans();
 
@@ -6148,14 +6149,14 @@ init : function (){
     Clan.prototype.addMember = function (source, name) {
         if (name.length < 4 || !/^[A-Za-z0-9 _\!]*$/.test(name)) {
             if (Config.SuperUsers.indexOf(name) == -1) {
-                db.sendMessage(source, "~~Server~~: Only alphanumeric names can be clan members.", main);
+                sys.sendMessage(source, "~~Server~~: Only alphanumeric names can be clan members.", main);
                 return;
             }
         }
         var x = this.indexInClan(name);
-        db.sendMessage(source, "->Debugger: This user is index " + x, main);
+        sys.sendMessage(source, "->Debugger: This user is index " + x, main);
         if (-1 < x) {
-            db.sendMessage(source, "~~Server~~:" + name + " is already in the member database.", main);
+            sys.sendMessage(source, "~~Server~~:" + name + " is already in the member database.", main);
             return;
         }
         this.members.push(db.escapeTagName(name).toLowerCase());
@@ -6169,7 +6170,7 @@ init : function (){
         name = db.escapeTagName(name, false).toLowerCase();
         var x = this.indexInClan(name);
         if (-1 == x) {
-            db.sendMessage(source, "~~Server~~:" + name + " isn't in the member database.", main);
+            sys.sendMessage(source, "~~Server~~:" + name + " isn't in the member database.", main);
             return;
         }
         else {
@@ -6181,16 +6182,16 @@ init : function (){
     Clan.prototype.showAll = function (source, chan) {
         this.members = db.getJSON(memberFile);
         if (this.members[0] == undefined) {
-            db.sendMessage(source, "~~Server~~: No members!");
+            sys.sendMessage(source, "~~Server~~: No members!");
             return;
         }
         this.members = this.members.sort();
-        db.sendMessage(source, "~~Server~~: The " + this.members.length + " members are:", chan);
-        db.sendMessage(source, this.members.join(", "), chan);
+        sys.sendMessage(source, "~~Server~~: The " + this.members.length + " members are:", chan);
+        sys.sendMessage(source, this.members.join(", "), chan);
         this.save();
     };
     Clan.prototype.exportMembers = function (source, chan) {
-        db.sendMessage(source, db.getJSON(memberFile), chan);
+        sys.sendMessage(source, db.getJSON(memberFile), chan);
     };
     clan = new Clan();
     Pictures = db.getJSON("pictures.json");
@@ -6212,10 +6213,10 @@ init : function (){
     };
     
     Juggernaut.prototype.sendMessage = function (target, msg, chan) {
-        db.sendBotMessage(target, msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
+        sys.sendBotMessage(target, msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
     };
     Juggernaut.prototype.sendAll = function (msg, chan) {
-        db.sendBotAll(msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
+        sys.sendBotAll(msg, chan, Config.Juggernaut[0], Config.Juggernaut[1]);
     };
     Juggernaut.prototype.lastWon = function(){
         return parseInt(sys.time()) - parseInt(jug.time);
@@ -6310,7 +6311,7 @@ init : function (){
             table += "<tr><td>" + this.logs[i][0] + "</td><td>" + this.logs[i][1] + "</td><td>" + this.logs[i][2] + "</td><td>" + this.logs[i][3] + "</td></tr>";
             num--;
         }
-        db.sendHtmlMessage(source, table + "</table><br>", chan);
+        sys.sendHtmlMessage(source, table + "</table><br>", chan);
     }
 
     AuthLogs.prototype.save = function() {
@@ -6468,7 +6469,7 @@ beforeIPConnected : function (ip) {
 beforeLogIn : function (source) {
     if (-1 < sys.name(source).indexOf(clan.tagToString())
     && clan.indexInClan(sys.name(source)) == -1) {
-        db.sendMessage(source, "~~Server~~: Your name wasn't found on the members list. This could be our error- a reminder will do fine. Otherwise, you must try out to join the clan.");
+        sys.sendMessage(source, "~~Server~~: Your name wasn't found on the members list. This could be our error- a reminder will do fine. Otherwise, you must try out to join the clan.");
         sys.sendAll(sys.name(source) + " was rejected for not being in the clan.", watch);
         sys.stopEvent();
         return;
@@ -6494,7 +6495,7 @@ afterLogIn : function (source) {
 
     players[source].showgoodbye = false;
     if (db.auth(source) < 1 && db.nameIsInappropriate(name)) {
-        db.sendMessage(source, "~~Server~~: That name is not acceptable.");
+        sys.sendMessage(source, "~~Server~~: That name is not acceptable.");
         sys.kick(source);
         return;
     }
@@ -6505,12 +6506,12 @@ afterLogIn : function (source) {
         TierBot.fixTeam(source, i);
     }
     if (tourmode == 1) {
-        db.sendHtmlMessage(source,"<hr>", main);
+        sys.sendHtmlMessage(source,"<hr>", main);
         TourBot.sendMessage(source, "A " + tourtier + " tournament is in its signup phase.", main);
         CommandBot.sendMessage(source, "Type !join to enter or !tourrules to see this server's Tournament rules.", main);
         TourBot.sendMessage(source, tourSpots() + " spots remaining!", main);
         TierBot.sendMessage(source, "Prize: " + prize, main);
-        db.sendHtmlMessage(source,"<hr>", main);
+        sys.sendHtmlMessage(source,"<hr>", main);
     }
     
     //  Only update banner if the person is on the banner
@@ -6521,9 +6522,9 @@ afterLogIn : function (source) {
     }
     
     if (mutes.isMuted(sys.ip(source))) {
-        db.sendMessage(source, "", main);
+        sys.sendMessage(source, "", main);
         ChatBot.sendMessage(source, "You are muted. Think about your life.", main);
-        db.sendMessage(source, "", main);
+        sys.sendMessage(source, "", main);
         sys.sendAll("Muted player " + name + " entered.", watch);
     }
 
@@ -6531,12 +6532,12 @@ afterLogIn : function (source) {
         try {
             var msg = hash.get("authnote");
             if (msg.length != 0) {
-                db.sendMessage(source, "~~Server~~: Auth note: " + msg, chan);
+                sys.sendMessage(source, "~~Server~~: Auth note: " + msg, chan);
             }
         }
         catch (e) {
             hash.set("authnote", "Invalid auth note registered. Please place a new one.");
-            db.sendMessage(source, "~~Server~~: Auth note: " + hash.get("authnote"));
+            sys.sendMessage(source, "~~Server~~: Auth note: " + hash.get("authnote"));
         }
     }
 },
@@ -6567,7 +6568,7 @@ beforeChannelJoin : function (source, chan){
             break;
         case clanchan:
             if (-1 == sys.name(source).indexOf(clan.tagToString())) {
-                db.sendMessage(source, "~~Server~~: This channel only permits " + clan.tagToString() + " members.", main);
+                sys.sendMessage(source, "~~Server~~: This channel only permits " + clan.tagToString() + " members.", main);
                 sys.stopEvent();
                 return;
             }
@@ -6640,7 +6641,7 @@ beforeChatMessage : function(source, msg, chan) {
     }
     sys.stopEvent();
     if (db.auth(source) < 1 && db.nameIsInappropriate(sys.name(source))) {
-        db.sendMessage(source, "~~Server~~: That name is not acceptable.");
+        sys.sendMessage(source, "~~Server~~: That name is not acceptable.");
         sys.kick(source);
         return;
     }
@@ -6654,7 +6655,7 @@ beforeChatMessage : function(source, msg, chan) {
     if (-1 < sys.name(source).indexOf(clan.tagToString())
     && clan.indexInClan(sys.name(source)) == -1) {
         //  sys.stopEvent();
-        db.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", chan);
+        sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", chan);
         sys.kick(source);
         return;
     }
@@ -6677,7 +6678,7 @@ beforeChatMessage : function(source, msg, chan) {
     else {
         if (players[source].confined) {
             //  sys.stopEvent();
-            db.sendHtmlMessage(source, db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
+            sys.sendHtmlMessage(source, db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
             ChatBot.sendAll(db.channelToString(chan) + "Confined Message -- " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg),watch);        
             return;
         }
@@ -6702,7 +6703,7 @@ beforeChatMessage : function(source, msg, chan) {
 
 afterChatMessage : function (source, msg, chan) {
     if (msg.toLowerCase() == "ph'nglui mglw'nafh cthulhu r'lyeh wgah'nagl fhtagn") {
-        db.sendBotAll("I live once more!", main, "Cthulhu", "green");
+        sys.sendBotAll("I live once more!", main, "Cthulhu", "green");
         sys.sendHtmlAll(db.playerToString(source) + " was muted for 5 minutes for summoning the beast!", main);
         mutes.mute("->Cthulhu", sys.ip(source), "summoning the beast", 5);
         sys.sendHtmlAll("<font color=green><timestamp/> -&gt;<i><b>*** Cthulhu</b> returns to its slumber.</i> </font>", main);
@@ -6732,7 +6733,7 @@ afterNewMessage : function (msg, chan){
             sys.sendAll("~~Server~~: " + msg, sys.channelId(Config.WatchChannelName));
             if (typeof (Config.ScriptOwner) != undefined) {
                 if (sys.id(Config.ScriptOwner) != undefined) {
-                    db.sendMessage(sys.id(Config.ScriptOwner), "~~Server~~: " + msg);
+                    sys.sendMessage(sys.id(Config.ScriptOwner), "~~Server~~: " + msg);
                 }
             }
         }
@@ -6867,12 +6868,12 @@ afterChangeTeam : function (source) {
     }
     if (players[source].oldname != sys.name(source)) {
         if (parseInt(sys.time()) - players[source].lastNameChange < 2) {
-            db.sendMessage(source, "~~Server~~: You can't change names that fast.");
+            sys.sendMessage(source, "~~Server~~: You can't change names that fast.");
             sys.kick(source);
             return;
         }
         if (-1 < sys.name(source).indexOf(clan.tagToString()) && -1 == clan.indexInClan(sys.name(source))) {
-            db.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", main);
+            sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", main);
             sys.kick(source);
             return;
         }
@@ -6901,7 +6902,7 @@ afterChangeTier : function (source, tsource, oldtier, newtier) {
 
 beforePlayerAway : function (source, away) {
     if (away && isInTourney(sys.name(source))) {
-        db.sendMessage(source, "Don't idle during a tournament.", main);
+        sys.sendMessage(source, "Don't idle during a tournament.", main);
         sys.stopEvent();
     }
 },
