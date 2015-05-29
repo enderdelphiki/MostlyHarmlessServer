@@ -2087,7 +2087,7 @@ init : function (){
                 if (-1 < this.data.unobtainablePoke.indexOf(poke)) {
                 
                     //  Warn...
-                    this.sendMessage(source, poke + " is not available in Pokemon X and Y versions and is banned from XY battles.", main);
+                    this.sendMessage(source, poke + " is not available in Pokemon XY or ORAS versions and is banned from 6th Generation battles.", main);
                     
                     //  change...
                     sys.changeTier(source, tsource, "Challenge Cup");
@@ -2101,7 +2101,7 @@ init : function (){
                 if (-1 < this.data.unobtainableItem.indexOf(item)) {
                     
                     //  Warn...
-                    this.sendMessage(source, item + " is not available in Pokemon X and Y versions and is banned from XY battles.", main);
+                    this.sendMessage(source, item + " is not available in Pokemon XY or ORAS versions and is banned from 6th Generation battles.", main);
                     
                     //  change...
                     sys.changeTier(source, tsource, "Challenge Cup");
@@ -2114,7 +2114,7 @@ init : function (){
                 if (sys.hasDreamWorldAbility(source, tsource, i) && -1 < hash.get("unreleasedPokes").indexOf(poke)) {
                 
                     //  Warn...
-                    this.sendMessage(source, poke + "'s hidden ability is not available in Pokemon X and Y versions and is banned from XY battles.", main);
+                    this.sendMessage(source, poke + "'s hidden ability is not available in Pokemon XY or ORAS versions and is banned from 6th Generation battles.", main);
                     
                     //  change...
                     sys.changeTier(source, tsource, "Challenge Cup");
@@ -2913,7 +2913,7 @@ init : function (){
                 }
                 
                 //  Display the pick message (also shows with dupes removed)
-                sys.sendHtmlAll(source, db.playerToString(source, true, (rpchan == chan)) + " !pick " + list.join(":"), chan);
+                sys.sendHtmlAll(db.playerToString(source, true, (rpchan == chan)) + " !pick " + list.join(":"), chan);
                 
                 //  Show the result
                 db.sendBotAll("I pick " + list[sys.rand(0, list.length)] + "!", chan, "Magic Sea Conch", "#00BBBB");
@@ -3826,7 +3826,7 @@ init : function (){
                 }
                 
                 //  Display
-                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status4.png><b><font color=red size=3>" + db.playerToString(target)+ " was burned by " + db.playerToString(source) + " <img src=Themes/Classic/status/battle_status4.png></font>", chan);
+                sys.sendHtmlAll("<img src=Themes/Classic/status/battle_status4.png><b><font color=red size=3>" + db.playerToString(target)+ " was burned by " + db.playerToString(source) + " <img src=Themes/Classic/status/battle_status4.png></font>", chan);
                 return true;
             }
         },
@@ -3845,7 +3845,7 @@ init : function (){
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
                 }
-                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status2.png><b><font color=Black size=3> " + db.playerToString(source) + " used Heal Bell! " + db.playerToString(target)+ " was cured of all status problems. <img src=Themes/Classic/status/battle_status2.png></font>", chan);
+                sys.sendHtmlAll("<img src=Themes/Classic/status/battle_status2.png><b><font color=Black size=3> " + db.playerToString(source) + " used Heal Bell! " + db.playerToString(target)+ " was cured of all status problems. <img src=Themes/Classic/status/battle_status2.png></font>", chan);
                 return true;
             }
         },
@@ -3864,7 +3864,7 @@ init : function (){
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
                 }
-                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status3.png><b><font color=blue size=3> " + db.playerToString(target) + " was frozen by " + db.playerToString(source) + "</font><img src=Themes/Classic/status/battle_status3.png>", chan);
+                sys.sendHtmlAll("<img src=Themes/Classic/status/battle_status3.png><b><font color=blue size=3> " + db.playerToString(target) + " was frozen by " + db.playerToString(source) + "</font><img src=Themes/Classic/status/battle_status3.png>", chan);
                 return true;
             }
         },
@@ -3883,7 +3883,7 @@ init : function (){
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
                 }
-                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status1.png><b><font color=#f8d030 size=3> " + db.playerToString(target) + " was paralyzed by " + db.playerToString(source) + " </font><img src=Themes/Classic/status/battle_status1.png></font>", chan);
+                sys.sendHtmlAll("<img src=Themes/Classic/status/battle_status1.png><b><font color=#f8d030 size=3> " + db.playerToString(target) + " was paralyzed by " + db.playerToString(source) + " </font><img src=Themes/Classic/status/battle_status1.png></font>", chan);
                 return true;
             }
         },
@@ -3902,7 +3902,7 @@ init : function (){
                     CommandBot.sendMessage(source, "All status commands are disabled right now.", chan);
                     return false;
                 }
-                sys.sendHtmlAll(source, "<img src=Themes/Classic/status/battle_status5.png><b><font color=Purple size=3> " + db.playerToString(target) + " was poisoned by " + db.playerToString(source) + " </font><img src=Themes/Classic/status/battle_status5.png>", chan);
+                sys.sendHtmlAll("<img src=Themes/Classic/status/battle_status5.png><b><font color=Purple size=3> " + db.playerToString(target) + " was poisoned by " + db.playerToString(source) + " </font><img src=Themes/Classic/status/battle_status5.png>", chan);
                 return true;
             }
         },
@@ -3912,7 +3912,7 @@ init : function (){
             cost : 15,
             help : "Flip a table",
             run : function (source, chan, command, commandData, mcmd) {
-                sys.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + " (╯°□°）╯︵ ┻━┻", chan);
+                sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " (╯°□°）╯︵ ┻━┻", chan);
                 return true;
             }
         },
@@ -3922,7 +3922,7 @@ init : function (){
             cost : 15,
             help : "Who knows?",
             run : function (source, chan, command, commandData, mcmd) {
-                sys.sendHtmlAll(source, db.playerToString(source, true, (chan == rpchan)) + "¯\\_(ツ)_/¯", chan);
+                sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + "¯\\_(ツ)_/¯", chan);
                 return true;
             }
         },
@@ -3944,7 +3944,7 @@ init : function (){
                 var sourcename = sys.name(source);
                 
                 //  Display
-                sys.sendHtmlAll(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + " " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                sys.sendHtmlAll("<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + " " + db.htmlEscape(commandData) + "</font></i></font>", chan);
                 return true;
             }
         },
@@ -3962,7 +3962,7 @@ init : function (){
                 
                 //  Define the name for this context
                 var sourcename = sys.name(source);
-                sys.sendHtmlAll(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                sys.sendHtmlAll("<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
                 return true;
             }
         },
@@ -6614,8 +6614,7 @@ beforeChannelDestroyed : function (chan) {
     }
 },
 
-beforeChatMessage : function(source, msg, chan) {try{
-
+beforeChatMessage : function(source, msg, chan) {
     if (msg == "@override" && db.auth(source) == 4) {
         //  Redefine becuase it might have failed
         var updateURL = Config.ScriptURL;
@@ -6636,71 +6635,76 @@ beforeChatMessage : function(source, msg, chan) {try{
         sys.webCall(updateURL, changeScript);
         return;
     }
-    if (-1 == sys.channelsOfPlayer(source).indexOf(main)) {
-        sys.putInChannel(source, main);
-    }
-    sys.stopEvent();
-    if (db.auth(source) < 1 && db.nameIsInappropriate(sys.name(source))) {
-        sys.sendMessage(source, "~~Server~~: That name is not acceptable.");
-        sys.kick(source);
-        return;
-    }
-    if (players == undefined) {
-        players = new Array();
-    }
-    if (players[source] == undefined) {
-        newPlayer(source);
-    }
-    
-    if (-1 < sys.name(source).indexOf(clan.tagToString())
-    && clan.indexInClan(sys.name(source)) == -1) {
-        //  sys.stopEvent();
-        sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", chan);
-        sys.kick(source);
-        return;
-    }
-    
-    //Check if the message is permitted.
-    if (ChatBot.beforeChatMessage(source, msg, chan)) {
-        //  sys.stopEvent();
-        return;
-    }
-    Tumbleweed.beforeChatMessage(source, msg, chan);
-    
-    //It's a command
-    if (-1 < ["!", "/", "%"].indexOf(msg[0])) {
-        //  sys.stopEvent();
-        CommandBot.beforeChatMessage (source, msg, chan, players);
-        return;
-    }
-    
-    //It's not a command
-    else {
-        if (players[source].confined) {
+    //  Stuff is needed to work. If it doesn't, make sure chatting still functions
+    try{
+        if (-1 == sys.channelsOfPlayer(source).indexOf(main)) {
+            sys.putInChannel(source, main);
+        }
+        sys.stopEvent();
+        if (db.auth(source) < 1 && db.nameIsInappropriate(sys.name(source))) {
+            sys.sendMessage(source, "~~Server~~: That name is not acceptable.");
+            sys.kick(source);
+            return;
+        }
+        if (players == undefined) {
+            players = new Array();
+        }
+        if (players[source] == undefined) {
+            newPlayer(source);
+        }
+        
+        if (-1 < sys.name(source).indexOf(clan.tagToString())
+        && clan.indexInClan(sys.name(source)) == -1) {
             //  sys.stopEvent();
-            sys.sendHtmlMessage(source, db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
-            ChatBot.sendAll(db.channelToString(chan) + "Confined Message -- " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg),watch);        
+            sys.sendMessage(source, "~~Server~~: Ask for a tryout to use that clan tag.", chan);
+            sys.kick(source);
             return;
         }
         
-        
-        if (chan != elsewhere) {
-            ChatBot.sendAll(db.channelToString(chan) + " -- </font>" + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg), watch);
-        }
-        
-        if (Party.beforeChatMessage(source, msg, chan)) {
+        //Check if the message is permitted.
+        if (ChatBot.beforeChatMessage(source, msg, chan)) {
             //  sys.stopEvent();
             return;
         }
-        if (chan == watch) {
+        Tumbleweed.beforeChatMessage(source, msg, chan);
+        
+        //It's a command
+        if (-1 < ["!", "/", "%"].indexOf(msg[0])) {
             //  sys.stopEvent();
+            CommandBot.beforeChatMessage (source, msg, chan, players);
             return;
         }
-        sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
-        return;
+        
+        //It's not a command
+        else {
+            if (players[source].confined) {
+                //  sys.stopEvent();
+                sys.sendHtmlMessage(source, db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
+                ChatBot.sendAll(db.channelToString(chan) + "Confined Message -- " + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg),watch);        
+                return;
+            }
+            
+            
+            if (chan != elsewhere) {
+                ChatBot.sendAll(db.channelToString(chan) + " -- </font>" + db.playerToString(source, false, false, true) + " " + db.htmlEscape(msg), watch);
+            }
+            
+            if (Party.beforeChatMessage(source, msg, chan)) {
+                //  sys.stopEvent();
+                return;
+            }
+            if (chan == watch) {
+                //  sys.stopEvent();
+                return;
+            }
+            sys.sendHtmlAll(db.playerToString(source, true, (chan == rpchan)) + " " + db.htmlEscape(msg), chan);
+            return;
+        }
     }
-}catch(e) {}
-
+    //  If something died, it's all fine.
+    catch(e) {
+        sys.sendAll(e, watch);
+    }
 },
 
 afterChatMessage : function (source, msg, chan) {
