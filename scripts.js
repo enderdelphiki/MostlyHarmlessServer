@@ -1780,6 +1780,10 @@ init : function (){
             //  Time has passed.
             this.count--;
 
+            if (600 == this.count) {
+                sys.sendHtmlAll("<timestamp/> -&gt; <i><b>Zombie:</b></i><i> **hrrhaaannnnnng!**</i>", main);
+            }
+
             //  Stop thinkfast
             if (500 == this.count) {
                 this.count = 360;
@@ -1797,6 +1801,11 @@ init : function (){
                     return;
                 }
 
+                if (40 < r) {
+                    sys.sendHtmlAll("<timestamp/> -&gt; <i><b>Zombie:</b></i><i> **hnnnnng...gruuhhhhhhhhh**</i>", main);
+                    this.count = 610;
+                }
+
                 //  display one at random
                 if (r < this.data.display.length) {
                     this.post(r);
@@ -1811,8 +1820,20 @@ init : function (){
         //  Called by script.beforeChatMessage(). Claim ThinkFast or just reset timer
         beforeChatMessage : function(source, msg, chan) {
             //  Earn Thinkfast
-            if (400 < this.count) {
+            if (495 < this.count && this.count < 505) {
                 awards.win(sys.name(source), "ThinkFast");
+            }
+            else if (590 < this.count && this.count < 650) {
+                players[source].zp++;
+                sys.sendHtmlAll("<timestamp/> -&gt; <i><b>Scorekeeper:</b></i><i> **Boom! Headshot!**</i>", main);
+
+                if (players[source].zp == 20 ) {
+                    awards.win(sys.name(source), "Hell's Janitor");
+                }
+                else {
+                    sys.sendHtmlAll("<timestamp/> -&gt; <i><b>Scorekeeper:</b></i>" + db.playerToString(source) + " has a score of " + players[source].zp, main);
+
+                }
             }
 
             //  A post was made; reset the timer.
@@ -3967,7 +3988,6 @@ init : function (){
             }
         },
         
-        //  For those moments win
         "slap" : {
             cost : 20,
             help : "Slap someone",
@@ -3987,6 +4007,18 @@ init : function (){
                 
                 //  Display
                 CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan == rpchan)) + " slaps " + db.playerToString(target, false, (chan == rpchan)) + " around a bit with a rubber chicken.</font>", chan);
+                return true;
+            }
+        },
+
+        //  For those moments win
+        "confused" : {
+            cost : 20,
+            help : "Because sometimes life hax",
+            run : function (source, chan, command, commandData, mcmd) {
+                                
+                //  Display
+                CommandBot.sendAll(source, "<i><font color=black>" + db.playerToString(source, false, (chan == rpchan)) + " was hurt in confusion!</font></i>", chan);
                 return true;
             }
         }
