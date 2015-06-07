@@ -1241,7 +1241,7 @@ init : function (){
             }
 
             //  It was gonna happen
-            var jajaja = ["alguem", "quier", "brasileiro"];
+            var jajaja = ["alguem", "quier", "brasileiro", "batalla"];
             for (var i = 0; i < jajaja.length; i++) {
                 if (-1 < message.indexOf(jajaja[i])) {
                     this.sendMessage(source, "Por favor use Inglés.", chan);
@@ -1804,6 +1804,7 @@ init : function (){
                 if (40 < r) {
                     sys.sendHtmlAll("<timestamp/> -&gt; <i><b>Zombie:</b></i><i> **hnnnnng...gruuhhhhhhhhh**</i>", main);
                     this.count = 610;
+                    return;
                 }
 
                 //  display one at random
@@ -3983,7 +3984,7 @@ init : function (){
                 
                 //  Define the name for this context
                 var sourcename = sys.name(source);
-                sys.sendHtmlAll("<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                sys.sendHtmlAll("<font color=" + db.getColor(source) + "><timestamp/><i><font>" + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
                 return true;
             }
         },
@@ -4006,7 +4007,7 @@ init : function (){
                 }
                 
                 //  Display
-                CommandBot.sendAll(source, "<font color=black>" + db.playerToString(source, false, (chan == rpchan)) + " slaps " + db.playerToString(target, false, (chan == rpchan)) + " around a bit with a rubber chicken.</font>", chan);
+                CommandBot.sendAll(source, "<i><font color=black>" + db.playerToString(source, false, (chan == rpchan)) + " slaps " + db.playerToString(target, false, (chan == rpchan)) + " around a bit with a rubber chicken.</font></i>", chan);
                 return true;
             }
         },
