@@ -1782,12 +1782,16 @@ init : function (){
 
             if (600 == this.count) {
                 sys.sendHtmlAll("<timestamp/> -&gt; <i><b>Zombie:</b></i><i> **hrrhaaannnnnng!**</i>", main);
+                this.count = 360;
+                return;
             }
 
             //  Stop thinkfast
             if (500 == this.count) {
                 this.count = 360;
                 awards.say("<i>Time's up!</i>", main);
+                this.count = 360;
+                return;
             }
             
             //  If the time has come to display a message...    
