@@ -29,6 +29,14 @@
         "badge" : "masterjuggernautaward"
     
     },
+
+    "Hell's Janitor" : {
+        "by" : "killing 10 zombies in one session",
+
+        "effect" : "An award tally by your name",
+
+        "badge" : "zpaward"
+    },
     
     "Shiny" : {
         

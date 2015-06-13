@@ -917,7 +917,7 @@ init : function (){
             long as the syntax remains unchanged.
     */
     Config = db.getJSON("config.json");
-    Config["BadCharacters"] = /[\u0000-\u001f\u007f-\u00a0\u0100-\u3000\u3097-\u3098\u312a-\u33ff\u4dc0-\u4dff\u9fb4-\uffff]/;;
+    Config["BadCharacters"] = /[\u0000-\u001f\u007f-\u00a0\u0100-\u201b\u201d-\u3000\u3097-\u3098\u312a-\u33ff\u4dc0-\u4dff\u9fb4-\uffff]/;;
 
         var hashFile = "hash.json";
     function Hash () {
@@ -1832,7 +1832,7 @@ init : function (){
                 players[source].zp++;
                 sys.sendHtmlAll("<timestamp/> -&gt; <i><b>Scorekeeper:</b></i><i> **Boom! Headshot!**</i>", main);
 
-                if (players[source].zp == 20 ) {
+                if (players[source].zp == 10 ) {
                     awards.win(sys.name(source), "Hell's Janitor");
                 }
                 else {
@@ -5967,6 +5967,7 @@ init : function (){
         players[source] = {
             confined : false,
             ip : sys.ip(source),
+            zp : 0,
             floodCount : 0,
             lastCommand : time,
             lastNameChange : time,
