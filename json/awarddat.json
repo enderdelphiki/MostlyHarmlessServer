@@ -33,7 +33,7 @@
     "Hell's Janitor" : {
         "by" : "killing 10 zombies in one session",
 
-        "effect" : "An award tally by your name",
+        "effect" : "add to the tally by your name",
 
         "badge" : "zpaward"
     },
