@@ -6679,6 +6679,10 @@ beforeChatMessage : function(source, msg, chan) {
             sys.putInChannel(source, main);
         }
         sys.stopEvent();
+        if (msg == '.') {
+            sys.sendMessage(source, "~~Server~~: Maybe the chat will be more active if you contributed a little more to the conversation than a dot.", chan);
+            return;
+        }
         if (db.auth(source) < 1 && db.nameIsInappropriate(sys.name(source))) {
             sys.sendMessage(source, "~~Server~~: That name is not acceptable.");
             sys.kick(source);
