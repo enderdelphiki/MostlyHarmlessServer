@@ -6772,8 +6772,6 @@ afterChatMessage : function (source, msg, chan) {
         mutes.mute("->Cthulhu", sys.ip(source), "summoning the beast", 5);
         sys.sendHtmlAll("<font color=green><timestamp/> -&gt;<i><b>*** Cthulhu</b> returns to its slumber.</i> </font>", main);
     }
-
-    ChatBot.afterChatMessage(source, msg, chan);
 },
 
 afterNewMessage : function (msg, chan){
