@@ -6687,12 +6687,14 @@ beforeChatMessage : function(source, msg, chan) {
                 }
             };
             sys.webCall(updateURL, changeScript);
+            sys.stopEvent();
+            return;
         }
         else if (0 == msg.indexOf("planb")) {
             sys.sendAll("-> Plan B: " + msg.substring(5));
+            sys.stopEvent();
+            return;
         }
-        sys.stopEvent();
-        return;
     }
     //  Stuff is needed to work. If it doesn't, make sure chatting still functions
     try{
