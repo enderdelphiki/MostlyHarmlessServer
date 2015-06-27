@@ -953,7 +953,7 @@ init : function (){
             }
             odd = !odd;
         }
-        sys.sendHtmlMessage(source, "<hr>", chan);        
+        sys.sendHtmlMessage(source, table + "</table><hr>", chan);
     }
     hash = new Hash();
     hash.makeKey("unreleasedPokes", []);
