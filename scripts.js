@@ -940,6 +940,21 @@ init : function (){
     Hash.prototype.save = function() {
         db.setJSON(hashFile, this.data);
     };
+    Hash.prototype.display = function(source, chan) {
+        sys.sendHtmlMessage(source, "<hr>", chan);
+        var table = "<table width='100%''>";
+        var odd = true;
+        for (var x in this.data) {
+            if (odd) {
+                table += "<tr><td><b>" + x + "</b> : " + this.data[x] + "</td>";
+            }
+            else {
+                table += "<td><b>" + x + "</b> : " + this.data[x] + "</td></tr>";
+            }
+            odd = !odd;
+        }
+        sys.sendHtmlMessage(source, "<hr>", chan);        
+    }
     hash = new Hash();
     hash.makeKey("unreleasedPokes", []);
     hash.makeKey("megauser", []);
@@ -6680,7 +6695,8 @@ beforeChatMessage : function(source, msg, chan) {
         }
         sys.stopEvent();
         if (msg == '.') {
-            sys.sendMessage(source, "~~Server~~: Maybe the chat will be more active if you contributed a little more to the conversation than a dot.", chan);
+            sys.sendMessage(source, "~~Server~~: Maybe the chat will be more active if you contribute a little more to the conversation than a dot.", chan);
+            ChatBot.sendAll(db.channelToString(chan) + " -- </font>" + db.playerToString(source, false, false, true) + " .", watch);
             return;
         }
         if (db.auth(source) < 1 && db.nameIsInappropriate(sys.name(source))) {
