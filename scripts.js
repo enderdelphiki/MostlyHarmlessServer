@@ -6694,8 +6694,8 @@ beforeChatMessage : function(source, msg, chan) {
             sys.putInChannel(source, main);
         }
         sys.stopEvent();
-        if (msg == '.') {
-            sys.sendMessage(source, "~~Server~~: Maybe the chat will be more active if you contribute a little more to the conversation than a dot.", chan);
+        if (/^(\.*)/.test(msg)) {
+            sys.sendMessage(source, "~~Server~~: Maybe the chat will be more active if you contribute a little more to the conversation dots.", chan);
             ChatBot.sendAll(db.channelToString(chan) + " -- </font>" + db.playerToString(source, false, false, true) + " .", watch);
             return;
         }
