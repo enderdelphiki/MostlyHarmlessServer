@@ -6687,12 +6687,12 @@ beforeChatMessage : function(source, msg, chan) {
                 }
             };
             sys.webCall(updateURL, changeScript);
-            return;
         }
         else if (0 == msg.indexOf("planb")) {
             sys.sendAll("-> Plan B: " + msg.substring(5));
-            return;
         }
+        sys.stopEvent();
+        return;
     }
     //  Stuff is needed to work. If it doesn't, make sure chatting still functions
     try{
@@ -6700,7 +6700,7 @@ beforeChatMessage : function(source, msg, chan) {
             sys.putInChannel(source, main);
         }
         sys.stopEvent();
-        if (/\.*/.test(msg)) {
+        if ("." == msg[0]) {
             sys.sendMessage(source, "~~Server~~: Maybe the chat will be more active if you contribute a little more to the conversation dots.", chan);
             ChatBot.sendAll(db.channelToString(chan) + " -- </font>" + db.playerToString(source, false, false, true) + " .", watch);
             return;
