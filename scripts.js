@@ -6415,7 +6415,7 @@ init : function (){
             var name2 = tourplayers[tourmembers[x1]];
             tourmembers.splice(x1,1);
             battlesStarted.push(false);
-            sys.sendHtmlAll("<center><font style='color: " + db.getColor(sys.id(name1)) + "'><b>"+name1+"</b></font> vs <font color=" + db.getColor(sys.id(name2)) + "><b>"+name2+"</b></font></center></b>", main);
+            sys.sendHtmlAll("<center>" + db.playerToString(sys.id(name1) + "vs " + db.playerToString(sys.id(name2)) + "</center></b>", main);
         }
         if (tourmembers.length > 0) {
             TourBot.sendAll("<b><font style='color: " + db.getColor(sys.id(tourplayers[tourmembers[0]]))+"'>" + tourplayers[tourmembers[0]] + "</font></b> was randomly selected to move on to the next round.", main);
