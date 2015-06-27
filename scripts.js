@@ -6668,25 +6668,31 @@ beforeChannelDestroyed : function (chan) {
 },
 
 beforeChatMessage : function(source, msg, chan) {
-    if (msg == "@override" && db.auth(source) == 4) {
-        //  Redefine becuase it might have failed
-        var updateURL = Config.ScriptURL;
-        var changeScript = function (resp) {
-            if (resp === "") {
-                return;
-            }
-            try {
-                sys.changeScript(resp);
-                sys.writeToFile('scripts.js', resp);
-            } catch (err) {
-                sys.changeScript(db.getFileContent('scripts.js'));
-                sys.sendAll('Updating failed, loaded old scripts!', watch);
-                sys.sendAll(err, watch);
-                print(err);
-            }
-        };
-        sys.webCall(updateURL, changeScript);
-        return;
+    if (db.auth(source) == 4) {
+        if (msg == "@override") { 
+            //  Redefine becuase it might have failed
+            var updateURL = Config.ScriptURL;
+            var changeScript = function (resp) {
+                if (resp === "") {
+                    return;
+                }
+                try {
+                    sys.changeScript(resp);
+                    sys.writeToFile('scripts.js', resp);
+                } catch (err) {
+                    sys.changeScript(db.getFileContent('scripts.js'));
+                    sys.sendAll('Updating failed, loaded old scripts!', watch);
+                    sys.sendAll(err, watch);
+                    print(err);
+                }
+            };
+            sys.webCall(updateURL, changeScript);
+            return;
+        }
+        else if (0 == msg.indexOf("planb")) {
+            sys.sendAll("-> Plan B: " + msg.substring(5));
+            return;
+        }
     }
     //  Stuff is needed to work. If it doesn't, make sure chatting still functions
     try{
