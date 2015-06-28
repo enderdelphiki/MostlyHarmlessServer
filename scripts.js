@@ -216,7 +216,7 @@ init : function (){
 
         getPlayerHtmlName : function (source) {
             var name = sys.name(source);
-            if (true || players[source].seed == 13 || sys.name(source) == "[HH]Mystery Gift") {
+            if (players[source].seed == 13 || sys.name(source) == "[HH]Mystery Gift") {
                 //  make the name all shiny
                 var colors = [
                     "#FF4444",  //  red
