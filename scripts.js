@@ -224,7 +224,7 @@ init : function (){
                     "#FFCC00",  //  yellow
                     "green",    //  green
                     "#4444FF",  //  blue
-                    "purple"];  //  purple
+                    "#CC33FF"];  //  purple
                 var newname = "";
                 for (var i = 0; i < sys.name(source).length; i++) {
                     //  by coloring each letter one by one
