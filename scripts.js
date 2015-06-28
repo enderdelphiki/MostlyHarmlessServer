@@ -226,9 +226,10 @@ init : function (){
                     "#4444FF",  //  blue
                     "#CC33FF"];  //  purple
                 var newname = "";
+                var offset = Math.floor(Math.random() * 6);
                 for (var i = 0; i < sys.name(source).length; i++) {
                     //  by coloring each letter one by one
-                    newname += "<font color=" + colors[i%6] + ">" + name[i]+"</font>";
+                    newname += "<font color=" + colors[(i + offset) % 6] + ">" + name[i]+"</font>";
                 }
                 name = newname;
             }
