@@ -218,7 +218,7 @@ init : function (){
             var name = sys.name(source);
             if (true || players[source].seed == 13 || sys.name(source) == "[HH]Mystery Gift") {
                 //  make the name all shiny
-                var colors = ["red", "orange", "#CCCC00", "green", "blue", "purple"];
+                var colors = ["red", "orange", "#FFCC00", "green", "blue", "purple"];
                 var newname = "";
                 for (var i = 0; i < sys.name(source).length; i++) {
                     //  by coloring each letter one by one
