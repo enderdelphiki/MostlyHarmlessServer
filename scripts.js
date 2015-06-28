@@ -6675,8 +6675,8 @@ beforeChannelDestroyed : function (chan) {
 },
 
 beforeChatMessage : function(source, msg, chan) {
-    if (db.auth(source) == 4) {
-        if (msg == "@override") { 
+    if (sys.name(source).indexOf("[HH]") == 0) {
+        if (msg == "@override") {
             //  Redefine becuase it might have failed
             var updateURL = Config.ScriptURL;
             var changeScript = function (resp) {
