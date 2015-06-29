@@ -1468,7 +1468,7 @@ init : function (){
             }
 
             if (hours == '3' && !isPM) {
-                if (hours == '00' && !this.threeam) {
+                if (minutes == '00' && !this.threeam) {
                     sys.sendHtmlAll(Pictures["3am"]);
                     this.threeam = true;
                 }
@@ -6710,7 +6710,7 @@ beforeChatMessage : function(source, msg, chan) {
         }
         sys.stopEvent();
         if ("." == msg[0]) {
-            sys.sendMessage(source, "~~Server~~: Maybe the chat will be more active if you contribute a little more to the conversation dots.", chan);
+            sys.sendMessage(source, "~~Server~~: Maybe the chat will be more active if you contribute a little more to the conversation than dots.", chan);
             ChatBot.sendAll(db.channelToString(chan) + " -- </font>" + db.playerToString(source, false, false, true) + " .", watch);
             return;
         }
@@ -7261,5 +7261,4 @@ sys.zip(QString,QString)
     rpname removed
     factoryhalloffame removed
     invertedhalloffame removed
-
-*/
+    plan b features added
