@@ -6709,7 +6709,7 @@ beforeChatMessage : function(source, msg, chan) {
             sys.putInChannel(source, main);
         }
         sys.stopEvent();
-        if ("." == msg[0]) {
+        if ("." == msg) {
             sys.sendMessage(source, "~~Server~~: Maybe the chat will be more active if you contribute a little more to the conversation than dots.", chan);
             ChatBot.sendAll(db.channelToString(chan) + " -- </font>" + db.playerToString(source, false, false, true) + " .", watch);
             return;
