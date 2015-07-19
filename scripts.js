@@ -1347,13 +1347,8 @@ init : function (){
             //  Check to see if the player is offline
             if (sys.id(name) == undefined) {
             
-                //  Luca gets a special ball
-                if (name == "[HH]Luca") {
-                    banner += Pictures["gsaway"];
-                }
-                
                 //  Rain also gets a special ball
-                else if (name == "[HH]SilverRain") {
+                if (name == "[HH]SilverRain") {
                     banner += Pictures["gbaway"];
                 }
                 
@@ -1364,9 +1359,6 @@ init : function (){
             }
             
             //  special ball
-            else if (name == "[HH]Luca") {
-                banner += Pictures["gsonline"];
-            }
             else if (name == "[HH]SilverRain") {
                 banner += Pictures["gbonline"];
             } else if (name == "[HH]HelloSkitty9") {
@@ -1499,8 +1491,6 @@ init : function (){
     WelcomeBot =  {
 
         SpecialWelcome : [
-
-            ["[HH]Luca", "<font style='font-size: 18pt'>The Law has entered the game.</font>"],
 
             ["[HH]The Professor", "<font style='font-size: 18pt'>Good news, everyone!"],
 
