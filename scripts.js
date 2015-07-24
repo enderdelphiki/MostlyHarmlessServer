@@ -3987,6 +3987,7 @@ init : function (){
                 }
                 else {
                     sys.sendHtmlAll("<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + " " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                }
                 return true;
             }
         },
@@ -4004,7 +4005,7 @@ init : function (){
                 
                 //  Define the name for this context
                 var sourcename = sys.name(source);
-                if (players[source]confined) {
+                if (players[source].confined) {
                     sys.sendHtmlMessage(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font>" + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
                 }
                 else {
@@ -4136,7 +4137,7 @@ init : function (){
                 
                 //  Display for everyone
                 sys.sendHtmlAll("<hr>", main);
-                sys.sendHtmlAll("<center><b><font color='#FF00CC' style='font-size: 14pt; font-family:calibri'>A " + tourtier + " Tournament has been started by " + db.playerToString(source) + "!</b></center>", main);
+                sys.sendHtmlAll("<center><b><font color='#FF00CC' style='font-size: 14pt; font-family:calibri'>A new " + tourtier + " Tournament has been started by " + db.playerToString(source) + "!</b></center>", main);
                 sys.sendAll("~~Server~~: " + tournumber + " people can join this tournament", main);
                 TourBot.sendAll("Prize: " + db.htmlEscape(prize), main);
                 CommandBot.sendAll(source, "Type !join to enter the tournament.", main);
