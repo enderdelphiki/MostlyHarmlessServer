@@ -3652,7 +3652,7 @@ init : function (){
                     
                     //  Otherwise show this person has joined
                     else {
-                        TourBot.sendAll(sys.name(source) + " joined the tournament! " + spotsleft + " more " + ((spotsleft == 1) ? "spot" : "spots") + " left!", -1);
+                        TourBot.sendAll(db.playerToString(source) + " joined the tournament! " + spotsleft + " more " + ((spotsleft == 1) ? "spot" : "spots") + " left!", -1);
                     }
                 }
                 return true;
@@ -3679,7 +3679,7 @@ init : function (){
                     delete tourplayers[name];
                     
                     //  Announce leave
-                    TourBot.sendAll(sys.name(source) + " left the tournament!", -1);
+                    TourBot.sendAll(db.playerToString(source) + " left the tournament!", -1);
                     return true;
                 }
             
@@ -3688,7 +3688,7 @@ init : function (){
                     
                     //  Start the battle
                     battlesStarted[Math.floor(tourbattlers.indexOf(name) / 2)] = true;
-                    TourBot.sendAll(sys.name(source) + " left the tournament!", -1);
+                    TourBot.sendAll(db.playerToString(source) + " left the tournament!", -1);
                     
                     //  End the battle
                     tourBattleEnd(tourOpponent(name), name);
@@ -3982,7 +3982,11 @@ init : function (){
                 var sourcename = sys.name(source);
                 
                 //  Display
-                sys.sendHtmlAll("<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + " " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                if (players[source].confined) {
+                    sys.sendHtmlMessage(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + " " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                }
+                else {
+                    sys.sendHtmlAll("<font color=" + db.getColor(source) + "><timestamp/><i><font size=3>*** " + sourcename + " " + db.htmlEscape(commandData) + "</font></i></font>", chan);
                 return true;
             }
         },
@@ -4000,7 +4004,12 @@ init : function (){
                 
                 //  Define the name for this context
                 var sourcename = sys.name(source);
-                sys.sendHtmlAll("<font color=" + db.getColor(source) + "><timestamp/><i><font>" + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                if (players[source]confined) {
+                    sys.sendHtmlMessage(source, "<font color=" + db.getColor(source) + "><timestamp/><i><font>" + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                }
+                else {
+                    sys.sendHtmlAll("<font color=" + db.getColor(source) + "><timestamp/><i><font>" + sourcename + "'s " + db.htmlEscape(commandData) + "</font></i></font>", chan);
+                }
                 return true;
             }
         },
@@ -4127,9 +4136,9 @@ init : function (){
                 
                 //  Display for everyone
                 sys.sendHtmlAll("<hr>", main);
-                sys.sendHtmlAll("<center><b><font color='#FF00CC' style='font-size: 14pt; font-family:calibri'>A "+tourtier+" Tournament has been started by <font color=" + db.getColor(source) + ">"+sys.name(source)+"!</font></font></b></center>", main);
-                sys.sendAll("~~Server~~: " +tournumber+" people can join this tournament", main);
-                TourBot.sendAll("Prize: "+db.htmlEscape(prize), main);
+                sys.sendHtmlAll("<center><b><font color='#FF00CC' style='font-size: 14pt; font-family:calibri'>A " + tourtier + " Tournament has been started by " + db.playerToString(source) + "!</b></center>", main);
+                sys.sendAll("~~Server~~: " + tournumber + " people can join this tournament", main);
+                TourBot.sendAll("Prize: " + db.htmlEscape(prize), main);
                 CommandBot.sendAll(source, "Type !join to enter the tournament.", main);
                 sys.sendHtmlAll("<hr>", main);
                 return true;
@@ -4167,16 +4176,18 @@ init : function (){
                 
                 //  Display change
                 sys.sendHtmlAll("<hr>", main);
-                sys.sendHtmlAll(db.playerToString(source) + " changed the size of the Tournament to " + count + "!", main);
-                sys.sendHtmlAll("<b>There are " + tourSpots() + " spots remaining!</b>", main);
-                sys.sendHtmlAll("<b>Type !join to enter the tournament!</b>", main);
-                sys.sendHtmlAll("<hr>", main);
+                TourBot.sendAll(db.playerToString(source) + " changed the size of the Tournament to " + count + "!", main);
                 
                 //  If there aren't any open spots anymore then start it
                 if (tourSpots() == 0 ) {
                     tourmode = 2;
                     roundnumber = 0;
                     roundPairing();
+                }
+                else {
+                    sys.sendHtmlAll("<b>There are " + tourSpots() + " spots remaining!</b>", main);
+                    sys.sendHtmlAll("<b>Type !join to enter the tournament!</b>", main);
+                    sys.sendHtmlAll("<hr>", main);
                 }
                 return true;
             }
@@ -4195,19 +4206,20 @@ init : function (){
                 
                 //  Make sure the person is a battler
                 var name2 = commandData.toLowerCase();
+                var loser = sys.id(commandData);
                 
                 //  DQ if so
                 if (tourmembers.indexOf(name2) != -1) {
                     tourmembers.splice(tourmembers.indexOf(name2),1);
                     delete tourplayers[name2];
-                    TourBot.sendAll(commandData + " was disqualified by " + db.playerToString(source) + "!", chan);
+                    TourBot.sendAll(db.playerToString(loser) + " was disqualified by " + db.playerToString(source) + "!", chan);
                     return true;
                 }
                 
                 //  End this person's battle
                 if (tourbattlers.indexOf(name2) != -1) {
                     battlesStarted[Math.floor(tourbattlers.indexOf(name2)/2)] = true;
-                    TourBot.sendAll(commandData + " was disqualified by " + db.playerToString(source) + "!", chan);
+                    TourBot.sendAll(db.playerToString(loser) + " was disqualified by " + db.playerToString(source) + "!", chan);
                     tourBattleEnd(tourOpponent(name2), name2);
                     return true;
                 }
@@ -4224,7 +4236,7 @@ init : function (){
                     //  End it
                     tourmode = 0;
                     sys.sendHtmlAll("<hr>", main);
-                    sys.sendHtmlAll(db.playerToString(source, true) + " closed the tournament.", main);
+                    TourBot.sendAll(db.playerToString(source) + " closed the tournament.", main);
                     sys.sendHtmlAll("<hr>", main);
                     return true;
                 }
@@ -6396,10 +6408,10 @@ init : function (){
         var finals = (tourmembers.length == 2);
         sys.sendHtmlAll("<hr>", main);
         if (!finals) {
-            sys.sendHtmlAll('<center><b><font style="color: #FF00CC">Round '+roundnumber+' of '+tourtier+' Tournament</font></b></center>', main);
+            sys.sendHtmlAll('<center><b><font style="color: #FF00CC">Round ' +roundnumber + ' of ' + tourtier + ' Tournament</font></b></center>', main);
         }
         else {
-            sys.sendHtmlAll('<center><b><font style="color: #FF00CC">FINALS OF '+tourtier+' TOURNAMENT</font></b></center>', main);
+            sys.sendHtmlAll('<center><b><font style="color: #FF00CC">FINALS OF ' + tourtier + ' TOURNAMENT</font></b></center>', main);
         }
         var i = 0;
         while (tourmembers.length >= 2) {
@@ -6407,11 +6419,11 @@ init : function (){
             var x1 = sys.rand(0, tourmembers.length);
             tourbattlers.push(tourmembers[x1]);
             var name1 = tourplayers[tourmembers[x1]];
-            tourmembers.splice(x1,1);
+            tourmembers.splice(x1, 1);
             x1 = sys.rand(0, tourmembers.length);
             tourbattlers.push(tourmembers[x1]);
             var name2 = tourplayers[tourmembers[x1]];
-            tourmembers.splice(x1,1);
+            tourmembers.splice(x1, 1);
             battlesStarted.push(false);
             sys.sendHtmlAll(db.playerToString(sys.id(name1)) + " vs " + db.playerToString(sys.id(name2)), main);
         }
@@ -6448,7 +6460,7 @@ init : function (){
             return;
         }
         sys.sendHtmlAll("<hr>", main);
-        sys.sendHtmlAll("<b>" + db.playerToString(sys.id(source) + " won the battle and advanced to the next round!", main);
+        sys.sendHtmlAll("<b>" + db.playerToString(sys.id(source)) + " won the battle and advanced to the next round!", main);
         sys.sendHtmlAll("<b>" + db.playerToString(sys.id(target)) + " lost the battle and is out of the tournament", main);
         if (!tourbattlers.length == 0) {
             sys.sendHtmlAll("<b><center>" + tourbattlers.length/2 + " battle" + ((tourbattlers.length == 1) ? "" : "s") + " remaining", main);
