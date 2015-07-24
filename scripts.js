@@ -6387,7 +6387,8 @@ init : function (){
         if (tourmembers.length == 1) {
             var chans = [0];
             sys.sendHtmlAll("<hr>", main);
-            sys.sendHtmlAll("<center><font style=' color:#FF00CC'><b>And the winner is:</b></font><br><font color=" + db.getColor(sys.id(tourplayers[tourmembers[0]])) + ">" + tourplayers[tourmembers[0]] + "</font><br>Congratulations, " + tourplayers[tourmembers[0]] + "! You won "+prize+"!</center>", main);
+            var winner = sys.id(tourplayers[tourmembers[0]]);
+            sys.sendHtmlAll("<center><font style=' color:#FF00CC'><b>And the winner is:</b></font><br>" + db.playerToString(winner) + "<br>Congratulations, " + tourplayers[tourmembers[0]] + "! You won "+prize+"!</center>", main);
             sys.sendHtmlAll("<hr>", main);
             tourmode = 0;
             return;
@@ -6412,10 +6413,11 @@ init : function (){
             var name2 = tourplayers[tourmembers[x1]];
             tourmembers.splice(x1,1);
             battlesStarted.push(false);
-            sys.sendHtmlAll("<center>" + db.playerToString(sys.id(name1)) + "vs " + db.playerToString(sys.id(name2)) + "</center></b>", main);
+            sys.sendHtmlAll(db.playerToString(sys.id(name1)) + " vs " + db.playerToString(sys.id(name2)), main);
         }
         if (tourmembers.length > 0) {
-            TourBot.sendAll("<b><font style='color: " + db.getColor(sys.id(tourplayers[tourmembers[0]]))+"'>" + tourplayers[tourmembers[0]] + "</font></b> was randomly selected to move on to the next round.", main);
+            var extra = sys.id(tourplayers[tourmembers[0]]);
+            TourBot.sendAll(db.playerToString(extra) + " was randomly selected to move on to the next round.", main);
         }
         sys.sendHtmlAll ("<hr>", main);
     };
@@ -6446,10 +6448,10 @@ init : function (){
             return;
         }
         sys.sendHtmlAll("<hr>", main);
-        sys.sendHtmlAll("<b><center><font style='color: " + db.getColor(sys.id(source)) + "'>" +source+"</font> won the battle and advanced to the next round!", main);
-        sys.sendHtmlAll("<b><center><font style='color: " + db.getColor(sys.id(target)) + "'>" +target+"</font> lost the battle and is out of the tournament", main);
+        sys.sendHtmlAll("<b>" + db.playerToString(sys.id(source) + " won the battle and advanced to the next round!", main);
+        sys.sendHtmlAll("<b>" + db.playerToString(sys.id(target)) + " lost the battle and is out of the tournament", main);
         if (!tourbattlers.length == 0) {
-            sys.sendHtmlAll("<b><center>" + tourbattlers.length/2 + " battle"+((tourbattlers.length == 1)?"":"s")+" remaining", main);
+            sys.sendHtmlAll("<b><center>" + tourbattlers.length/2 + " battle" + ((tourbattlers.length == 1) ? "" : "s") + " remaining", main);
         }
         sys.sendHtmlAll("<hr>", main);
     };
