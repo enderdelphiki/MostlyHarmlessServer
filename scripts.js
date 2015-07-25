@@ -3148,6 +3148,16 @@ init : function (){
                 //  Finish output and print
                 table += "</table>";
                 sys.sendHtmlMessage(source, table, chan);
+                
+                //  Stolen from PO main script
+                var tiers = ["ORAS Ubers", "ORAS OU", "ORAS UU", "ORAS LU", "ORAS NU", "ORAS LC"];
+                var allowed = [];
+                for (var x = 0; x < tiers.length; x++) {
+                    if (!sys.isPokeBannedFromTier(pokeId, tiers[x])) {
+                        allowed.push(tiers[x]);
+                    }
+                }
+                sys.sendHtmlMessage(src, "<b>Allowed in tiers: </b>" + allowed.join(", "), channel);
                 return true;
             }
         },
