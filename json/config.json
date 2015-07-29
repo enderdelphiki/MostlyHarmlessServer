@@ -37,8 +37,8 @@
     
     "NoImp" : ["Server", "Light", "Corliss", "Light Corliss", "HelloSkitty9", "HelloSkitty", "Jesus", "God", "Muhammad"],
 
-    "BadNames" : ["muhammad", "$g", "[hh[", "]hh]", "]hh[", "{hh}", "{hh]", "[hh}", "[hhh]", "[vp]", "69", "anus", "anvs", "bich", "bitch", "bltch", "chatbot", "christ", "chrlst", "cock", "command", "creeper", "cum", "cvm", "cunt", "cvnt", "dlck", "dick", "ejaculate", "fag", "fck", "fuck", "fvck", "fuhrer", "fvhrer", "fuk", "fvk", "gbrother", "god", "goodbye", "harmless", "heil", "hiel", "hitchhiker", "hitler", "horny", "jesus", "jesvs", "kbot", "knight of zero", "kyubey", "masterbate", "masterbait", "mostly", "nigg", "penis", "porn", "pure", "pvre", "pussy", "pvssy", "pusy", "server", "sex", "shit", "slap", "std", "swag", "tier", "troll", "vagina", "uagina", "vaglna", "valley", "vfd", "welcome", "ender", "shofu", "kirby"],
-        
+    "BadNames" : ["muhammad", "$g", "[hh[", "]hh]", "]hh[", "{hh}", "{hh]", "[hh}", "[hhh]", "[vp]", "69", "anus", "anvs", "bich", "bitch", "bltch", "chatbot", "christ", "chrlst", "cock", "command", "creeper", "cum", "cvm", "cunt", "cvnt", "dlck", "dick", "ejaculate", "fag", "fck", "fuck", "fvck", "fuhrer", "fvhrer", "fuk", "fvk", "gbrother", "god", "goodbye", "harmless", "heil", "hiel", "hitchhiker", "hitler", "horny", "jesus", "jesvs", "kbot", "knight of zero", "kyubey", "masterbate", "masterbait", "mostly", "nigg", "penis", "porn", "pure", "pvre", "pussy", "pvssy", "pusy", "server", "sex", "shit", "slap", "std", "swag", "tier", "troll", "vagina", "uagina", "vaglna", "valley", "vfd", "welcome", "ender", "shofu", "kirby", "[vp]"],
+    
     "Rules" : [
         
         "Do not ask for auth. Do not ask for the script. Do not ask the owners to host your clan/server. The answer is no.",
@@ -84,6 +84,8 @@
     "TourBot" : ["Announcer", "#FF00CC"],
     
     "League" : [
+        ["Open", "???", "http://w11.zetaboards.com/The_Valley/topic/8136084/1/?x=0#post8091236"],
+
         ["[HH]Ender", "Flying","http://w11.zetaboards.com/The_Valley/topic/11044804/1/"],
 
         ["[HH]Char", "Ghost","http://w11.zetaboards.com/The_Valley/topic/11123887/1/"],
@@ -95,8 +97,6 @@
         ["[HH]SilverRain", "Dark","http://w11.zetaboards.com/The_Valley/topic/11014001/1/"],
         
         ["[HH]Eris", "Psychic","http://w11.zetaboards.com/The_Valley/topic/10610584/1/"],
-        
-        ["[HH]Luca", "Steel","http://w11.zetaboards.com/The_Valley/topic/8895661/1/"],
         
         ["[HH]Magnus", "Dragon","http://w11.zetaboards.com/The_Valley/topic/10474800/1/"],
         
