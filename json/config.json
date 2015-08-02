@@ -37,7 +37,7 @@
     
     "NoImp" : ["Server", "Light", "Corliss", "Light Corliss", "HelloSkitty9", "HelloSkitty", "Jesus", "God", "Muhammad"],
 
-    "BadNames" : ["muhammad", "$g", "[hh[", "]hh]", "]hh[", "{hh}", "{hh]", "[hh}", "[hhh]", "[vp]", "69", "anus", "anvs", "bich", "bitch", "bltch", "chatbot", "christ", "chrlst", "cock", "command", "creeper", "cum", "cvm", "cunt", "cvnt", "dlck", "dick", "ejaculate", "fag", "fck", "fuck", "fvck", "fuhrer", "fvhrer", "fuk", "fvk", "gbrother", "god", "goodbye", "harmless", "heil", "hiel", "hitchhiker", "hitler", "horny", "jesus", "jesvs", "kbot", "knight of zero", "kyubey", "masterbate", "masterbait", "mostly", "nigg", "penis", "porn", "pure", "pvre", "pussy", "pvssy", "pusy", "server", "sex", "shit", "slap", "std", "swag", "tier", "troll", "vagina", "uagina", "vaglna", "valley", "vfd", "welcome", "ender", "shofu", "kirby", "[vp]"],
+    "BadNames" : ["muhammad", "$g", "[hh[", "[SG]", "[G$]", "]G$]", "]G$[", "G$", "]hh]", "]hh[", "{hh}", "{hh]", "[hh}", "[hhh]", "[vp]", "69", "anus", "anvs", "bich", "bitch", "bltch", "chatbot", "christ", "chrlst", "cock", "command", "creeper", "cum", "cvm", "cunt", "cvnt", "dlck", "dick", "ejaculate", "fag", "fck", "fuck", "fvck", "fuhrer", "fvhrer", "fuk", "fvk", "gbrother", "god", "goodbye", "harmless", "heil", "hiel", "hitchhiker", "hitler", "horny", "jesus", "jesvs", "kbot", "knight of zero", "kyubey", "masterbate", "masterbait", "mostly", "nigg", "penis", "porn", "pure", "pvre", "pussy", "pvssy", "pusy", "server", "sex", "shit", "slap", "std", "swag", "tier", "troll", "vagina", "uagina", "vaglna", "valley", "vfd", "welcome", "ender", "shofu", "kirby", "[vp]"],
     
     "Rules" : [
         
@@ -195,7 +195,9 @@
 
         "Julie, do the thing!",
 
-        "He's dead, Jim!"
+        "He's dead, Jim!",
+        
+        "!retpircs sdrawkcab eht ma I"
     ],
 
     "htmlNames" : {
@@ -209,6 +211,7 @@
         "[HH]Hallow Primordia":"<font color='#ee9289'>[</font><font color='#e27a73'>H</font><font color='#d6635d'>H</font><font color='#ca4b48'>]</font><font color='#be3432'>H</font><font color='#b21c1c'>a</font><font color='#8e1616'>l</font><font color='#6b1111'>l</font><font color='#470b0b'>o</font><font color='#240606'>w</font> <font color='#05011b'>P</font><font color='#0a0236'>r</font><font color='#0e0350'>i</font><font color='#13046b'>m</font><font color='#250679'>o</font><font color='#370887'>r</font><font color='#490a94'>d</font><font color='#5b0ca2'>i</font><font color='#6d0eb0'>a</font>",
         "[HH]Saiomai":"<font color='#ff0000'>[</font><font color='#e8021d'>H</font><font color='#d10439'>H</font><font color='#bb0656'>]</font><font color='#a40872'>S</font><font color='#8d0a8f'>a</font><font color='#71248c'>i</font><font color='#553e89'>o</font><font color='#3a5986'>m</font><font color='#1e7383'>a</font><font color='#028d80'>i</font>",
         "[HH]Sora":"<font color='#ff0000'>[</font><font color='#d03b25'>H</font><font color='#a1764a'>H</font><font color='#a6896c'>]</font><font color='#ab9d8e'>S</font><font color='#b0b0b0'>o</font><font color='#58abd8'>r</font><font color='#00a5ff'>a</font>",
-        "[HH]SemiBolt" : "<font color='#01DFD7'>[HH]Semi<font color='#00FFBF'>Bolt</font>"
+        "[HH]SemiBolt" : "<font color='#01DFD7'>[HH]Semi<font color='#00FFBF'>Bolt</font>",
+        "Koskonie" : "<font color='#990000'>[SG]</font><font color='#330000'>K</font><font color='#990000'>o</font><font color='#330000'>s</font><font color='#990000'>k</font><font color='#330000'>o</font><font color='#990000'>n</font><font color='#330000'>i</font><font color='#990000'>e</font>"
     }
 }
