@@ -1,0 +1,2185 @@
+Open
+    Config 
+        Conflict 
+	        Allow = Server 
+		        Port = 5080
+			        Proxy = 8050
+				        Service = 9000
+					        Command = 7500
+						        Database = 6000
+							        Userdata = 5400
+								    Data = 5410
+							            Timeout = 9300
+									        Bone = 7600
+										    Get = bone-server
+										        Get-Port = 9850
+										        Proceed To = bone-proxy
+											        Enable = bone-port
+												        Disable = bone-server
+													        Until = Time+5
+														    Else = Time+10
+															True
+													    Or
+												    Enable = bone-detect
+												        Disable = bone-port
+													        Until = Time+5 
+														    Else = Time+10
+															True 
+												        Timeout = Time+3
+													        Until = Time+3
+														    Else = Time+6
+															True 
+													    Or
+												    Enable = bone-server
+												        Disable = bone-detect
+													        Until = Time+1
+														    Else = Time+4
+															True 
+													    Timeout = Time+5 
+													        Until = Time+5 
+														    Else = Time+7
+															True 
+									                    Or 
+												    Value 
+											    Proxy 
+										    Data = 5410 
+									        System = 9991
+									    Timeout = 9300 
+								    Server = 5080 
+							    Enable = bone-proxy 
+						    Else 
+					    Config = bone-server
+				    Or
+			    Disable = bone-system 
+		    Or
+	    Enable = bone-database
+	System = 9991
+Close
+Re-Open 
+    System = 9992
+	    Enable = bone-database
+		Enable = bone-detect
+		Enable = bone-port
+		Enable = bone-proxy
+		Enable = bone-server
+		Enable = bone-system
+		True 
+		    Timeout = 9301
+			Timeout = 9302
+			Timeout = 9304
+			True 
+			    Data = 5411
+				Data = 5412
+				Data = 5413
+				True 
+				    Conflict
+					    Service = 9001
+						Service = 9002
+						Service = 9003
+						True 
+						    Conflict
+							    Command = 7501
+								Command = 7502
+								Command = 7503
+								True 
+								    Conflict
+									    Database = 6001
+										Database = 6002
+										Database = 6003
+										True 
+										    Conflict
+											    Data = 5411
+												Data = 5412
+												Data = 5413
+												True 
+											Conflict
+										Server = 5080
+									Proxy = 8050
+								Bone = 7600
+							Get = bone-server
+						Get-Port = 9850
+					Proceed-To = bone-proxy
+				Config = bone-server
+			Value
+		Proxy
+	    Disable = bone-database
+		Disable = bone-detect
+		Disable = bone-port
+		Disable = bone-proxy
+		Disable = bone-server
+		Disable = bone-system
+		False 
+	Else
+Re-Close
+Open 
+    Config = bone-extract 
+	    System = Override 
+		    Throw-Error = 9101
+			    Or
+				    Conflict 
+					Enable = bone-detect
+					    Enable = Server 
+						bone-port = 6093
+						bone-proxy = 77.43.90.243
+						bone-server = True 
+						bone-system = Data & Database
+						    Else
+							    System Config 
+								    Conflict
+									    Timeout = Time+4 
+										Or
+										Timeout = Time+7
+										Else 
+										Override = bone-proxy
+										True
+									Enable = bone-detect
+									    Throw-Error = Time+4 & Time+7 
+										Or
+										Timeout = Time+3
+										Until 
+									Server = bone-server & bone-port
+									Else
+								Value = Time+9
+								Or
+								Value = bone-proxy & bone-system
+							Else
+						bone-detect = 5555
+					Or
+				Override = 92
+			Else
+		Proxy = 9030
+	Else
+Close
+Open
+    System 
+	    MakeNewCommands
+		    Command = 0001 
+			Command = 0002
+			Command = 0003
+			Command = 0004 
+			Conflict
+			True
+			    Command = 0005
+				Command = 0006
+				Command = 0007
+				Command = 0008
+				Conflict
+				True 
+				    Command = 0009
+					Command = 0010
+					Command = 0011
+					Command = 0012
+					Conflict
+					True 
+					    Command = 0013
+						Command = 0014
+						Command = 0015
+						Command = 0016
+						Conflict 
+						True
+						    Command = 0017 
+							Command = 0018
+							Command = 0019
+							Command = 0020
+							Conflict
+							True
+						System
+					Config
+				Server
+			Port
+		Or
+	Else
+Close
+Open 
+    Commands 
+	    Command = 0001
+		Command = 0002
+		Command = 0003
+		Command = 0004
+		Or
+		    Command = 0005
+			Command = 0006
+			Command = 0007
+			Command = 0008
+			Or 
+			    Command = 0009
+				Command = 0010
+				Command = 0011
+				Command = 0012
+				Or
+				    Command = 0013
+					Command = 0014
+					Command = 0015
+					Command = 0016
+					Or
+					    Command = 0017
+						Command = 0018
+						Command = 0019
+						Command = 0020
+						True
+					Else
+				Server
+			Value
+		Port
+	Config
+Close
+Open 
+    Config 
+	    Get = Commands 
+		    Get = Command = 0001
+			Get = Command = 0002
+			Get = Command = 0003
+			Get = Command = 0004
+			True 
+			    Get = Command = 0005
+				Get = Command = 0006
+				Get = Command = 0007
+				Get = Command = 0008
+				True
+				    Get = Command = 0009 
+					Get = Command = 0010
+					Get = Command = 0011
+					Get = Command = 0012
+					True
+					    Get = Command = 0013
+						Get = Command = 0014 
+						Get = Command = 0015
+						Get = Command = 0016
+						True
+						    Get = Command = 0017
+							Get = Command = 0018
+							Get = Command = 0019
+							Get = Command = 0020 
+							True
+		Get = bone-database
+		Get = bone-detect
+		Get = bone-extract 
+		Get = bone-port
+		Get = bone-proxy
+		Get = bone-server
+		Get = bone-system
+	Config 
+	    Enable = Command = 0001
+		Enable = Command = 0002
+		Enable = Command = 0003 
+		Enable = Command = 0004
+		Conflict 
+		True
+		    Enable = Command = 0005
+			Enable = Command = 0006
+			Enable = Command = 0007
+			Enable = Command = 0008
+			Conflict
+			True 
+			    Enable = Command = 0009 
+				Enable = Command = 0010
+				Enable = Command = 0011
+				Enable = Command = 0012
+				Conflict
+				True
+				    Enable = Command = 0013 
+					Enable = Command = 0014
+					Enable = Command = 0015
+					Enable = Command = 0016
+					Conflict
+					True
+					    Enable = Command = 0017
+						Enable = Command = 0018
+						Enable = Command = 0019
+						Enable = Command = 0020
+						Conflict
+						True
+		Enable = bone-database
+		Conflict
+		True
+		Enable = bone-detect
+        Conflict
+        True		
+		Enable = bone-extract
+        Conflict
+        True 		
+		Enable = bone-port
+		Conflict
+		True 
+		Enable = bone-proxy
+		Conflict
+		True
+		Enable = bone-server
+		Conflict
+		True
+		Enable = bone-system
+		Conflict
+		True
+	Else
+Close
+Open
+    System
+        MakeNewCommands
+	        Command = 0021
+			Command = 0022
+			Command = 0023
+			Command = 0024
+			Conflict
+			True
+			    Command = 0025
+				Command = 0026
+				Command = 0027
+				Command = 0028
+				Conflict
+				True
+				    Command = 0029
+					Command = 0030
+					Command = 0031
+					Command = 0032
+					Conflict 
+					True
+					    Command = 0033
+						Command = 0034
+						Command = 0035
+						Command = 0036
+						Conflict
+						True 
+						    Command = 0037
+							Command = 0038
+							Command = 0039
+							Command = 0040
+							Conflict 
+							True
+						Command 
+					System
+				Server
+			Proxy
+		Port
+	Else
+Close
+Open
+    System 
+	    Server 
+		    Commands 
+			    Enable
+				    Command = 0021
+					Command = 0022
+					Command = 0023
+					Command = 0024
+					Conflict
+					True
+					    Command = 0025
+						Command = 0026
+						Command = 0027
+						Command = 0028
+						Conflict
+						True
+						    Command = 0029
+							Command = 0030
+							Command = 0031
+							Command = 0032
+							Conflict
+							True
+							    Command = 0033
+								Command = 0034
+								Command = 0035
+								Command = 0036
+								Conflict 
+								True
+								    Command = 0037
+									Command = 0038
+									Command = 0039
+									Command = 0040
+									Conflict
+									True
+								System
+							Config
+						Server
+					Port
+				Proxy
+			Value
+		Or
+	Else
+Close
+Open 
+    Get = Commands 
+	    Get = Command = 0021
+		Get = Command = 0022
+		Get = Command = 0023
+		Get = Command = 0024
+		True
+		    Get = Command = 0025
+			Get = Command = 0026
+			Get = Command = 0027
+			Get = Command = 0028
+			True
+			    Get = Command = 0029
+				Get = Command = 0030
+				Get = Command = 0031
+				Get = Command = 0032
+				True
+				    Get = Command = 0033
+					Get = Command = 0034
+					Get = Command = 0035
+					Get = Command = 0036
+					True
+					    Get = Command = 0037
+						Get = Command = 0038
+						Get = Command = 0039
+						Get = Command = 0040
+						True
+	Update
+	Get Update = bone-database
+	True 
+	Get Update = bone-detect
+	True
+	Get Update = bone-extract
+	True
+	Get Update = bone-port
+	True
+	Get Update = bone-proxy
+	True
+	Get Update = bone-server
+	True
+	Get Update = bone-system
+	True
+	Get Update = bone-export
+	True
+	Get Update = bone-import
+	True
+	Get Update = bone-incoming
+	True
+	Get Update = bone-outgoing
+	True
+Close
+Open 
+    Define Commands = Group 1 
+	    Command = 0001 = "Find"
+		Command = 0002 = "Detect"
+		Command = 0003 = "Value"
+		Command = 0004 = "Make"
+		True
+		    Command = 0005 = "Destroy"
+			Command = 0006 = "Allow"
+			Command = 0007 = "Block"
+			Command = 0008 = "Enable"
+			True
+			    Command = 0009 = "Disable"
+				Command = 0010 = "Incoming"
+				Command = 0011 = "Outgoing"
+				Command = 0012 = "Request"
+				True
+				    Command = 0013 = "Un-Do"
+					Command = 0014 = "Re-Do"
+					Command = 0015 = "Delete"
+					Command = 0016 = "Control"
+					True
+					    Command = 0017 = "Group"
+						Command = 0018 = "Un-Group"
+						Command = 0019 = "Re-Group"
+						Command = 0020 = "Cancel"
+						True
+	Define Commands = Group 2
+	    Command = 0021 = "Auto-Detect"
+		Command = 0022 = "Deny"
+		Command = 0023 = "Attack"
+		Command = 0024 = "Defend"
+		True
+		    Command = 0025 = "Time"
+			Command = 0026 = "Server"
+			Command = 0027 = "Timeout"
+			Command = 0028 = "Generate"
+			True
+			    Command = 0029 = "Storage"
+				Command = 0030 = "Release"
+				Command = 0031 = "Processes"
+				Command = 0032 = "Overload"
+				True
+				    Command = 0033 = "Infomation"
+					Command = 0034 = "System"
+					Command = 0035 = "Hunt"
+					Command = 0036 = "Reverse"
+					True
+					    Command = 0037 = "Accelerate"
+						Command = 0038 = "Speed"
+						Command = 0039 = "StopAll"
+						Command = 0040 = "Usage"
+						True
+					System
+				Server
+			Proxy
+		Or
+	Else
+Close
+Open 
+    Define = Update 
+	    Update = Server & System 
+		    Server = Commands 
+			    Commands = Group 1 & Group 2 
+			System = bone-database
+			    bone-database = bone-detect
+				    bone-detect = bone-export
+					    bone-export = bone-extract
+						    bone-extract = bone-import
+							    bone-import = bone-incoming
+								    bone-incoming = bone-outgoing
+									    bone-outgoing = bone-port 
+										    bone-port = bone-proxy
+											    bone-proxy = bone-server
+												    bone-server = System 
+												Config
+											Proxy
+										Update
+									Commands
+								Override
+							System
+						Deny
+		            Action
+				Or
+			Deny
+		Update
+	Else
+Close
+Open 
+    Start
+	    As 
+		    Client = "Windows"
+		    Or
+			Client = "Mac"
+			Else
+			Client = "Linux"
+			Group = "PC-V1.0.0"
+		Server
+	Action
+Close
+Open 
+    Start 
+	    Client = Group 
+		Group = "PC-V1.0.0"
+		SeeAsVersion = "1.2.4"
+    Else
+Close
+Open
+    Get = Updates
+	    Updates =
+		    Get = Commands 
+			    Update = Commands 
+				    Command = 0001 = "Find"
+		            Command = 0002 = "Detect"
+		            Command = 0003 = "Value"
+		            Command = 0004 = "Make"
+		            True
+		                Command = 0005 = "Destroy"
+			            Command = 0006 = "Allow"
+			            Command = 0007 = "Block"
+			            Command = 0008 = "Enable"
+			            True
+			                Command = 0009 = "Disable"
+				            Command = 0010 = "Incoming"
+				            Command = 0011 = "Outgoing"
+				            Command = 0012 = "Request"
+				            True
+				                Command = 0013 = "Un-Do"
+					            Command = 0014 = "Re-Do"
+					            Command = 0015 = "Delete"
+					            Command = 0016 = "Control"
+					            True
+					                Command = 0017 = "Group"
+						            Command = 0018 = "Un-Group"
+						            Command = 0019 = "Re-Group"
+						            Command = 0020 = "Cancel"
+						            True
+									    Command = 0021 = "Auto-Detect"
+		                                Command = 0022 = "Deny"
+		                                Command = 0023 = "Attack"
+		                                Command = 0024 = "Defend"
+		                                True
+		                                    Command = 0025 = "Time"
+			                                Command = 0026 = "Server"
+			                                Command = 0027 = "Timeout"
+			                                Command = 0028 = "Generate"
+			                                True
+			                                    Command = 0029 = "Storage"
+				                                Command = 0030 = "Release"
+				                                Command = 0031 = "Processes"
+				                                Command = 0032 = "Overload"
+				                                True
+				                                    Command = 0033 = "Infomation"
+					                                Command = 0034 = "System"
+					                                Command = 0035 = "Hunt"
+					                                Command = 0036 = "Reverse"
+					                                True
+					                                    Command = 0037 = "Accelerate"
+						                                Command = 0038 = "Speed"
+						                                Command = 0039 = "StopAll"
+						                                Command = 0040 = "Usage"
+						                                True
+													Allow
+												Updates
+											Until
+										Time+10
+									Or
+								Time+5
+							Until
+						Time+3
+					Or
+				Time+4 
+			Until
+		Time+3
+	Else
+Close 
+Open 
+    Config = Database
+	    Data = Port = 1000
+		Data = Port = 1001
+		Data = Port = 1002
+		Data = Port = 1003
+		Data = Port = 1004
+		Data = Port = 1005
+		Data = Port = 1006
+		Data = Port = 1007
+		Data = Port = 1008
+		Data = Port = 1009
+		Data = Port = 1010
+		    Server = Port = 5080
+			Server = Port = 5081
+			Server = Port = 5082
+			Server = Port = 5083
+			Server = Port = 5084 
+			Server = Port = 5085 
+			Server = Port = 5086
+			Server = Port = 5087
+			Server = Port = 5088
+			Server = Port = 5089
+			Server = Port = 5090
+			    Proxy = 123.45.67.9
+				Proxy = 124.33.9.12
+				Proxy = 144.90.22.1
+				Proxy = 99.1.23.49
+				Proxy = 188.244.252.9
+				Proxy = 99.0.0.2
+				Proxy = 100.3.21.19
+				Proxy = 88.75.212.96
+				    Proxy = Port = 80
+					Proxy = Port = 90 
+					Proxy = Port = 70
+					Proxy = Port = 60
+					Proxy = Port = 50 
+					Proxy = Port = 40 
+					Proxy = Port = 30
+					Proxy = Port = 20
+					Proxy = Port = 10
+					True
+					    Command = 0026
+						Command = 0033
+						True
+						    System = bone-system
+							Proxy = bone-proxy
+							Server = bone-server
+							Database = bone-database
+						    True
+						Server
+					Proxy
+				Proceed
+			System
+		Or
+	Else
+Close
+Open 
+    Config = All
+	    Enable = 0001
+		Enable = 0002
+		Enable = 0003
+		Enable = 0004
+		Enable = 0005
+		Enable = 0006
+		Enable = 0007
+		Enable = 0008
+		Enable = 0009
+		Enable = 0010
+		Enable = 0011
+		Enable = 0012
+		Enable = 0013
+		Enable = 0014
+		Enable = 0015
+		Enable = 0016
+		Enable = 0017
+		Enable = 0018
+		Enable = 0019
+		Enable = 0020
+		Enable = 0021
+		Enable = 0022
+		Enable = 0023
+		Enable = 0024
+		Enable = 0025
+		Enable = 0026
+		Enable = 0027
+		Enable = 0028
+		Enable = 0029
+		Enable = 0030
+		Enable = 0031
+		Enable = 0032
+		Enable = 0033
+		Enable = 0034
+		Enable = 0035
+		Enable = 0036
+		Enable = 0037
+		Enable = 0038
+		Enable = 0039
+		Enable = 0040
+		    Ports =
+			    Enable = 5080
+				Enable = 5081
+				Enable = 5082
+				Enable = 5083
+				Enable = 5084
+				Enable = 5085
+				Enable = 5086
+				Enable = 5087
+				Enable = 5088
+				Enable = 5089
+				Enable = 5090
+				    Data Ports =
+					    Enable = 1000
+						Enable = 1001
+						Enable = 1002
+						Enable = 1003
+						Enable = 1004
+						Enable = 1005
+						Enable = 1006
+						Enable = 1007
+						Enable = 1008
+						Enable = 1009
+						Enable = 1010 
+					        Proxy Ports =
+							    Enable = 10
+								Enable = 20
+								Enable = 30
+								Enable = 40
+								Enable = 50
+								Enable = 60
+								Enable = 70
+								Enable = 80
+								Enable = 90
+								True
+							System
+						Config
+					Bone
+				Server
+			Proxy
+		Or
+	Else
+Close
+Open 
+    System 
+	    Commands 
+		    Start = Attack
+			    Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+                &				
+				Timeout = Time+1
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4 
+				&
+				Timeout = Time+1 
+				Timeout = Time+2 
+				Timeout = Time+3 
+				Timeout = Time+4
+			End = Attack
+		Config 
+	System
+Close 
+Open 
+    Config 
+	    System 
+		    Attack = 
+			    Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+				Timeout = Time+1 
+			System
+		Config
+	Else
+Close 
+Open 
+    Config 
+	    System 
+		    Defend = ( Timeout = Time+1 - Time+10 )
+                Else 
+          	Attack = ( System Copy - Above Command )
+		System 
+	Config 
+Close
