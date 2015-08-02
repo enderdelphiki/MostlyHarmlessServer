@@ -14,4 +14,9 @@ This server script was made and is currently being managed by [HH]Ender on the M
 
 http://w11.zetaboards.com/The_Valley/index/
 
-To use this script, run $git clone in your server's directory.
+*If you would like to use this script: 
+
+      There are two methods to use these scripts:
+        1. Use This Command Line Whilst In Your Server Directory:
+            $ git clone https://github.com/todd-beckman/MostlyHarmlessServer.git
+        2. Download As A Zip File and Unzip it in your Pokemon Online server directory.
