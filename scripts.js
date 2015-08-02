@@ -1091,7 +1091,7 @@ init : function (){
     awards = new Award();
 
     /*
-        ChatBot is a pseudobot that enforces chage rules automaticallly.
+        ChatBot is a pseudobot that enforces change rules automatically.
         
         Load this before everything else plz
     */
@@ -1380,6 +1380,7 @@ init : function (){
         },
         
         //  The [ugly] function that draws the banner
+        //  Its worse than ugly 
         update : function() {
             //  If we aren't managing the banner, do nothing
             if (!this.data.Dynamic) {
@@ -1401,7 +1402,8 @@ init : function (){
             banner += "<tr><td><table width='33%' border=0 style='vertical-align: bottom; font-family:" + this.data.FontFamily + ";color:" + this.data.TextColor + ";font-size:8pt' >";
 
             var spl = 
-            //  Track the first letter as used in the filename for the autballs
+            //  Track the first letter as used in the filename for the authballs
+            //  "Autballs" - Your not spanish mate
                 authletter = ['u', 'm', 'a', 'o'];
                 
             //  Now go through the first 6 league members
