@@ -1,10 +1,10 @@
 {
     
-    "maxMessageLength" : 150,
+    "maxMessageLength" : 125,
     
     "flood" : {
         
-        "limit" : 6,
+        "limit" : 5,
         
         "add" : 1
     
