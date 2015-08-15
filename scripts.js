@@ -2716,6 +2716,7 @@ init : function (){
             "boom: Swiss Cheesed",
             "braceyourself: Winter's coming",
             "calm: I'M COMPLETELY CALM!",
+            "choking: Why you LITTLE-!",
             "completed: That was a challenge?",
             "disapprove: For those frowny-face shenanigans",
             "doge: very meme such funny wow",
@@ -2725,7 +2726,7 @@ init : function (){
             "fry: Not sure if meme or just stupid",
             "fucking: There are 8 badges in the Kanto region. He got all 10.",
             "giggity: For those moments",
-            "gotcha: Challeng Accepted",
+            "gotcha: Challenge Accepted",
             "grumpycat: I made a meme once. It was horrible.",
             "interesting: Stay thirsty, my friends.",
             "notbutter: I can't believe it!",
@@ -2737,6 +2738,7 @@ init : function (){
             "phrasing: God damnit, Lana!",
             "pundog: For the awkward pause after the lame punchline",
             "success: Achievement unlocked",
+            "squidgirl: Inkvasion!"
             "uhh: If I had a nickel for every brain I didn't have... I'd have one nickel.",
             "morpheus: What if I told you...",
             "wish: You only get one.",
@@ -3052,10 +3054,46 @@ init : function (){
             }
         },
 
+        "show" : {
+            cost : 5,
+            help : "Publicly display basic information about a Pokemon, move, item, or ability",
+            run : function (source, chan, command, commandData, mcmd) {
+                var id = sys.pokemon(commandData);
+                if (id != undefined) {
+                    //  start table with sprite
+                    var table = "<table><tr><td rowspan='3'><img src='pokemon:num=" + id + "&gen=6'></td>";
+                    
+                    //  Add abilities
+                    var abilities = [];
+                    for (var i = 0; i < 3; i++) {
+                        var ability = sys.ability(sys.pokeAbility(id, 0));
+                        if (ability != "(No Ability)") {
+                            abilities.push(ability);
+                        }
+                    }
+                    table += "<td colspan='6'>" + abilities.join(", ") + "</td></tr>";
+
+                    //  Add the base stats
+                    table += "<tr><td>HP</td><td>Attack</td><td>Defense</td><td>Sp Atk</td><td>Sp Def</td><td>Speed</td></tr>";
+                    var stats = sys.pokeBaseStats(id);
+                    table += "<tr>";
+                    for (var i = 0; i < 6; i++) {
+                        table += "<td>" + stats[0] + "</td>";
+                    }
+                    table += "</tr></table>";
+                    sys.sendHtmlAll(table, chan);
+                }
+                
+
+
+                return true;
+            }
+        }
+
         //  Displays a lot of information about a specified Pokemon
         "pokemon" : {
             cost : 0,
-            help : "Check information about a Pokemon (for example, /pokemon Mega Lucario to see the stats of a Mega form)",
+            help : "Privately check information about a Pokemon (for example, /pokemon Mega Lucario to see the stats of a Mega form)",
             run : function (source, chan, command, commandData, mcmd) {
                 //  Make sure there is input
                 if (!commandData) {
@@ -6322,21 +6360,21 @@ init : function (){
                 break;
             case 10:
                 this.sendAll(Pictures["planktonwins"], main);
-                awards.win(sys.name(id), "Juggernaut");
+                awards.win(jug.name, "Juggernaut");
                 break;
             case 15:
                 this.sendAll("Unstoppable!", main);
                 break;
             case 20:
                 this.sendAll("Hax God!", main);
-                awards.win(sys.name(id), "Elite JN");
+                awards.win(jug.name, "Elite JN");
                 break;
             case 25:
                 this.sendAll(Pictures["completed"], main);
                 break;
             case 30:
                 this.sendAll("All our base are belonged to " + this.getName() + ".", main);
-                awards.win(sys.name(id), "Master JN");
+                awards.win(jug.name, "Master JN");
                 break;
             default:
                 if (score > 29 && score % 5 == 0) {
@@ -7279,4 +7317,9 @@ sys.zip(QString,QString)
     factoryhalloffame removed
     invertedhalloffame removed
     plan b features added
+
+TODO:
+    
+    show public info about mons/move/items/abilities
+
 */
