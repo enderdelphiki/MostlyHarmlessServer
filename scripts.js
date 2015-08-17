@@ -2738,7 +2738,7 @@ init : function (){
             "phrasing: God damnit, Lana!",
             "pundog: For the awkward pause after the lame punchline",
             "success: Achievement unlocked",
-            "squidgirl: Inkvasion!"
+            "squidgirl: Inkvasion!",
             "uhh: If I had a nickel for every brain I didn't have... I'd have one nickel.",
             "morpheus: What if I told you...",
             "wish: You only get one.",
@@ -3066,7 +3066,7 @@ init : function (){
                     //  Add abilities
                     var abilities = [];
                     for (var i = 0; i < 3; i++) {
-                        var ability = sys.ability(sys.pokeAbility(id, 0));
+                        var ability = sys.ability(sys.pokeAbility(id, i));
                         if (ability != "(No Ability)") {
                             abilities.push(ability);
                         }
@@ -3083,12 +3083,9 @@ init : function (){
                     table += "</tr></table>";
                     sys.sendHtmlAll(table, chan);
                 }
-                
-
-
                 return true;
             }
-        }
+        },
 
         //  Displays a lot of information about a specified Pokemon
         "pokemon" : {
