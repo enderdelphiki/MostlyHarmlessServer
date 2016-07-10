@@ -1,5 +1,3 @@
-//  I wrote it in the client window not a text editor
-//  Give the shitty code a break
 
 function html_escape(text) {
     var m = String(text);
