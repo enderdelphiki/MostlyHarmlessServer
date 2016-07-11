@@ -16,6 +16,18 @@ function Juggernaut() {
 Juggernaut.prototype.sendAll = juggerbot.sendAll;
 Juggernaut.prototype.sendMessage = juggerbot.sendMessage;
 
+Juggernaut.prototype.afterBattleEnded = function(winner, loser, result, bid) {
+  if (result == 'tie') {
+    return;
+  }
+  if (this.isJuggernaut(winner)) {
+    this.jWonAgainst(loser);
+  }
+  else if (this.isJuggernaut(loser) || 172800 < this.lastWon()) {
+    this.newJuggernaut(sys.name(winner));
+  }
+}
+
 //  Returns the name of the Juggernaut
 Juggernaut.prototype.getName = function() {
   return this.jug.name;

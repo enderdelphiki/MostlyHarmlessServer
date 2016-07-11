@@ -7,6 +7,35 @@ function Tournaments() {
 Tournaments.prototype.sendAll = tourbot.sendAll;
 Tournaments.prototype.sendMessage = tourbot.sendMessage;
 
+//  Event triggered when a battle has ended
+Tournaments.prototype.afterBattleEnded(winner, loser, result, bid) {
+  //  Should never happen in a tournament battle, but you never know
+  if (result == 'tie') {
+    return;
+  }
+  var source = sys.name(winner);
+  var target = sys.name(loser);
+  if (!this.areOpponents(source, target) || !this.ongoingBattle(source)) {
+    return;
+  }
+  this.battlesLost.push(source);
+  this.battlesLost.push(target);
+  var sourcename = source.toLowerCase();
+  var targetname = source.toLowerCase();
+  this.battlesStarted.splice(Math.floor(this.battlers.indexOf(sourcename) / 2), 1);
+  this.battlers.splice(this.battlers.indexOf(sourcename), 1);
+  this.battlers.splice(this.battlers.indexOf(targetname), 1);
+  this.members.push(targetname);
+  delete this.players[targetname];
+  if (this.battlers.length < 2) {
+    roundPairing();
+    return;
+  }
+  sys.sendHtmlAll('<hr>', main);
+  sys.sendHtmlAll('<b>' + _.playerToString(sys.id(source)) + ' won the battle and advanced to the next round!', main);
+  sys.sendHtmlAll('<hr>', main);
+};
+
 //  Event triggered after a player logs in
 Tournaments.prototype.afterLogIn = function(source) {
   if (this.mode == 1) {
@@ -24,6 +53,15 @@ Tournaments.prototype.areOpponents = function(source, target) {
   var sourcename = sys.name(source);
   var targetname = sys.name(target);
   return this.isInTourney(sourcename) && this.isInTourney(targetname) && this.opponent(sourcename) == targetname.toLowerCase();
+};
+
+//  Returns whether to cancel a player going idle
+Tournaments.prototype.beforePlayerAway = function(source, away) {
+  if (away && this.isInTourney(sys.name(source))) {
+    tourbot.sendMessage(source, 'If you want to idle, /leave the tournament.', main);
+    return true;
+  }
+  return false;
 };
 
 //  Returns whether a player is currently in the competition
@@ -91,29 +129,6 @@ Tournaments.prototype.roundPairing = function() {
     sys.sendHtmlAll(_.playerToString(sys.id(name1)) + 'vs ' + _.playerToString(sys.id(name2), main);
   }
 };
-
-//  Triggered when a tournament battle ends
-Tournaments.prototype.tourBattleEnd = function(source, target) {
-  if (!this.areOpponents(source, target) || !this.ongoingBattle(source)) {
-    return;
-  }
-  this.battlesLost.push(source);
-  this.battlesLost.push(target);
-  var sourcename = source.toLowerCase();
-  var targetname = source.toLowerCase();
-  this.battlesStarted.splice(Math.floor(this.battlers.indexOf(sourcename) / 2), 1);
-  this.battlers.splice(this.battlers.indexOf(sourcename), 1);
-  this.battlers.splice(this.battlers.indexOf(targetname), 1);
-  this.members.push(targetname);
-  delete this.players[targetname];
-  if (this.battlers.length < 2) {
-    roundPairing();
-    return;
-  }
-  sys.sendHtmlAll('<hr>', main);
-  sys.sendHtmlAll('<b>' + _.playerToString(sys.id(source)) + ' won the battle and advanced to the next round!', main);
-  sys.sendHtmlAll('<hr>', main);
-}
 
 //  Returns the number of slots remaining
 Tournaments.prototype.tourSpots = function() {

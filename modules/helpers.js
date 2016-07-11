@@ -125,7 +125,7 @@ exports.Helpers = {
     if (!string) {
       source = sys.name(source);
     }
-    if (-1 < Config.superUsers.indexOf(soure)) {
+    if (-1 < Config.superUsers.indexOf(source)) {
       return 4;
     }
     return sys.maxAuth(sys.dbIp(source));
@@ -152,7 +152,7 @@ exports.Helpers = {
 
   //  Returns a nice channel formatting
   channelHTML: function(channel) {
-    return '<font color=' + _.channelColor(channel) + '>[#' + sys.channel(channel) + ']</font>';
+    return '<font color="' + _.channelColor(channel) + '">[#' + sys.channel(channel) + ']</font>';
   },
 
   //  Returns the username without a clan tag given an integer id

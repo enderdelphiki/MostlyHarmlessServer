@@ -44,7 +44,7 @@ Clan.prototype.removeMember = function(source, name) {
   name = _.escapeTagName(name, false).toLowerCase();
   var x = this.indexInClan(name);
   if (-1 == x) {
-    sys.sendMessage(source, '~~Server~~:' + name + ' isn't in the member database.', main);
+    sys.sendMessage(source, '~~Server~~:' + name + ' isn\'t in the member database.', main);
     return false;
   }
   else {

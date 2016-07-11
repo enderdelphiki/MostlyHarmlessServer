@@ -31,7 +31,7 @@ var Config {
   rolePlayingChannel: 'Role Playing',
 
   //  Channel restricted to super users. Messages here are automatically eval'ed
-  shellChannel: '$ sudo -l',
+  shellChannel: 'gksudo',
 
   //  This channel is entirely exempt from the watch channel
   elsewhere: 'Elsewhere',
@@ -233,7 +233,7 @@ init: function() {
 
   //  This must come last or everything will break
   commandbot = require('commandbot.js').CommandBot;
-  commandbot.registerCommandsFrom([
+  commandbot.registerCommandsFromList([
     require('awards.js').Commands,
     require('banner.js').Commands,
     require('chatbot.js').Commands,
@@ -555,14 +555,14 @@ beforeChatMessage: function(source, message, channel) {
         Party.beforeChatMessage(source, message, channel);
         return;
       }
-      sys.sendHtmlAll(_.playerToSTring(source, true, channel == rpchan) + ' ' + _.htmlEscape(message), channel);
+      sys.sendHtmlAll(_.playerToString(source, true, channel == rpchan) + ' ' + _.htmlEscape(message), channel);
       return;
     }
   }
   //  For safety, print the message. Otherwise the chat will be unresponsive
   catch (e) {
     _.sendAlert('Error in beforeChatMessage', e);
-    sys.sendHtmlAll(_.playerToSTring(source, true, channel == rpchan) + ' ' + _.htmlEscape(message), channel);
+    sys.sendHtmlAll(_.playerToString(source, true, channel == rpchan) + ' ' + _.htmlEscape(message), channel);
   }
 },
 
@@ -572,9 +572,13 @@ afterChatMessage: function(source, message, channel) {
   }
   if (message.toLowerCase() == "ph'nglui mglw'nafh cthulhu r'lyeh wgah'nagl fhtagn") {
     cthulhu.sendAll("I live once more!", main);
-    sys.sendHtmlAll(db.playerToString(source) + " was muted for 5 minutes for summoning the beast!", main);
+    sys.sendHtmlAll(_.playerToString(source) + " was muted for 5 minutes for summoning the beast!", main);
     mutes.mute("->Cthulhu", sys.ip(source), "summoning the beast", 5);
     sys.sendHtmlAll("<font color=green><timestamp/> -&gt;<i><b>*** Cthulhu</b> returns to its slumber.</i> </font>", main);
+  }
+  //  This is why you trust your auth
+  if (channel == shellChannel && 4 == _.auth(source)) {
+    sys.eval(message);
   }
 },
 
@@ -619,16 +623,8 @@ afterBattleEnded: function(winner, loser, result, bid) {
   if (!initialized) {
     return;
   }
-  if (result == 'tie') {
-    return;
-  }
-  if (juggernaut.isJuggernaut(winner)) {
-    juggernaut.jWonAgainst(loser);
-  }
-  else if (juggernaut.isJuggernaut(loser) || 172800 < juggernaut.lastWon()) {
-    juggernaut.newJuggernaut(sys.name(winner));
-  }
-  tourbot.tourBattleEnd(sys.name(winner), sys.name(loser));
+  juggernaut.afterBattleEnded(winner, loser, result, bid);
+  tourbot.afterBattleEnded(winner, loser, result, bid);
 },
 
 beforeChallengeIssued: function(source, target, clauses, rated, mode, sourceteam, tier) {
@@ -690,8 +686,7 @@ beforePlayerAway: function(source, away) {
   if (!initialized) {
     return;
   }
-  if (away && tourbot.isInTourney(sys.name(source))) {
-    tourbot.sendMessage(source, 'If you want to idle, /leave the tournament.', main);
+  if (tourbot.beforePlayerAway(source, away)) {
     sys.stopEvent();
   }
 },
